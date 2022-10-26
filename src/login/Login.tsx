@@ -4,6 +4,8 @@ import flower from '../scandi-373.svg';
 import * as yup from 'yup';
 import { Link } from "react-router-dom";
 import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase-config'
 
 import {
     LoginContainer,
@@ -18,7 +20,8 @@ import {
     ErrorList,
     linkStyle,
     PasswordContainer,
-    eyeStyle
+    eyeStyle,
+    ForgotPassword
 } from './styles'
 
 interface LoginInfo {
@@ -30,8 +33,40 @@ interface LoginInfo {
 const Login : React.FC = () => {
 
     const [loginData, setLoginData] = useState<LoginInfo>({ email:'', password:'' })
-    const [loginErrors, setLoginErrors] = useState<string[]>();
+    const [loginErrors, setLoginErrors] = useState<string[]>([]);
     const [eyeIcon, setEyeIcon] = useState<boolean>(true);
+
+    
+    const loginUser = () => {
+        signInWithEmailAndPassword(auth, loginData.email, loginData.password)
+        .then((userCredential) => {
+            // Signed in 
+            //TODO: use user across app in global state
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+        })
+        .catch((error) => {
+            /**
+                auth/user-not-found Firebase: Error (auth/user-not-found). 
+                auth/wrong-password Firebase: Error (auth/wrong-password).
+            **/
+           const ERRORS = [
+               ["auth/wrong-password", "wrong password, please try again"],
+               ["auth/user-not-found", "invalid credentials, please try again"],
+               ["auth/invalid-email", "invalid email, please try again"],
+               ["auth/user-disabled", "the account you are trying to update has been disabled"],
+               ["too-many-requests", "too many failed attempts, try again later or reset your password"]
+           ];
+           const ERROR_CODES = ERRORS.map(item => item[0]);
+            const errorCode = error.code;
+            if(ERROR_CODES.includes(errorCode)){
+                let error_array:string[][] = ERRORS.filter(item => item[0] === errorCode);
+                let error_message:string = error_array[0][1];
+                setLoginErrors(loginErrors => [...loginErrors, error_message]);
+            }
+        });
+    }
 
     let loginSchema = yup.object().shape({
         email: yup.string().email().required("email is required"),
@@ -55,7 +90,7 @@ const Login : React.FC = () => {
                 } )
             } else{
                 setLoginErrors([]);
-                console.log("valid");
+                loginUser();
             }
         })
 
@@ -89,9 +124,10 @@ const Login : React.FC = () => {
          <SignUpLink>
          Need an account? <Link to="/signup" style={linkStyle}> <SignUp>Sign up</SignUp></Link>
          </SignUpLink>
+            <Link to="/reset" style={linkStyle}> <ForgotPassword>Forgot Password?</ForgotPassword></Link>
          {
              <ErrorList> {
-             loginErrors?.map((error, item) => {
+             loginErrors && loginErrors.map((error, item) => {
 
                  return (
                      <li key={item}>{error}</li>

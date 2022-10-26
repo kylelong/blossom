@@ -4,6 +4,8 @@ import flower from '../scandi-373.svg';
 import * as yup from 'yup';
 import { Link } from "react-router-dom";
 import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase-config'
 
 import {
     SignUpContainer,
@@ -30,13 +32,44 @@ interface SignUpInfo {
 const SignUp : React.FC = () => {
 
     const [signUpData, setSignUpData] = useState<SignUpInfo>({ email:'', password:'' })
-    const [signUpErrors, setSignUpErrors] = useState<string[]>();
+    const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
     const [eyeIcon, setEyeIcon] = useState<boolean>(true);
 
     let signUpSchema = yup.object().shape({
         email: yup.string().email().required("email is required"),
         password: yup.string().min(8).required("password is required")
     });
+
+    const registerUser = () => {
+        createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password)
+        .then((userCredential) => {
+            // Signed in 
+            //TODO: use user across app in global state
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+        })
+        .catch((error) => {
+
+            /* 
+                EMAIL_EXISTS: "auth/email-already-in-use"
+            */
+
+           const ERRORS = [
+            ["auth/email-already-in-use", "email is alreay in use"],
+            ["auth/invalid-email","invalid email, please try again"],
+            ["auth/operation-not-allowed","operation not allowed, double check and try again"],
+            ["auth/weak-password", "password is too weak, please add more complexity"]
+        ];
+        const ERROR_CODES = ERRORS.map(item => item[0]);
+         const errorCode = error.code;
+         if(ERROR_CODES.includes(errorCode)){
+             let error_array:string[][] = ERRORS.filter(item => item[0] === errorCode);
+             let error_message:string = error_array[0][1];
+             setSignUpErrors(signUpErrors => [...signUpErrors, error_message]);
+         }
+        });
+    }
    
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,7 +88,7 @@ const SignUp : React.FC = () => {
                 } )
             } else{
                 setSignUpErrors([]);
-                console.log("valid");
+                registerUser();
             }
         })
 
@@ -65,6 +98,9 @@ const SignUp : React.FC = () => {
         const { name, value } = e.target;
         setSignUpData({...signUpData, [name]: value})    
     }
+
+
+
     
  return (
      <SignUpContainer>
@@ -91,7 +127,7 @@ const SignUp : React.FC = () => {
          </LoginLink>
          {
              <ErrorList> {
-             signUpErrors?.map((error, item) => {
+             signUpErrors && signUpErrors.map((error, item) => {
 
                  return (
                      <li key={item}>{error}</li>

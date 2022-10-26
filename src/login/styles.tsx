@@ -71,13 +71,13 @@ export const linkStyle = {
 
 export const ErrorList = styled.ul`
     text-align: left;
-    margin-left: 21px;
     font-weight: bold;
 `;
 export const SignUpLink = styled.a`
     text-decoration: none;
     color: black;
     display: flex;
+    margin-bottom: 5px;
     
 `;
 
@@ -85,6 +85,12 @@ export const SignUp = styled.div`
     color: #FA5F55;
     font-weight: bold;
     margin-left: 5px;
+`;
+
+export const ForgotPassword = styled.div`
+    color: #FA5F55;
+    font-weight: bold;
+    margin-top: 7px;
 `;
 
 export const eyeStyle = {

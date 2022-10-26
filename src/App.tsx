@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import Login from './login/Login';
 import SignUp from './signup/SignUp';
+import ForgotPassword from './forgotPassword/ForgotPassword';
+import ResetPassword from './resetPassword/ResetPassword';
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,6 +30,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
+          <Route path="/reset" element={<ForgotPassword />}></Route>
+          <Route path="/reset_password" element={<ResetPassword />}></Route>
         </Routes>
       </Router>
     </div>
