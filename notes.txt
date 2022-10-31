@@ -1,0 +1,16 @@
+      checkActionCode(auth, oobCode)
+            .then((response) => {
+                applyActionCode(auth, oobCode).then((response) => {
+                    console.log("success");
+                    console.log(oobCode);
+                    console.log(auth.currentUser);
+                })
+                .catch(err => {
+                    console.log("error - applying");
+                    console.log(err);
+                })
+            })
+            .catch(err => {
+                console.log("error - checking");
+                    console.log(err);
+            })

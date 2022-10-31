@@ -26,6 +26,7 @@ interface ResetPasswordInfo {
     email: string
 }
 
+// form to request to signal forgot password
 const ForgotPassword : React.FC = () => {
 
 
