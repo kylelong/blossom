@@ -143,6 +143,7 @@ export const QuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  align-items: flex-start;
   @media (max-width: 900px) {
     align-items: center;
   }
@@ -174,6 +175,7 @@ export const Price = styled.div`
   color: #fa5f55;
   font-family: Helvetica Neue, Arial, sans-serif;
   letter-spacing: 2px;
+  margin-bottom: 10px;
 `;
 
 export const Month = styled.span`

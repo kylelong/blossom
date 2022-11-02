@@ -113,13 +113,18 @@ const LandingPage: React.FC = () => {
               Release a survey in minutes as opposed to weeks or months of
               engineering time
             </AnswerLabel>
+            <AnswerLabel>
+              Spend time building products / feature core to your business while
+              we handle surveys
+            </AnswerLabel>
           </QuestionContainer>
           <QuestionContainer>
-            <QuestionLabel>What do I get?</QuestionLabel>
+            <QuestionLabel>Why Blossom?</QuestionLabel>
 
             <AnswerLabelItem>
               Unlimited surveys for all of your needs
             </AnswerLabelItem>
+            <AnswerLabelItem>No coding required</AnswerLabelItem>
             <AnswerLabelItem>
               Advanced analytics including a/b testing, completion rate, and
               much more
@@ -127,7 +132,10 @@ const LandingPage: React.FC = () => {
           </QuestionContainer>
           <QuestionContainer>
             <QuestionLabel>How much does this cost?</QuestionLabel>
-            <AnswerLabel>$49 / month. Feel free to cancel anytime.</AnswerLabel>
+            <AnswerLabel>
+              $49 / month. Feel free to cancel anytime. Start today with a 2
+              week free trial
+            </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>
         <FlowerImageSection src={flower3} />
@@ -139,13 +147,11 @@ const LandingPage: React.FC = () => {
           <Price>
             $49<Month>/month</Month>
           </Price>
-          <BenefitLabel>
-            Everything you need to create beautiful surveys
-          </BenefitLabel>
-          <AnswerLabel>Unlimited Surveys</AnswerLabel>
+          <BenefitLabel>All you need to create beautiful surveys</BenefitLabel>
           <AnswerLabel>Release survey to users in minutes</AnswerLabel>
           <AnswerLabel>AB test different user groups</AnswerLabel>
           <AnswerLabel>Advanced analytics</AnswerLabel>
+          <AnswerLabel>Unlimited Surveys</AnswerLabel>
           <AnswerLabel>Fast support</AnswerLabel>
         </PriceContainer>
       </PricingSectionContainer>
