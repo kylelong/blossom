@@ -38,6 +38,7 @@ export const SloganContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 `;
 
 export const Slogan = styled.div`
@@ -85,6 +86,7 @@ export const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 28px;
+  text-align: center;
 `;
 
 export const BenefitsContainer = styled.div`
@@ -92,7 +94,6 @@ export const BenefitsContainer = styled.div`
   flex-direction: row;
   margin-top: 30px;
   justify-content: space-evenly;
-
   @media (max-width: 900px) {
     flex-direction: column;
   }
@@ -109,6 +110,7 @@ export const SectionHeader = styled.div`
   font-weight: bold;
   color: #355e3b;
   font-size: 25px;
+  text-align: center;
 `;
 
 export const BenefitsListItem = styled.li`
@@ -132,10 +134,11 @@ export const FAQContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
+  margin-bottom: 28px;
   align-items: flex-start;
-
   @media (max-width: 900px) {
-    align-items: center;
+    margin-left: 15px;
+    padding: 10px;
   }
 `;
 
@@ -144,9 +147,6 @@ export const QuestionContainer = styled.div`
   flex-direction: column;
   margin-bottom: 10px;
   align-items: flex-start;
-  @media (max-width: 900px) {
-    align-items: center;
-  }
 `;
 export const QuestionLabel = styled.div`
   color: #355e3b;
@@ -169,6 +169,40 @@ export const AnswerLabelItem = styled.div`
 `;
 
 /* Price */
+
+export const PriceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 28px;
+  align-items: center;
+  box-shadow: 5px 5px 10px #c4c4c4;
+  border-radius: 5px;
+  max-width: 350px;
+  padding: 20px;
+  margin-bottom: 24px;
+`;
+
+export const PricingLabelContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+export const PricingLabel = styled.div`
+  color: #525f7f;
+  line-height: 25px;
+  margin-bottom: 7px;
+`;
+
+export const PricingHeader = styled.div`
+  color: #355e3b;
+  font-weight; bold;
+  font-size: 18px;
+  font-family: Helvetica Neue, Arial, sans-serif;
+  margin-bottom: 10px;
+`;
+
 export const Price = styled.div`
   font-size: 36px;
   font-weight: 900;
@@ -191,16 +225,11 @@ export const PricingSectionContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
+  @media (max-width: 500px) {
+    padding: 10px;
+  }
 `;
 
-export const PriceContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 28px;
-  align-items: center;
-  box-shadow: 5px 5px 10px #c4c4c4;
-  border-radius: 5px;
-  width: 350px;
-  padding-top: 10px;
-  height: 350px;
+export const Footer = styled.div`
+  text-align: center;
 `;

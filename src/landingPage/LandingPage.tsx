@@ -10,6 +10,7 @@ import flower7 from "../scandi-370.svg"; // *
 import happy_customer from "../happy_customer.svg";
 import team from "../team.svg";
 import money from "../purse.svg";
+import { CheckCircledIcon, DotIcon } from "@radix-ui/react-icons";
 
 import {
   LandingPageContainer,
@@ -33,12 +34,24 @@ import {
   QuestionLabel,
   QuestionContainer,
   AnswerLabel,
+  PricingLabel,
+  PricingLabelContainer,
   AnswerLabelItem,
   Price,
   Month,
   PriceContainer,
+  PricingHeader,
+  Footer,
 } from "./styles";
 const LandingPage: React.FC = () => {
+  const pricingBenefits = [
+    "Unlimited Surveys",
+    "Release surveys to users in minutes",
+    "No coding required",
+    "Advanced analytics",
+    "AB test different user groups",
+    "Fast support",
+  ];
   return (
     <LandingPageContainer>
       <HeaderContainer>
@@ -110,10 +123,12 @@ const LandingPage: React.FC = () => {
               Why not have my engineering team build surveys?
             </QuestionLabel>
             <AnswerLabel>
+              <DotIcon />
               Release a survey in minutes as opposed to weeks or months of
               engineering time
             </AnswerLabel>
             <AnswerLabel>
+              <DotIcon />
               Spend time building products / feature core to your business while
               we handle surveys
             </AnswerLabel>
@@ -122,10 +137,15 @@ const LandingPage: React.FC = () => {
             <QuestionLabel>Why Blossom?</QuestionLabel>
 
             <AnswerLabelItem>
+              <DotIcon />
               Unlimited surveys for all of your needs
             </AnswerLabelItem>
-            <AnswerLabelItem>No coding required</AnswerLabelItem>
             <AnswerLabelItem>
+              <DotIcon />
+              No coding required
+            </AnswerLabelItem>
+            <AnswerLabelItem>
+              <DotIcon />
               Advanced analytics including a/b testing, completion rate, and
               much more
             </AnswerLabelItem>
@@ -133,29 +153,37 @@ const LandingPage: React.FC = () => {
           <QuestionContainer>
             <QuestionLabel>How much does this cost?</QuestionLabel>
             <AnswerLabel>
-              $49 / month. Feel free to cancel anytime. Start today with a 2
-              week free trial
+              $49 / month. Start today with a 2 week free trial. Cancel anytime
             </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>
         <FlowerImageSection src={flower3} />
       </FAQSectionContainer>
 
-      <PricingSectionContainer>
+      <PricingSectionContainer id="pricing">
         <SectionHeader>Pricing</SectionHeader>
         <PriceContainer>
           <Price>
             $49<Month>/month</Month>
           </Price>
-          <BenefitLabel>All you need to create beautiful surveys</BenefitLabel>
-          <AnswerLabel>Release survey to users in minutes</AnswerLabel>
-          <AnswerLabel>AB test different user groups</AnswerLabel>
-          <AnswerLabel>Advanced analytics</AnswerLabel>
-          <AnswerLabel>Unlimited Surveys</AnswerLabel>
-          <AnswerLabel>Fast support</AnswerLabel>
+          <PricingHeader>
+            All you need to create beautiful surveys
+          </PricingHeader>
+          <PricingLabelContainer>
+            {pricingBenefits.map((benefit, index) => {
+              return (
+                <div key={index}>
+                  <PricingLabel key={index}>
+                    <CheckCircledIcon key={index} /> {benefit}
+                  </PricingLabel>
+                </div>
+              );
+            })}
+          </PricingLabelContainer>
         </PriceContainer>
       </PricingSectionContainer>
-      <FlowerImageSection src={flower7} />
+      <FlowerImageSection src={flower7} style={{ marginBottom: "20px" }} />
+      <Footer>Copyright &copy; 2022 Blossom</Footer>
     </LandingPageContainer>
   );
 };

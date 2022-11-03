@@ -21,11 +21,12 @@ const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
     await applyActionCode(auth, oobCode)
       .then((response) => {
         console.log("success");
-        auth.currentUser?.reload().then((response) => {
-          console.log(auth.currentUser?.emailVerified);
-          console.log(auth.currentUser);
-          setVerified(true);
-        });
+        if (auth.currentUser) {
+          console.log("email verified: ", auth.currentUser.emailVerified);
+          auth.currentUser.reload().then((response) => {
+            setVerified(true);
+          });
+        }
 
         auth.onAuthStateChanged((user) => {
           if (user) {
