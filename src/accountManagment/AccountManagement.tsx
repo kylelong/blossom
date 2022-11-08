@@ -4,6 +4,8 @@ import ResetPassword from "../resetPassword/ResetPassword";
 import VerifyEmail from "../verifyEmail/VerifyEmail";
 import { auth } from "../firebase-config";
 import { checkActionCode } from "firebase/auth";
+
+// reset password & verify email
 const AccountManagement: React.FC = () => {
   const { search } = useLocation();
   const mode = new URLSearchParams(search).get("mode");

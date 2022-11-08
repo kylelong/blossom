@@ -8,8 +8,15 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   User,
+  UserCredential,
 } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { auth, app } from "../firebase-config";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 
 import {
   SignUpContainer,
@@ -27,6 +34,8 @@ import {
   eyeStyle,
 } from "./styles";
 
+const db = getFirestore(app);
+
 interface SignUpInfo {
   email: string;
   password: string;
@@ -41,8 +50,14 @@ const SignUp: React.FC = () => {
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
 
   let signUpSchema = yup.object().shape({
-    email: yup.string().email().required("email is required"),
-    password: yup.string().min(8).required("password is required"),
+    email: yup
+      .string()
+      .email()
+      .required("email is required"),
+    password: yup
+      .string()
+      .min(8)
+      .required("password is required"),
   });
 
   const sendConfirmationEmail = async (user: User) => {
@@ -64,6 +79,17 @@ const SignUp: React.FC = () => {
     }
   };
 
+  const addUser = async (userCredential: UserCredential) => {
+    await addDoc(collection(db, "users"), {
+      company: "",
+      email: signUpData.email,
+      uid: userCredential.user.uid,
+      confirmed: false,
+      contact: { firstName: "", lastName: "" },
+      createdAt: serverTimestamp(),
+    });
+  };
+
   const registerUser = async () => {
     await createUserWithEmailAndPassword(
       auth,
@@ -73,7 +99,7 @@ const SignUp: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         //TODO: use user across app in global state
-
+        addUser(userCredential);
         sendConfirmationEmail(userCredential.user);
       })
       .catch((error) => {

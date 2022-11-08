@@ -232,4 +232,5 @@ export const PricingSectionContainer = styled.div`
 
 export const Footer = styled.div`
   text-align: center;
+  padding-bottom: 10px;
 `;

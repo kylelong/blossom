@@ -1,16 +1,15 @@
 import React from "react";
 import Logo from "../Logo";
 import Menu from "./Menu";
+import { CheckCircledIcon, DotIcon } from "@radix-ui/react-icons";
 import flower from "../scandi-373.svg";
 import flower2 from "../scandi-331.svg"; // *
 import flower3 from "../scandi-334.svg"; // *
 import flower6 from "../scandi-360.svg"; // *
 import flower7 from "../scandi-370.svg"; // *
-// import increase_profits from "../increase_profits.svg";
 import happy_customer from "../happy_customer.svg";
 import team from "../team.svg";
 import money from "../purse.svg";
-import { CheckCircledIcon, DotIcon } from "@radix-ui/react-icons";
 
 import {
   LandingPageContainer,
@@ -43,6 +42,7 @@ import {
   PricingHeader,
   Footer,
 } from "./styles";
+
 const LandingPage: React.FC = () => {
   const pricingBenefits = [
     "Unlimited Surveys",
@@ -52,6 +52,7 @@ const LandingPage: React.FC = () => {
     "AB test different user groups",
     "Fast support",
   ];
+
   return (
     <LandingPageContainer>
       <HeaderContainer>
@@ -183,7 +184,7 @@ const LandingPage: React.FC = () => {
         </PriceContainer>
       </PricingSectionContainer>
       <FlowerImageSection src={flower7} style={{ marginBottom: "20px" }} />
-      <Footer>Copyright &copy; 2022 Blossom</Footer>
+      <Footer>Copyright &copy; Blossom</Footer>
     </LandingPageContainer>
   );
 };
