@@ -5,6 +5,7 @@ import Logo from "../Logo";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import { auth } from "../firebase-config";
 import { confirmPasswordReset } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 import {
   ResetPasswordContainer,
@@ -18,6 +19,8 @@ import {
   LogoContainer,
   ErrorList,
   PasswordReset,
+  LoginButton,
+  linkStyle,
 } from "./styles";
 
 interface Props {
@@ -108,32 +111,43 @@ const ResetPassword: React.FC<Props> = ({ oobCode }) => {
         <Logo />
         <FlowerImage src={flower} />
       </LogoContainer>
-      <Slogan>update your password</Slogan>
-      <ResetForm>
-        <PasswordContainer>
-          <InputBox
-            type={eyeIcon ? "password" : "text"}
-            placeholder="New Password"
-            name="password"
-            onChange={handleChange}
-          ></InputBox>
-          {eyeIcon ? (
-            <HiOutlineEye
-              style={eyeStyle}
-              onClick={() => setEyeIcon(!eyeIcon)}
-            />
-          ) : (
-            <HiOutlineEyeOff
-              style={eyeStyle}
-              onClick={() => setEyeIcon(!eyeIcon)}
-            />
-          )}
-        </PasswordContainer>
-        <ResetButton onClick={reset}>Update Password</ResetButton>
-      </ResetForm>
+      {!passwordReset && (
+        <>
+          <Slogan>update your password</Slogan>
+          <ResetForm>
+            <PasswordContainer>
+              <InputBox
+                type={eyeIcon ? "password" : "text"}
+                placeholder="New Password"
+                name="password"
+                onChange={handleChange}
+              ></InputBox>
+              {eyeIcon ? (
+                <HiOutlineEye
+                  style={eyeStyle}
+                  onClick={() => setEyeIcon(!eyeIcon)}
+                />
+              ) : (
+                <HiOutlineEyeOff
+                  style={eyeStyle}
+                  onClick={() => setEyeIcon(!eyeIcon)}
+                />
+              )}
+            </PasswordContainer>
+            <ResetButton onClick={reset}>Update Password</ResetButton>
+          </ResetForm>
+        </>
+      )}
 
       {passwordReset && (
-        <PasswordReset>password successfully updated &#x1F60A;</PasswordReset>
+        <>
+          {" "}
+          <PasswordReset>password successfully updated &#x1F60A;</PasswordReset>
+          <Link to="/login" style={linkStyle}>
+            {" "}
+            <LoginButton>Login</LoginButton>
+          </Link>
+        </>
       )}
 
       {

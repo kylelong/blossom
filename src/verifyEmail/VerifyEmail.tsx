@@ -8,6 +8,8 @@ import {
   LogoContainer,
   FlowerImage,
   VerifiedMessaged,
+  linkStyle,
+  LoginButton,
 } from "./styles";
 import {
   query,
@@ -18,6 +20,7 @@ import {
   updateDoc,
   collection,
 } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 const db = getFirestore(app);
 
@@ -33,7 +36,6 @@ const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
     const querySnapShot = await getDocs(q);
     querySnapShot.forEach((document) => {
       const docRef = doc(db, "users", document.id);
-      console.log(document.data(), document.id);
       updateDoc(docRef, {
         confirmed: true,
       });
@@ -53,12 +55,6 @@ const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
             }
           });
         }
-
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            console.log("SIGNED IN!!");
-          }
-        });
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +71,13 @@ const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
         <FlowerImage src={flower} />
       </LogoContainer>
       {verified && (
-        <VerifiedMessaged>Your email has been verified.</VerifiedMessaged>
+        <>
+          <VerifiedMessaged>Your email has been verified.</VerifiedMessaged>
+          <Link to="/login" style={linkStyle}>
+            {" "}
+            <LoginButton>Login</LoginButton>
+          </Link>
+        </>
       )}
     </VerifyEmailContainer>
   );

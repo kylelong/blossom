@@ -26,3 +26,26 @@ export const VerifiedMessaged = styled.div`
   font-size: 14px;
   font-weight: bold;
 `;
+
+export const linkStyle = {
+  textDecoration: "none",
+  color: "black",
+};
+
+export const LoginButton = styled.button`
+  height: 38px;
+  width: 257px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: white;
+  background-color: #355e3b;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 28px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

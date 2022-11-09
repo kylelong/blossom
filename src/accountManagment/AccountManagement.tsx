@@ -15,9 +15,13 @@ const AccountManagement: React.FC = () => {
 
   useEffect(() => {
     if (oobCode) {
-      checkActionCode(auth, oobCode).then((response) => {
-        setValidCode(true);
-      });
+      try {
+        checkActionCode(auth, oobCode).then((response) => {
+          setValidCode(true);
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }, [oobCode]);
 

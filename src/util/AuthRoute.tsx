@@ -9,7 +9,7 @@ import Loader from "../loader";
  * if the user is logged in
  */
 const AuthRoute: React.FC = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   if (loading) {
     return <Loader />;
   }

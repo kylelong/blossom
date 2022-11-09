@@ -65,24 +65,19 @@ const SignUp: React.FC = () => {
       // let actionCodeSettings = {
       //     url: "http://localhost:3000/confirm_email?email="+ user.email
       // }
-      await sendEmailVerification(user).then(() => {
-        // Email verification sent!
-        // ...
-        console.log("Email verification sent!");
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            console.log(user);
-            console.log("SIGNED IN!!");
-          }
-        });
-      });
+      try {
+        await sendEmailVerification(user);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
   const addUser = async (userCredential: UserCredential) => {
+    const email = signUpData.email;
     await addDoc(collection(db, "users"), {
       company: "",
-      email: signUpData.email,
+      email: email,
       uid: userCredential.user.uid,
       confirmed: false,
       contact: { firstName: "", lastName: "" },
@@ -98,7 +93,6 @@ const SignUp: React.FC = () => {
     )
       .then((userCredential) => {
         // Signed in
-        //TODO: use user across app in global state
         addUser(userCredential);
         sendConfirmationEmail(userCredential.user);
       })
