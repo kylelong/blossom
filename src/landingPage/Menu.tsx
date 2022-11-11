@@ -44,19 +44,19 @@ const Menu: React.FC = () => {
                 auth.signOut();
               }}
             >
-              Sign out
+              sign out
             </MenuItem>
-            <MenuItem>Account</MenuItem>
+            <MenuItem>account</MenuItem>
           </MenuContainer>
         );
       } else {
         return (
           <MenuContainer>
             <Link to="/login" style={{ textDecoration: "none" }}>
-              <MenuItem>Login</MenuItem>
+              <MenuItem>login</MenuItem>
             </Link>
             <Link to="/signup" style={{ textDecoration: "none" }}>
-              <MenuItem>Sign up</MenuItem>
+              <MenuItem>sign up</MenuItem>
             </Link>
           </MenuContainer>
         );

@@ -6,19 +6,32 @@ import {
   CubeIcon,
   Pencil2Icon,
 } from "@radix-ui/react-icons";
+import surveyMan from "../images/survey_man.svg";
+import Logo from "../Logo";
+import flower from "../images/scandi-373.svg";
+
+export const LogoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const FlowerImage = styled.img`
+  position: relative;
+  bottom: 4px;
+`;
 
 const NavigationContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 200px;
-  padding: 10px;
 `;
 
 const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  border-right: 3px solid #f8f8f8;
+  margin-right: -12px;
+  border-right: 3px solid #f3f3f3;
+  height: 100vh;
 `;
 
 const MenuIcon = styled.span`
@@ -41,6 +54,7 @@ const MenuItem = styled.div`
     cursor: pointer;
     color: white;
     padding: 10px;
+    font-weight: bold;
   }
 `;
 
@@ -48,6 +62,10 @@ const NavigationMenu: React.FC = () => {
   return (
     <NavigationContainer>
       <MenuContainer>
+        <LogoContainer>
+          <Logo />
+          <FlowerImage src={flower} />
+        </LogoContainer>
         <MenuItem>
           <MenuIcon>
             <DashboardIcon />
