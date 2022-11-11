@@ -1,25 +1,27 @@
 import React from "react";
 import Menu from "../landingPage/Menu";
 import Logo from "../Logo";
-import flower from "../scandi-373.svg";
+import flower from "../images/scandi-373.svg";
+import NavigationMenu from "./NavigationMenu";
 
 import {
   DashboardContainer,
   LogoContainer,
   FlowerImage,
-  Header,
+  HeaderContainer,
 } from "./styles";
 
 const Dashboard = () => {
   return (
     <DashboardContainer>
-      <Header>
+      <HeaderContainer>
         <LogoContainer>
           <Logo />
           <FlowerImage src={flower} />
         </LogoContainer>
         <Menu />
-      </Header>
+      </HeaderContainer>
+      <NavigationMenu />
     </DashboardContainer>
   );
 };

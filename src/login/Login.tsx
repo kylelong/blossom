@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Logo from "../Logo";
-import flower from "../scandi-373.svg";
+import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
@@ -77,14 +77,8 @@ const Login: React.FC = () => {
   };
 
   let loginSchema = yup.object().shape({
-    email: yup
-      .string()
-      .email()
-      .required("email is required"),
-    password: yup
-      .string()
-      .min(8)
-      .required("password is required"),
+    email: yup.string().email().required("email is required"),
+    password: yup.string().min(8).required("password is required"),
   });
 
   const onSubmit = (e: React.FormEvent) => {

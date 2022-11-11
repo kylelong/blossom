@@ -2,14 +2,14 @@ import React from "react";
 import Logo from "../Logo";
 import Menu from "./Menu";
 import { CheckCircledIcon, DotIcon } from "@radix-ui/react-icons";
-import flower from "../scandi-373.svg";
-import flower2 from "../scandi-331.svg"; // *
-import flower3 from "../scandi-334.svg"; // *
-import flower6 from "../scandi-360.svg"; // *
-import flower7 from "../scandi-370.svg"; // *
-import happy_customer from "../happy_customer.svg";
-import team from "../team.svg";
-import money from "../purse.svg";
+import flower from "../images/scandi-373.svg";
+import flower2 from "../images/scandi-331.svg"; // *
+import flower3 from "../images/scandi-334.svg"; // *
+import flower6 from "../images/scandi-360.svg"; // *
+import flower7 from "../images/scandi-370.svg"; // *
+import happy_customer from "../images/happy_customer.svg";
+import team from "../images/team.svg";
+import money from "../images/purse.svg";
 
 import {
   LandingPageContainer,
@@ -116,6 +116,30 @@ const LandingPage: React.FC = () => {
         <FlowerImageSection src={flower2} />
       </SectionContainer>
 
+      <PricingSectionContainer id="pricing">
+        <SectionHeader>Pricing</SectionHeader>
+        <PriceContainer>
+          <Price>
+            $49<Month>/month</Month>
+          </Price>
+          <PricingHeader>
+            All you need to create beautiful surveys
+          </PricingHeader>
+          <PricingLabelContainer>
+            {pricingBenefits.map((benefit, index) => {
+              return (
+                <div key={index}>
+                  <PricingLabel key={index}>
+                    <CheckCircledIcon key={index} /> {benefit}
+                  </PricingLabel>
+                </div>
+              );
+            })}
+          </PricingLabelContainer>
+        </PriceContainer>
+        <FlowerImageSection src={flower3} />
+      </PricingSectionContainer>
+
       <FAQSectionContainer>
         <SectionHeader>FAQs</SectionHeader>
         <FAQContainer>
@@ -158,33 +182,10 @@ const LandingPage: React.FC = () => {
             </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>
-        <FlowerImageSection src={flower3} />
       </FAQSectionContainer>
 
-      <PricingSectionContainer id="pricing">
-        <SectionHeader>Pricing</SectionHeader>
-        <PriceContainer>
-          <Price>
-            $49<Month>/month</Month>
-          </Price>
-          <PricingHeader>
-            All you need to create beautiful surveys
-          </PricingHeader>
-          <PricingLabelContainer>
-            {pricingBenefits.map((benefit, index) => {
-              return (
-                <div key={index}>
-                  <PricingLabel key={index}>
-                    <CheckCircledIcon key={index} /> {benefit}
-                  </PricingLabel>
-                </div>
-              );
-            })}
-          </PricingLabelContainer>
-        </PriceContainer>
-      </PricingSectionContainer>
       <FlowerImageSection src={flower7} style={{ marginBottom: "20px" }} />
-      <Footer>Copyright &copy; Blossom</Footer>
+      <Footer>Copyright {new Date().getFullYear()} &copy; Blossom</Footer>
     </LandingPageContainer>
   );
 };

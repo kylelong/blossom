@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { auth, app } from "../firebase-config";
 import { applyActionCode } from "firebase/auth";
 import Logo from "../Logo";
-import flower from "../scandi-373.svg";
+import flower from "../images/scandi-373.svg";
 import {
   VerifyEmailContainer,
   LogoContainer,

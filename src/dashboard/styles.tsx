@@ -2,14 +2,15 @@ import styled from "styled-components";
 
 export const DashboardContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
   position: relative;
   top: 10px;
   width: 100vw;
 `;
 
-export const Header = styled.div`
+// logo and menu
+export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;

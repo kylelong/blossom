@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import flower from "../scandi-373.svg";
+import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
 import Logo from "../Logo";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
