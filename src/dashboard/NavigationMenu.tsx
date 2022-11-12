@@ -5,8 +5,9 @@ import {
   ImageIcon,
   CubeIcon,
   Pencil2Icon,
+  ExitIcon,
+  GearIcon,
 } from "@radix-ui/react-icons";
-import surveyMan from "../images/survey_man.svg";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 
@@ -24,6 +25,9 @@ const NavigationContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 200px;
+  @media (max-width: 630px) {
+    width: unset;
+  }
 `;
 
 const MenuContainer = styled.div`
@@ -32,6 +36,9 @@ const MenuContainer = styled.div`
   margin-right: -12px;
   border-right: 3px solid #f3f3f3;
   height: 100vh;
+  @media (max-width: 630px) {
+    display: none;
+  }
 `;
 
 const MenuIcon = styled.span`
@@ -89,6 +96,18 @@ const NavigationMenu: React.FC = () => {
             <CubeIcon />
           </MenuIcon>
           analytics
+        </MenuItem>
+        <MenuItem>
+          <MenuIcon>
+            <GearIcon />
+          </MenuIcon>
+          account
+        </MenuItem>
+        <MenuItem>
+          <MenuIcon>
+            <ExitIcon />
+          </MenuIcon>
+          sign out
         </MenuItem>
       </MenuContainer>
     </NavigationContainer>

@@ -1,24 +1,20 @@
 import React from "react";
-import Menu from "../landingPage/Menu";
 import NavigationMenu from "./NavigationMenu";
+import MobileNavigationMenu from "./MobileNavigationMenu";
 
-import { DashboardContainer, HeaderContainer } from "./styles";
+import {
+  DashboardContainer,
+  HeaderContainer,
+  DashboardHeaderText,
+} from "./styles";
 
 const Dashboard = () => {
   return (
     <DashboardContainer>
       <NavigationMenu />
       <HeaderContainer>
-        <div
-          style={{
-            fontSize: "22px",
-            fontWeight: "bold",
-          }}
-        >
-          {" "}
-          dashboard
-        </div>
-        <Menu />
+        <MobileNavigationMenu />
+        <DashboardHeaderText>dashboard</DashboardHeaderText>
       </HeaderContainer>
     </DashboardContainer>
   );
