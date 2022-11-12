@@ -1,4 +1,5 @@
 import React from "react";
+import { auth } from "../firebase-config";
 import styled from "styled-components";
 import {
   DashboardIcon,
@@ -34,7 +35,7 @@ const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: -12px;
-  border-right: 3px solid #f3f3f3;
+  border-right: 1.8px solid #f3f3f3;
   height: 100vh;
   @media (max-width: 630px) {
     display: none;
@@ -103,7 +104,11 @@ const NavigationMenu: React.FC = () => {
           </MenuIcon>
           account
         </MenuItem>
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            auth.signOut();
+          }}
+        >
           <MenuIcon>
             <ExitIcon />
           </MenuIcon>

@@ -75,6 +75,7 @@ export const ResetButton = styled.button`
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 15px;
+  text-align: center;
 
   &:hover {
     cursor: pointer;

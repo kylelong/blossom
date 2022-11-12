@@ -1,5 +1,6 @@
 import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { auth } from "../firebase-config";
 import styled from "styled-components";
 import {
   HamburgerMenuIcon,
@@ -10,7 +11,7 @@ import {
   ExitIcon,
   GearIcon,
 } from "@radix-ui/react-icons";
-import "./mobilenavigationmenustyles.css";
+import "./mobile.css";
 
 export const MobileMenu = styled.div`
   @media (min-width: 631px) {
@@ -62,7 +63,12 @@ const MobileNavigationMenu: React.FC = () => {
               </div>
               account
             </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenuItem">
+            <DropdownMenu.Item
+              className="DropdownMenuItem"
+              onClick={() => {
+                auth.signOut();
+              }}
+            >
               <div className="RightSlot">
                 <ExitIcon />
               </div>

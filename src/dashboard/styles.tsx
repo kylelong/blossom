@@ -17,10 +17,31 @@ export const HeaderContainer = styled.div`
   width: 90vw;
   padding-top: 12px;
   @media (max-width: 630px) {
-    flex-direction: row;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     align-items: center;
   }
+`;
+
+export const SubLogoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 22px;
+  @media (min-width: 631px) {
+    display: none;
+  }
+`;
+
+export const LogoContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const FlowerImage = styled.img`
+  position: relative;
+  bottom: 4px;
+  width: 33px;
 `;
 
 export const DashboardHeaderText = styled.div`
