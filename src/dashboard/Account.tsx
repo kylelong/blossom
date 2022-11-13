@@ -3,14 +3,35 @@ import DashboardMenu from "./DashboardMenu";
 import { auth, app } from "../firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
+import * as Label from "@radix-ui/react-label";
 import {
   DashboardContainer,
   DashboardSectionContainer,
   DashboardContent,
   DashboardHeaderTextDesktop,
+  MenuContainer,
 } from "./styles";
+import "./analytics.css";
 import User from "./types";
 import Menu from "../landingPage/Menu";
+const CompanyForm = () => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 15,
+        alignItems: "start",
+        flexDirection: "row",
+      }}
+    >
+      <Label.Root className="LabelRoot" htmlFor="firstName">
+        Company:
+      </Label.Root>
+      <input className="Input" type="text" id="contact" placeholder="Google" />
+    </div>
+  );
+};
 
 const Account = () => {
   const [user] = useAuthState(auth);
@@ -39,9 +60,17 @@ const Account = () => {
         <DashboardMenu headerText={"account"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>account</DashboardHeaderTextDesktop>
-          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+          <div className="accountContainer">
+            <div className="accountLabel">
+              Email: <span className="accountField">{user?.email}</span>
+            </div>
+            {CompanyForm()}
+            <button className="updateBtn">Update</button>
+          </div>
         </DashboardContent>
-        <Menu />
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
       </DashboardSectionContainer>
     </DashboardContainer>
   );

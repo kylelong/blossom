@@ -12,10 +12,16 @@ export const DashboardSectionContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   text-align: center;
-  @media (max-width: 630px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     width: 100%;
     align-items: center;
+  }
+`;
+
+export const MenuContainer = styled.div`
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -24,7 +30,6 @@ export const DashboardSectionContainer = styled.div`
  */
 
 // logo and menu
-export const DashboardMenuContainer = styled.div``;
 
 // dashboard content
 export const DashboardContent = styled.div`
@@ -36,7 +41,7 @@ export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   padding-top: 12px;
-  @media (max-width: 630px) {
+  @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -48,7 +53,7 @@ export const SubLogoContainer = styled.div`
   display: flex;
   flex-direction: row;
   font-size: 22px;
-  @media (min-width: 631px) {
+  @media (min-width: 769px) {
     display: none;
   }
 `;
@@ -75,7 +80,7 @@ export const DashboardHeaderTextDesktop = styled.div`
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
-  @media (max-width: 630px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;

@@ -5,7 +5,6 @@ import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 
 import {
-  DashboardMenuContainer,
   HeaderContainer,
   DashboardHeaderText,
   LogoContainer,
@@ -19,7 +18,7 @@ interface Props {
 
 const DashboardMenu: React.FC<Props> = ({ headerText }) => {
   return (
-    <DashboardMenuContainer>
+    <div>
       <NavigationMenu />
       <HeaderContainer>
         <LogoContainer>
@@ -32,7 +31,7 @@ const DashboardMenu: React.FC<Props> = ({ headerText }) => {
 
         <MobileNavigationMenu />
       </HeaderContainer>
-    </DashboardMenuContainer>
+    </div>
   );
 };
 

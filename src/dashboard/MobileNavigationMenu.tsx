@@ -15,7 +15,7 @@ import {
 import "./mobile.css";
 
 export const MobileMenu = styled.div`
-  @media (min-width: 631px) {
+  @media (min-width: 769px) {
     display: none;
   }
 `;

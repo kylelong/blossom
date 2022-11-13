@@ -6,6 +6,7 @@ import {
   DashboardSectionContainer,
   DashboardContent,
   DashboardHeaderTextDesktop,
+  MenuContainer,
 } from "./styles";
 
 const Dashboard = () => {
@@ -17,7 +18,9 @@ const Dashboard = () => {
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
           <div>This is a dashboard for your surveys asdfasdfasdf</div>
         </DashboardContent>
-        <Menu />
+        <MenuContainer>
+          <Menu />
+        </MenuContainer>
       </DashboardSectionContainer>
     </DashboardContainer>
   );

@@ -6,6 +6,7 @@ export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 24px;
+  width: 155px;
 `;
 
 export const MenuItem = styled.div`
@@ -18,6 +19,10 @@ export const MenuItem = styled.div`
     cursor: pointer;
   }
 `;
+
+export const linkStyle = {
+  textDecoration: "none",
+};
 
 const Menu: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -46,16 +51,18 @@ const Menu: React.FC = () => {
             >
               sign out
             </MenuItem>
-            <MenuItem>account</MenuItem>
+            <Link to="/account" style={linkStyle}>
+              <MenuItem>account</MenuItem>
+            </Link>
           </MenuContainer>
         );
       } else {
         return (
           <MenuContainer>
-            <Link to="/login" style={{ textDecoration: "none" }}>
+            <Link to="/login" style={linkStyle}>
               <MenuItem>login</MenuItem>
             </Link>
-            <Link to="/signup" style={{ textDecoration: "none" }}>
+            <Link to="/signup" style={linkStyle}>
               <MenuItem>sign up</MenuItem>
             </Link>
           </MenuContainer>

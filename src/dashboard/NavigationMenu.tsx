@@ -26,7 +26,7 @@ export const FlowerImage = styled.img`
 const NavigationContainer = styled.div`
   display: flex;
   flex-direction: column;
-  @media (max-width: 630px) {
+  @media (max-width: 768px) {
     width: unset;
   }
 `;
@@ -37,7 +37,7 @@ const MenuContainer = styled.div`
   margin-right: -12px;
   border-right: 1.8px solid #f3f3f3;
   height: 100vh;
-  @media (max-width: 630px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
