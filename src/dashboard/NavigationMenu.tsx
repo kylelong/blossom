@@ -1,6 +1,7 @@
 import React from "react";
 import { auth } from "../firebase-config";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import {
   DashboardIcon,
   ImageIcon,
@@ -11,6 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
+import { link } from "fs";
 
 export const LogoContainer = styled.div`
   display: flex;
@@ -66,6 +68,11 @@ const MenuItem = styled.div`
   }
 `;
 
+const linkStyle = {
+  textDecoration: "none",
+  color: "black",
+};
+
 const NavigationMenu: React.FC = () => {
   return (
     <NavigationContainer>
@@ -74,36 +81,46 @@ const NavigationMenu: React.FC = () => {
           <Logo />
           <FlowerImage src={flower} />
         </LogoContainer>
-        <MenuItem>
-          <MenuIcon>
-            <DashboardIcon />
-          </MenuIcon>
-          dashboard
-        </MenuItem>
-        <MenuItem>
-          <MenuIcon>
-            <ImageIcon />
-          </MenuIcon>
-          create
-        </MenuItem>
-        <MenuItem>
-          <MenuIcon>
-            <Pencil2Icon />
-          </MenuIcon>
-          surveys
-        </MenuItem>
-        <MenuItem>
-          <MenuIcon>
-            <CubeIcon />
-          </MenuIcon>
-          analytics
-        </MenuItem>
-        <MenuItem>
-          <MenuIcon>
-            <GearIcon />
-          </MenuIcon>
-          account
-        </MenuItem>
+        <Link to="/dashboard" style={linkStyle}>
+          <MenuItem>
+            <MenuIcon>
+              <DashboardIcon />
+            </MenuIcon>
+            dashboard
+          </MenuItem>
+        </Link>
+        <Link to="/create" style={linkStyle}>
+          <MenuItem>
+            <MenuIcon>
+              <ImageIcon />
+            </MenuIcon>
+            create
+          </MenuItem>
+        </Link>
+        <Link to="/surveys" style={linkStyle}>
+          <MenuItem>
+            <MenuIcon>
+              <Pencil2Icon />
+            </MenuIcon>
+            surveys
+          </MenuItem>
+        </Link>
+        <Link to="/analytics" style={linkStyle}>
+          <MenuItem>
+            <MenuIcon>
+              <CubeIcon />
+            </MenuIcon>
+            analytics
+          </MenuItem>
+        </Link>
+        <Link to="/account" style={linkStyle}>
+          <MenuItem>
+            <MenuIcon>
+              <GearIcon />
+            </MenuIcon>
+            account
+          </MenuItem>
+        </Link>
         <MenuItem
           onClick={() => {
             auth.signOut();

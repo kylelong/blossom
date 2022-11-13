@@ -1,7 +1,14 @@
-import Reac from "react";
+import React from "react";
+import DashboardMenu from "./DashboardMenu";
 
-const Surveys: React.FC = () => {
-  return <div></div>;
+import { DashboardContainer } from "./styles";
+
+const Surveys = () => {
+  return (
+    <DashboardContainer>
+      <DashboardMenu headerText={"surveys"} />
+    </DashboardContainer>
+  );
 };
 
 export default Surveys;

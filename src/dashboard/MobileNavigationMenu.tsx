@@ -2,6 +2,7 @@ import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { auth } from "../firebase-config";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import {
   HamburgerMenuIcon,
   DashboardIcon,
@@ -19,6 +20,11 @@ export const MobileMenu = styled.div`
   }
 `;
 
+const linkStyle = {
+  textDecoration: "none",
+  color: "black",
+};
+
 const MobileNavigationMenu: React.FC = () => {
   return (
     <MobileMenu>
@@ -31,38 +37,50 @@ const MobileNavigationMenu: React.FC = () => {
 
         <DropdownMenu.Portal>
           <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
-            <DropdownMenu.Item className="DropdownMenuItem">
-              <div className="RightSlot">
-                <DashboardIcon />
-              </div>
-              dashboard
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenuItem">
-              <div className="RightSlot">
-                <ImageIcon />
-              </div>
-              create
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenuItem">
-              <div className="RightSlot">
-                <Pencil2Icon />
-              </div>
-              surveys
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className="DropdownMenuItem">
-              <div className="RightSlot">
-                <CubeIcon />
-              </div>{" "}
-              analytics
-            </DropdownMenu.Item>
+            <Link to="/dashboard" style={linkStyle}>
+              <DropdownMenu.Item className="DropdownMenuItem">
+                <div className="RightSlot">
+                  <DashboardIcon />
+                </div>
+                dashboard
+              </DropdownMenu.Item>
+            </Link>
+
+            <Link to="/create" style={linkStyle}>
+              <DropdownMenu.Item className="DropdownMenuItem">
+                <div className="RightSlot">
+                  <ImageIcon />
+                </div>
+                create
+              </DropdownMenu.Item>
+            </Link>
+
+            <Link to="/surveys" style={linkStyle}>
+              <DropdownMenu.Item className="DropdownMenuItem">
+                <div className="RightSlot">
+                  <Pencil2Icon />
+                </div>
+                surveys
+              </DropdownMenu.Item>
+            </Link>
+            <Link to="/analytics" style={linkStyle}>
+              <DropdownMenu.Item className="DropdownMenuItem">
+                <div className="RightSlot">
+                  <CubeIcon />
+                </div>{" "}
+                analytics
+              </DropdownMenu.Item>
+            </Link>
 
             <DropdownMenu.Separator className="DropdownMenuSeparator" />
-            <DropdownMenu.Item className="DropdownMenuItem">
-              <div className="RightSlot">
-                <GearIcon />
-              </div>
-              account
-            </DropdownMenu.Item>
+            <Link to="/dashboard" style={linkStyle}>
+              <DropdownMenu.Item className="DropdownMenuItem">
+                <div className="RightSlot">
+                  <GearIcon />
+                </div>
+                account
+              </DropdownMenu.Item>
+            </Link>
             <DropdownMenu.Item
               className="DropdownMenuItem"
               onClick={() => {

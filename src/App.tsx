@@ -9,6 +9,10 @@ import Dashboard from "./dashboard/Dashboard";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthRoute from "./util/AuthRoute";
 import AuthRouteLoggedOut from "./util/AuthRouteLoggedOut";
+import Create from "./dashboard/Create";
+import Surveys from "./dashboard/Surveys";
+import Analytics from "./dashboard/Analytics";
+import Account from "./dashboard/Account";
 
 function App() {
   return (
@@ -23,13 +27,11 @@ function App() {
 
           <Route element={<AuthRouteLoggedOut />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>
-            {/**
-             *  <Route path="/dashboard" element={<Dashboard />}></Route>
-             *  <Route path="/create" element={<Create />}></Route>
-             *  <Route path="/surveys" element={<Surveys />}></Route>
-             *  <Route path="/analytics" element={<Analytics />}></Route>
-             *  <Route path="/account" element={<Account />}></Route>
-             */}
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/create" element={<Create />}></Route>
+            <Route path="/surveys" element={<Surveys />}></Route>
+            <Route path="/analytics" element={<Analytics />}></Route>
+            <Route path="/account" element={<Account />}></Route>
           </Route>
 
           <Route path="/reset" element={<ForgotPassword />}></Route>

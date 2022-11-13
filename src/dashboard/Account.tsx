@@ -3,12 +3,12 @@ import DashboardMenu from "./DashboardMenu";
 
 import { DashboardContainer } from "./styles";
 
-const Create = () => {
+const Account = () => {
   return (
     <DashboardContainer>
-      <DashboardMenu headerText={"create"} />
+      <DashboardMenu headerText={"account"} />
     </DashboardContainer>
   );
 };
 
-export default Create;
+export default Account;
