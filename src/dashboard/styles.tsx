@@ -3,18 +3,38 @@ import styled from "styled-components";
 
 export const DashboardContainer = styled.div`
   display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  width: 100vw;
+  flex-direction: column;
   padding: 10px;
 `;
 
+export const DashboardSectionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+  @media (max-width: 630px) {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+`;
+
+/**
+ * make header display none when px < 630
+ */
+
 // logo and menu
+export const DashboardMenuContainer = styled.div``;
+
+// dashboard content
+export const DashboardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 export const HeaderContainer = styled.div`
   display: flex;
-  justify-content: space-around;
   flex-direction: row;
-  width: 90vw;
   padding-top: 12px;
   @media (max-width: 630px) {
     display: flex;
@@ -44,8 +64,18 @@ export const FlowerImage = styled.img`
   width: 33px;
 `;
 
+/* end of header menu */
+
 export const DashboardHeaderText = styled.div`
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
+`;
+export const DashboardHeaderTextDesktop = styled.div`
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  @media (max-width: 630px) {
+    display: none;
+  }
 `;

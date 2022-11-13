@@ -73,7 +73,7 @@ const MobileNavigationMenu: React.FC = () => {
             </Link>
 
             <DropdownMenu.Separator className="DropdownMenuSeparator" />
-            <Link to="/dashboard" style={linkStyle}>
+            <Link to="/account" style={linkStyle}>
               <DropdownMenu.Item className="DropdownMenuItem">
                 <div className="RightSlot">
                   <GearIcon />

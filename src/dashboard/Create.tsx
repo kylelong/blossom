@@ -1,14 +1,26 @@
 import React from "react";
 import DashboardMenu from "./DashboardMenu";
+import Menu from "../landingPage/Menu";
+import {
+  DashboardContainer,
+  DashboardSectionContainer,
+  DashboardContent,
+  DashboardHeaderTextDesktop,
+} from "./styles";
 
-import { DashboardContainer } from "./styles";
-
-const Create = () => {
+const Dashboard = () => {
   return (
     <DashboardContainer>
-      <DashboardMenu headerText={"create"} />
+      <DashboardSectionContainer>
+        <DashboardMenu headerText={"create"} />
+        <DashboardContent>
+          <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
+          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+        </DashboardContent>
+        <Menu />
+      </DashboardSectionContainer>
     </DashboardContainer>
   );
 };
 
-export default Create;
+export default Dashboard;

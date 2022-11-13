@@ -1,12 +1,24 @@
 import React from "react";
 import DashboardMenu from "./DashboardMenu";
-
-import { DashboardContainer } from "./styles";
+import Menu from "../landingPage/Menu";
+import {
+  DashboardContainer,
+  DashboardSectionContainer,
+  DashboardContent,
+  DashboardHeaderTextDesktop,
+} from "./styles";
 
 const Dashboard = () => {
   return (
     <DashboardContainer>
-      <DashboardMenu headerText={"dashboard"} />
+      <DashboardSectionContainer>
+        <DashboardMenu headerText={"dashboard"} />
+        <DashboardContent>
+          <DashboardHeaderTextDesktop>dashboard</DashboardHeaderTextDesktop>
+          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+        </DashboardContent>
+        <Menu />
+      </DashboardSectionContainer>
     </DashboardContainer>
   );
 };

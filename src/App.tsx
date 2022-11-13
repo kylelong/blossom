@@ -27,7 +27,6 @@ function App() {
 
           <Route element={<AuthRouteLoggedOut />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>
-            <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/create" element={<Create />}></Route>
             <Route path="/surveys" element={<Surveys />}></Route>
             <Route path="/analytics" element={<Analytics />}></Route>

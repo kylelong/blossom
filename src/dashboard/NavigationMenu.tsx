@@ -12,7 +12,6 @@ import {
 } from "@radix-ui/react-icons";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
-import { link } from "fs";
 
 export const LogoContainer = styled.div`
   display: flex;
@@ -27,7 +26,6 @@ export const FlowerImage = styled.img`
 const NavigationContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 200px;
   @media (max-width: 630px) {
     width: unset;
   }
@@ -57,6 +55,7 @@ const MenuItem = styled.div`
   margin-bottom: 12px;
   padding: 10px;
   border: 1px transparent solid;
+  text-align: left;
   &:hover {
     background-color: #fa5f55;
     border: 1px white solid;
@@ -113,24 +112,6 @@ const NavigationMenu: React.FC = () => {
             analytics
           </MenuItem>
         </Link>
-        <Link to="/account" style={linkStyle}>
-          <MenuItem>
-            <MenuIcon>
-              <GearIcon />
-            </MenuIcon>
-            account
-          </MenuItem>
-        </Link>
-        <MenuItem
-          onClick={() => {
-            auth.signOut();
-          }}
-        >
-          <MenuIcon>
-            <ExitIcon />
-          </MenuIcon>
-          sign out
-        </MenuItem>
       </MenuContainer>
     </NavigationContainer>
   );

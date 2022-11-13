@@ -11,12 +11,7 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { auth, app } from "../firebase-config";
-import {
-  addDoc,
-  collection,
-  getFirestore,
-  serverTimestamp,
-} from "firebase/firestore";
+import { getFirestore, serverTimestamp, setDoc, doc } from "firebase/firestore";
 
 import {
   SignUpContainer,
@@ -69,11 +64,14 @@ const SignUp: React.FC = () => {
 
   const addUser = async (userCredential: UserCredential) => {
     const email = signUpData.email;
-    await addDoc(collection(db, "users"), {
+    // make doc id the user id
+    const uid = userCredential.user.uid;
+    await setDoc(doc(db, "users", uid), {
       company: "",
       email: email,
-      uid: userCredential.user.uid,
+      uid: uid,
       confirmed: false,
+      premium: false, // update to true on stripe confirmation page
       contact: { firstName: "", lastName: "" },
       createdAt: serverTimestamp(),
     });

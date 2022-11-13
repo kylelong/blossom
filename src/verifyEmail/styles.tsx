@@ -44,6 +44,7 @@ export const LoginButton = styled.button`
   font-size: 14px;
   font-weight: bold;
   margin-top: 28px;
+  text-align: center;
 
   &:hover {
     cursor: pointer;

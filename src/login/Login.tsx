@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         //TODO: use user across app in global state
-        const user = userCredential.user;
+        // const user = userCredential.user;
         // console.log(user);
         // ...
       })
