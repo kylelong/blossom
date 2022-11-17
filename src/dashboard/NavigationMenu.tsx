@@ -1,14 +1,12 @@
 import React from "react";
-import { auth } from "../firebase-config";
+import {auth} from "../firebase-config";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import {
   DashboardIcon,
   ImageIcon,
   CubeIcon,
   Pencil2Icon,
-  ExitIcon,
-  GearIcon,
 } from "@radix-ui/react-icons";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";

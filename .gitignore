@@ -12,6 +12,7 @@ functions/
 remoteconfig.template.json
 storage.rules
 notes.txt
+schema.txt
 
 # dependencies
 /node_modules

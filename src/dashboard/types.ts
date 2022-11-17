@@ -1,5 +1,3 @@
-import { userInfo } from "os";
-
 type User = {
   company: string;
   confirmed: boolean;

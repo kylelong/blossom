@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
 import {
@@ -10,19 +10,19 @@ import {
 } from "./styles";
 
 const Dashboard = () => {
-  const [surveyCount, setSurveyCount] = useState<number>(0);
+  // const [surveyCount, setSurveyCount] = useState<number>(0);
   return (
     <DashboardContainer>
       <DashboardSectionContainer>
         <DashboardMenu headerText={"dashboard"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>dashboard</DashboardHeaderTextDesktop>
-          {surveyCount === 0 && (
+          {/* {surveyCount === 0 && (
             <div>
               Click here to create a survey. Once you create surveys you will
               see metrics here. This is dummy text
             </div>
-          )}
+          )} */}
         </DashboardContent>
         <MenuContainer>
           <Menu />

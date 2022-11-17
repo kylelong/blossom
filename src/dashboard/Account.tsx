@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import DashboardMenu from "./DashboardMenu";
-import { auth, app } from "../firebase-config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import {auth, app} from "../firebase-config";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
+import {useForm} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
 import {
   DashboardContainer,
@@ -12,47 +13,61 @@ import {
   MenuContainer,
 } from "./styles";
 import "./analytics.css";
-import User from "./types";
+// import User from "./types";
 import Menu from "../landingPage/Menu";
-const CompanyForm = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 15,
-        alignItems: "start",
-        flexDirection: "row",
-      }}
-    >
-      <Label.Root className="LabelRoot" htmlFor="firstName">
-        Company:
-      </Label.Root>
-      <input className="Input" type="text" id="contact" placeholder="Google" />
-    </div>
-  );
+
+type accountData = {
+  company: string;
 };
 
 const Account = () => {
   const [user] = useAuthState(auth);
-  const [userData, setUserData] = useState<User | null>(null);
   const db = getFirestore(app);
-  const userInfo = async () => {
+
+  // const [userData, setUserData] = useState<User | null>(null);
+  // from firebase
+  const [currentCompany, setCurrentCompany] = useState<string | undefined>("");
+  const {register, handleSubmit} = useForm<accountData>({
+    defaultValues: {
+      company: "",
+    },
+  });
+
+  const updateCompany = async (company: string) => {
+    if (user) {
+      const userDoc = doc(db, "users", user.uid);
+      try {
+        await updateDoc(userDoc, {
+          company: company,
+        });
+        setCurrentCompany(company);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const userInfo = useCallback(async () => {
     if (user?.uid) {
       const userDoc = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDoc);
 
       if (userDocSnap.exists()) {
-        setUserData(userDocSnap.data() as User);
+        // setUserData(userDocSnap.data() as User);
+        setCurrentCompany(userDocSnap.data().company);
       } else {
         console.log("no document");
       }
     }
-  };
+  }, [db, user?.uid]);
 
   useEffect(() => {
     userInfo();
-  }, [user]);
+  }, [userInfo]);
+
+  const onSubmit = handleSubmit(({company}) => {
+    updateCompany(company);
+  });
 
   return (
     <DashboardContainer>
@@ -64,8 +79,30 @@ const Account = () => {
             <div className="accountLabel">
               Email: <span className="accountField">{user?.email}</span>
             </div>
-            {CompanyForm()}
-            <button className="updateBtn">Update</button>
+            <form
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 5,
+                alignItems: "start",
+                flexDirection: "column",
+              }}
+              onSubmit={onSubmit}
+            >
+              <Label.Root className="LabelRoot" htmlFor="firstName">
+                Company: <span>{currentCompany}</span>
+              </Label.Root>
+              <input
+                {...register("company")}
+                className="Input"
+                type="text"
+                name="company"
+                id="contact"
+              />
+              <button className="updateBtn" type="submit">
+                Update
+              </button>
+            </form>
           </div>
         </DashboardContent>
         <MenuContainer>
