@@ -10,13 +10,13 @@ import {
   LogoContainer,
   FlowerImage,
   SubLogoContainer,
-} from "./styles";
+} from "./dashboardStyles";
 
 interface Props {
   headerText?: string;
 }
 
-const DashboardMenu: React.FC<Props> = ({ headerText }) => {
+const DashboardMenu: React.FC<Props> = ({headerText}) => {
   return (
     <div>
       <NavigationMenu />

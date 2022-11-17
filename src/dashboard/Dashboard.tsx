@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
 import {
@@ -7,7 +7,7 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
-} from "./styles";
+} from "./dashboardStyles";
 
 const Dashboard = () => {
   // const [surveyCount, setSurveyCount] = useState<number>(0);

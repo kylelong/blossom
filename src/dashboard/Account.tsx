@@ -11,7 +11,7 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
-} from "./styles";
+} from "./dashboardStyles";
 import "./analytics.css";
 // import User from "./types";
 import Menu from "../landingPage/Menu";

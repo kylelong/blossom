@@ -7,7 +7,7 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
-} from "./styles";
+} from "./dashboardStyles";
 
 const Dashboard = () => {
   return (
