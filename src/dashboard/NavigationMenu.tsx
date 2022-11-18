@@ -1,5 +1,4 @@
 import React from "react";
-import {auth} from "../firebase-config";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {
