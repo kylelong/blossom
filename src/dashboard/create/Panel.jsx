@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
-import {auth} from "../../firebase-config";
+// import {auth} from "../../firebase-config";
 import QuestionPanel from "./questions/QuestionPanel";
 
-import {useAuthState} from "react-firebase-hooks/auth";
+// import {useAuthState} from "react-firebase-hooks/auth";
 // import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
 import "./panel.css";
 
@@ -22,7 +22,7 @@ const Panel = () => {
         alignItems: "start",
         flexDirection: "column",
       }}
-      onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
+      onChange={handleSubmit((data) => setData(JSON.stringify(data)))}
     >
       <Label.Root className="LabelRoot" htmlFor="surveyTitle">
         Survey Title:
@@ -38,6 +38,7 @@ const Panel = () => {
       <button className="publishBtn panelBtn" type="submit">
         Publish
       </button>
+      <div>{JSON.parse(data).surveyTitle}</div>
     </form>
   );
 };
