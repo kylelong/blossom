@@ -112,6 +112,7 @@ h3 {
 }
 
 .AccordionItem {
+  width: 322px;
   overflow: hidden;
   margin-top: 1px;
 }
@@ -204,3 +205,25 @@ h3 {
   display: flex;
   flex-direction: column;
 }
+
+/** Panel.jsx **/
+
+.panelContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  width: 50vw;
+  justify-content: space-between;
+}
+.surveyContainer {
+  display: flex;
+  flex-direction: column;
+}
+/* .formContainer {
+} */
+.surveyName {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/** end of Panel.jsx **/

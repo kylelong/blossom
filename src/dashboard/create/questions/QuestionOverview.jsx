@@ -29,17 +29,28 @@ const AccordionContent = React.forwardRef(
   )
 );
 
-const QuestionOverview = ({questions, removeQuestion}) => {
+const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
   return (
     <>
       {questions.map((question, index) => {
-        let label = `Question ${index + 1} - ${question}`; //question 1 - 4twerg9
+        let label = `Question ${index + 1} - ${question.hash}`; //question 1 - 4twerg9
         return (
           <React.Fragment key={index}>
             <Accordion.Item className="AccordionItem" value={`item-${index}`}>
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
                 <div>{label}</div>
+                <input
+                  type="text"
+                  placeholder="question title"
+                  onChange={(e) => {
+                    updateQuestion(question.hash, e.target.value);
+                    // console.log(
+                    //   `updating question with hash ${question.hash} question title to be`,
+                    //   e.target.value
+                    // );
+                  }}
+                ></input>
                 <button
                   className="removeQuestionBtn panelBtn"
                   onClick={() => removeQuestion(index)}

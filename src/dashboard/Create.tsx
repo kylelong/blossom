@@ -17,7 +17,7 @@ const Dashboard = () => {
         <DashboardMenu headerText={"create"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
-          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+          <div>Create a new survey below</div>
           <Panel />
         </DashboardContent>
         <MenuContainer>
