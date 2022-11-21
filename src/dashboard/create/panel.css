@@ -115,6 +115,7 @@ h3 {
   width: 322px;
   overflow: hidden;
   margin-top: 1px;
+  border-bottom: 1px solid var(--mauve6);
 }
 
 .AccordionItem:first-child {
@@ -131,7 +132,7 @@ h3 {
 .AccordionItem:focus-within {
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 0 2px var(--mauve12);
+  box-shadow: 0 0 0 1px var(--mauve11);
 }
 
 .AccordionHeader {
@@ -173,6 +174,7 @@ h3 {
 
 .AccordionContentText {
   padding: 15px 20px;
+  text-align: left;
 }
 
 .AccordionChevron {
@@ -224,6 +226,23 @@ h3 {
 .surveyName {
   font-size: 22px;
   font-weight: bold;
+}
+.questionTitle {
+  all: unset;
+  width: 250px;
+  display: inline-flex;
+  text-align: left;
+  border-radius: 4px;
+  padding: 0 10px;
+  height: 35px;
+  font-size: 15px;
+  line-height: 1;
+  color: black;
+  background-color: white;
+  box-shadow: 0 0 0 1px var(--blackA9);
+}
+.questionTitle:focus {
+  box-shadow: 0 0 0 2px #355e3b;
 }
 
 /** end of Panel.jsx **/

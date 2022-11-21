@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import * as Accordion from "@radix-ui/react-accordion";
+import * as Label from "@radix-ui/react-label";
 import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
 import classNames from "classnames";
+import QuestionTypeSelectMenu from "./QuestionTypeSelectMenu";
+import "./questionoverview.css";
 const AccordionTrigger = React.forwardRef(
   ({children, className, ...props}, forwardedRef) => (
     <Accordion.Header className="AccordionHeader">
@@ -29,38 +32,72 @@ const AccordionContent = React.forwardRef(
   )
 );
 
-const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
+const QuestionOverview = ({
+  questions,
+  removeQuestion,
+  updateQuestion,
+  updateQuestionTypeTwo,
+}) => {
+  const [questionType, setQuestionType] = useState("");
+  const [questionHash, setQuestionHash] = useState("");
+  const updateQuestionType = (type) => {
+    setQuestionType(type);
+    updateQuestionTypeTwo(questionHash, type);
+  };
+  const hasOptions = ["single_select", "multi_select"].includes(questionType);
+  useEffect(() => {
+    console.log(questionType);
+  }, [questionHash]);
   return (
     <>
       {questions.map((question, index) => {
-        let label = `Question ${index + 1} - ${question.hash}`; //question 1 - 4twerg9
+        let label = `Question ${index + 1}`; //question 1 - 4twerg9
         return (
-          <React.Fragment key={index}>
+          <div key={index} onClick={() => setQuestionHash(question.hash)}>
             <Accordion.Item className="AccordionItem" value={`item-${index}`}>
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
-                <div>{label}</div>
+                <Label.Root className="LabelRoot" htmlFor="surveyTitle">
+                  Title:
+                </Label.Root>
                 <input
                   type="text"
-                  placeholder="question title"
+                  className="questionTitle"
+                  placeholder="Question title"
+                  value={question.questionTitle ? question.questionTitle : ""}
                   onChange={(e) => {
                     updateQuestion(question.hash, e.target.value);
-                    // console.log(
-                    //   `updating question with hash ${question.hash} question title to be`,
-                    //   e.target.value
-                    // );
                   }}
                 ></input>
-                <button
-                  className="removeQuestionBtn panelBtn"
-                  onClick={() => removeQuestion(index)}
-                >
-                  Remove
-                  <MinusCircledIcon style={{marginLeft: "5px"}} />
-                </button>
+                <div className="questionDetailsContainer">
+                  <div className="questionTypeContainer">
+                    <QuestionTypeSelectMenu
+                      updateQuestionType={updateQuestionType}
+                      defaultQuestionType={question.questionType}
+                    />
+                    {/* <Label.Root className="LabelRoot" htmlFor="surveyTitle">
+                      # of answer choices:
+                    </Label.Root> */}
+                    {hasOptions && (
+                      <input
+                        type="text"
+                        className="answerChoices"
+                        placeholder="# of answers"
+                      ></input>
+                    )}
+                  </div>
+
+                  <button
+                    className="removeQuestionBtn panelBtn"
+                    onClick={() => removeQuestion(index)}
+                  >
+                    Remove
+                    <MinusCircledIcon style={{marginLeft: "5px"}} />
+                  </button>
+                </div>
               </AccordionContent>
             </Accordion.Item>
-          </React.Fragment>
+          </div>
         );
       })}
     </>

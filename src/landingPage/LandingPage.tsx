@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "../Logo";
 import Menu from "./Menu";
-import { CheckCircledIcon, DotIcon } from "@radix-ui/react-icons";
+import {CheckCircledIcon, DotIcon} from "@radix-ui/react-icons";
 import flower from "../images/scandi-373.svg";
 import flower2 from "../images/scandi-331.svg"; // *
 import flower3 from "../images/scandi-334.svg"; // *
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
         <SectionHeader>Pricing</SectionHeader>
         <PriceContainer>
           <Price>
-            $49<Month>/month</Month>
+            $25<Month>/month</Month>
           </Price>
           <PricingHeader>
             All you need to create beautiful surveys
@@ -184,7 +184,7 @@ const LandingPage: React.FC = () => {
         </FAQContainer>
       </FAQSectionContainer>
 
-      <FlowerImageSection src={flower7} style={{ marginBottom: "20px" }} />
+      <FlowerImageSection src={flower7} style={{marginBottom: "20px"}} />
       <Footer>Copyright {new Date().getFullYear()} &copy; Blossom</Footer>
     </LandingPageContainer>
   );

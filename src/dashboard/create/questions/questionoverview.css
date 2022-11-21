@@ -1,0 +1,27 @@
+.questionDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+}
+.questionTypeContainer {
+  display: flex;
+  flex-direction: row;
+}
+.answerChoices {
+  all: unset;
+  display: inline-flex;
+  width: 105px;
+  margin-left: 10px;
+  text-align: left;
+  border-radius: 4px;
+  padding: 0 10px;
+  height: 35px;
+  font-size: 15px;
+  line-height: 1;
+  color: black;
+  background-color: white;
+  box-shadow: 0 0 0 1px var(--blackA9);
+}
+.answerChoices:focus {
+  box-shadow: 0 0 0 2px #355e3b;
+}

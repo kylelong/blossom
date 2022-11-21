@@ -1,48 +1,76 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {useForm} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
-// import {auth} from "../../firebase-config";
-// import {useAuthState} from "react-firebase-hooks/auth";
-// import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
-import QuestionPanel from "./questions/QuestionPanel";
+import {PlusCircledIcon} from "@radix-ui/react-icons";
+import * as Accordion from "@radix-ui/react-accordion";
+import QuestionOverview from "./questions/QuestionOverview";
 import "./panel.css";
 
 const Panel = () => {
-  // const [user] = useAuthState(auth);
   const {register, handleSubmit} = useForm();
   const [data, setData] = useState("Survey Title");
   const [surveyName, setSurveyName] = useState("Survey Title");
-  const [questionData, setQuestionData] = useState([]);
+  const [questions, setQuestions] = useState([]);
+
+  const addQuestion = () => {
+    let data = {
+      questionTitle: "",
+      index: questions.length,
+      questionType: "",
+      answerChoices: [],
+      hash: randomHash(),
+    };
+    setQuestions((questions) => [...questions, data]);
+  };
+
+  const randomHash = () => {
+    return Math.random().toString(36).substr(2, 10);
+  };
+
+  // update index
+  const removeQuestion = (index) => {
+    setQuestions((prevState) => {
+      const questions = [...prevState];
+      questions.splice(index, 1);
+      return questions;
+    });
+  };
+
+  const updateQuestion = useCallback(
+    (hash, title) => {
+      let copy = [...questions];
+      let index = copy.findIndex((element) => element.hash === hash);
+      copy[index].questionTitle = title;
+      setQuestions(copy);
+    },
+    [questions]
+  );
+
+  const updateQuestionType = useCallback(
+    (hash, questionType) => {
+      let copy = [...questions];
+      let index = copy.findIndex((element) => element.hash === hash);
+      copy[index].questionType = questionType;
+      setQuestions(copy);
+    },
+    [questions]
+  );
 
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
-  }, [surveyName, questionData]);
-
-  const getQuestions = (questions) => {
-    setQuestionData(questions);
-  };
-
-  const updateQuestion = useCallback(
-    (hash, title) => {
-      let copy = questionData;
-      let index = copy.findIndex((element) => element.hash === hash);
-      copy[index].questionTitle = title;
-      setQuestionData(copy);
-      console.log(questionData);
-    },
-    [questionData]
-  );
+  }, [surveyName, questions]);
 
   return (
     <div className="panelContainer">
       <div className="surveyContainer">
         <div className="surveyName">{surveyName}</div>
-        {questionData.map((question, index) => {
+        {questions.map((question, index) => {
           return (
             <div key={index}>
-              {question.hash} - {question.questionTitle}
+              {question.hash} - {question.questionTitle} -{" "}
+              {question.questionType}
             </div>
           );
         })}
@@ -69,10 +97,30 @@ const Panel = () => {
             name="surveyTitle"
             id="surveyTitle"
           />
-          <QuestionPanel
-            getQuestions={getQuestions}
-            updateQuestion={updateQuestion}
-          />
+          <div className="QuestionPanel">
+            <Accordion.Root
+              className="AccordionRoot"
+              type="single"
+              defaultValue="item-1"
+              collapsible
+            >
+              <QuestionOverview
+                questions={questions}
+                removeQuestion={removeQuestion}
+                updateQuestion={updateQuestion}
+                updateQuestionTypeTwo={updateQuestionType}
+              />
+            </Accordion.Root>
+            <button
+              className="addQuestionBtn panelBtn"
+              onClick={(e) => {
+                addQuestion();
+                e.preventDefault();
+              }}
+            >
+              Add Question <PlusCircledIcon style={{marginLeft: "5px"}} />
+            </button>
+          </div>
           <button className="publishBtn panelBtn" type="submit">
             Publish
           </button>
