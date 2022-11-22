@@ -9,6 +9,7 @@ const QuestionPanel = ({getQuestions, updateQuestion}) => {
       questionTitle: "",
       index: questions.length,
       questionType: "",
+      numberOfAnswerChoices: 0,
       answerChoices: [],
       hash: randomHash(),
     };

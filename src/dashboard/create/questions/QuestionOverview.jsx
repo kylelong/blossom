@@ -4,6 +4,7 @@ import * as Label from "@radix-ui/react-label";
 import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
 import classNames from "classnames";
 import QuestionTypeSelectMenu from "./QuestionTypeSelectMenu";
+import MultipleChoiceInput from "./MultipleChoiceInput";
 import "./questionoverview.css";
 const AccordionTrigger = React.forwardRef(
   ({children, className, ...props}, forwardedRef) => (
@@ -40,6 +41,7 @@ const QuestionOverview = ({
 }) => {
   const [questionType, setQuestionType] = useState("");
   const [questionHash, setQuestionHash] = useState("");
+  const [numberOfAnswers, setNumberOfAnswers] = useState(0);
   const updateQuestionType = (type) => {
     setQuestionType(type);
     updateQuestionTypeTwo(questionHash, type);
@@ -47,7 +49,7 @@ const QuestionOverview = ({
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
   useEffect(() => {
     console.log(questionType);
-  }, [questionHash]);
+  }, [questionHash, numberOfAnswers, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -83,9 +85,15 @@ const QuestionOverview = ({
                         type="text"
                         className="answerChoices"
                         placeholder="# of answers"
+                        onChange={(e) => setNumberOfAnswers(e.target.value)}
                       ></input>
                     )}
                   </div>
+                  {hasOptions && numberOfAnswers > 0 && (
+                    <div className="MultipleChoiceInputContainer">
+                      <MultipleChoiceInput amount={index} />
+                    </div>
+                  )}
 
                   <button
                     className="removeQuestionBtn panelBtn"

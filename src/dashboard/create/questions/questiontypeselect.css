@@ -19,13 +19,13 @@
   gap: 5px;
   background-color: white;
   color: var(--violet11);
-  box-shadow: 0 2px 10px var(--blackA7);
+  box-shadow: 0 2px 10px var(--mauve6);
 }
 .SelectTrigger:hover {
   background-color: var(--mauve3);
 }
 .SelectTrigger:focus {
-  box-shadow: 0 0 0 2px black;
+  box-shadow: 0 0 0 1px var(--mauve11);
 }
 .SelectTrigger[data-placeholder] {
   color: var(--violet9);

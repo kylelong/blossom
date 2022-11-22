@@ -237,12 +237,12 @@ h3 {
   height: 35px;
   font-size: 15px;
   line-height: 1;
-  color: black;
+  color: var(--mauve11);
   background-color: white;
-  box-shadow: 0 0 0 1px var(--blackA9);
+  box-shadow: 0 0 0 1px var(--mauve11);
 }
 .questionTitle:focus {
-  box-shadow: 0 0 0 2px #355e3b;
+  box-shadow: 0 0 0 2px var(--mauve11);
 }
 
 /** end of Panel.jsx **/
