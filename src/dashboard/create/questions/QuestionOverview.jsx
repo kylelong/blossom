@@ -33,22 +33,19 @@ const AccordionContent = React.forwardRef(
   )
 );
 
-const QuestionOverview = ({
-  questions,
-  removeQuestion,
-  updateQuestion,
-  updateQuestionTypeTwo,
-}) => {
+const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
   const [questionType, setQuestionType] = useState("");
   const [questionHash, setQuestionHash] = useState("");
   const [numberOfAnswers, setNumberOfAnswers] = useState(0);
   const updateQuestionType = (type) => {
     setQuestionType(type);
-    updateQuestionTypeTwo(questionHash, type);
+    updateQuestion(questionHash, "questionType", type);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
   useEffect(() => {
     console.log(questionType);
+    //let index = questions.findIndex((element) => element.hash === questionHash);
+    //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
   }, [questionHash, numberOfAnswers, questionType]);
   return (
     <>
@@ -68,7 +65,11 @@ const QuestionOverview = ({
                   placeholder="Question title"
                   value={question.questionTitle ? question.questionTitle : ""}
                   onChange={(e) => {
-                    updateQuestion(question.hash, e.target.value);
+                    updateQuestion(
+                      question.hash,
+                      "questionTitle",
+                      e.target.value
+                    );
                   }}
                 ></input>
                 <div className="questionDetailsContainer">
@@ -76,6 +77,7 @@ const QuestionOverview = ({
                     <QuestionTypeSelectMenu
                       updateQuestionType={updateQuestionType}
                       defaultQuestionType={question.questionType}
+                      hash={question.hash}
                     />
                     {/* <Label.Root className="LabelRoot" htmlFor="surveyTitle">
                       # of answer choices:
@@ -85,13 +87,21 @@ const QuestionOverview = ({
                         type="text"
                         className="answerChoices"
                         placeholder="# of answers"
-                        onChange={(e) => setNumberOfAnswers(e.target.value)}
+                        onChange={(e) => {
+                          let num = e.target.value;
+                          setNumberOfAnswers(num);
+                          updateQuestion(
+                            question.hash,
+                            "numberOfAnswerChoices",
+                            num
+                          );
+                        }}
                       ></input>
                     )}
                   </div>
                   {hasOptions && numberOfAnswers > 0 && (
                     <div className="MultipleChoiceInputContainer">
-                      <MultipleChoiceInput amount={index} />
+                      <MultipleChoiceInput amount={numberOfAnswers} />
                     </div>
                   )}
 

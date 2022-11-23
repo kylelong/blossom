@@ -17,6 +17,7 @@ const Panel = () => {
       questionTitle: "",
       index: questions.length,
       questionType: "",
+      numberOfAnswerChoices: 0,
       answerChoices: [],
       hash: randomHash(),
     };
@@ -37,11 +38,19 @@ const Panel = () => {
   };
 
   const updateQuestion = useCallback(
-    (hash, title) => {
+    (hash, property, value) => {
       let copy = [...questions];
       let index = copy.findIndex((element) => element.hash === hash);
-      copy[index].questionTitle = title;
-      setQuestions(copy);
+      if (property in questions[index]) {
+        if (property === "questionTitle") {
+          copy[index].questionTitle = value;
+        } else if (property === "questionType") {
+          copy[index].questionType = value;
+        } else if (property === "numberOfAnswerChoices") {
+          copy[index].numberOfAnswerChoices = value;
+        }
+        setQuestions(copy);
+      }
     },
     [questions]
   );
@@ -108,7 +117,6 @@ const Panel = () => {
                 questions={questions}
                 removeQuestion={removeQuestion}
                 updateQuestion={updateQuestion}
-                updateQuestionTypeTwo={updateQuestionType}
               />
             </Accordion.Root>
             <button

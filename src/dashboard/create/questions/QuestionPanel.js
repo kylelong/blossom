@@ -4,6 +4,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./QuestionOverview";
 const QuestionPanel = ({getQuestions, updateQuestion}) => {
   const [questions, setQuestions] = useState([]);
+
   const addQuestion = () => {
     let data = {
       questionTitle: "",
