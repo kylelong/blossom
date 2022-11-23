@@ -46,7 +46,7 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
     console.log(questionType);
     //let index = questions.findIndex((element) => element.hash === questionHash);
     //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
-  }, [questionHash, numberOfAnswers, questionType]);
+  }, [questions, questionHash, numberOfAnswers, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -101,7 +101,10 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
                   </div>
                   {hasOptions && numberOfAnswers > 0 && (
                     <div className="MultipleChoiceInputContainer">
-                      <MultipleChoiceInput amount={numberOfAnswers} />
+                      <MultipleChoiceInput
+                        amount={question.numberOfAnswerChoices}
+                      />
+                      {/* amount = {question.numberOfAnswerChoices} */}
                     </div>
                   )}
 
