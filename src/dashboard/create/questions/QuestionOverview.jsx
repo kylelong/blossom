@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Label from "@radix-ui/react-label";
 import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
@@ -42,11 +42,10 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
     updateQuestion(questionHash, "questionType", type);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
-  useEffect(() => {
-    console.log(questionType);
-    //let index = questions.findIndex((element) => element.hash === questionHash);
-    //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
-  }, [questions, questionHash, numberOfAnswers, questionType]);
+  // useEffect(() => {
+  //   //let index = questions.findIndex((element) => element.hash === questionHash);
+  //   //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
+  // }, [questions, questionHash, numberOfAnswers, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -103,8 +102,9 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput
                         amount={question.numberOfAnswerChoices}
+                        updateQuestion={updateQuestion}
+                        questionHash={question.hash}
                       />
-                      {/* amount = {question.numberOfAnswerChoices} */}
                     </div>
                   )}
 

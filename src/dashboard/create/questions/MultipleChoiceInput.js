@@ -22,38 +22,43 @@ export const MultipleChoiceInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const MultipleChoiceInput = ({amount}) => {
+const MultipleChoiceInput = ({amount, updateQuestion, questionHash}) => {
   const [items, setItems] = useState([]);
-  const removeItem = (index) => {
+  const randomHash = () => {
+    return Math.random().toString(36).substr(2, 10);
+  };
+  const removeItem = (hash) => {
+    updateQuestion(questionHash, "numberOfAnswerChoices", items.length - 1);
+    console.log(amount);
     setItems((prevState) => {
       const items = [...prevState];
+      let index = items.findIndex((element) => element === hash);
       items.splice(index, 1);
+      console.log(items.length);
       return items;
     });
   };
   useEffect(() => {
     let inputs = [];
     for (let i = 0; i < amount; i++) {
-      inputs.push(
-        <Input
-          placeholder={`Choice #${i + 1}`}
-          onChange={() => {
-            console.log(`typing in ${i}`);
-          }}
-        />
-      );
+      inputs.push(randomHash());
     }
     setItems(inputs);
   }, [amount]);
   return (
     <>
-      {items.map((item, index) => {
+      {items.map((hash, index) => {
         return (
           <MultipleChoiceInputContainer key={index}>
-            {item}
+            <Input
+              placeholder={`Choice #${index + 1} - ${hash}`}
+              onChange={() => {
+                console.log(`typing in ${index + 1}`);
+              }}
+            />
             <MinusCircledIcon
               onClick={() => {
-                removeItem(index);
+                removeItem(hash);
               }}
               style={{
                 marginLeft: "7px",

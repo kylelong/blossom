@@ -55,20 +55,11 @@ const Panel = () => {
     [questions]
   );
 
-  const updateQuestionType = useCallback(
-    (hash, questionType) => {
-      let copy = [...questions];
-      let index = copy.findIndex((element) => element.hash === hash);
-      copy[index].questionType = questionType;
-      setQuestions(copy);
-    },
-    [questions]
-  );
-
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
+    console.log(JSON.stringify(questions, null, 2));
   }, [surveyName, questions]);
 
   return (
