@@ -39,9 +39,15 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
   const [numberOfAnswers, setNumberOfAnswers] = useState(0);
   const updateQuestionType = (type) => {
     setQuestionType(type);
-    updateQuestion(questionHash, "questionType", type);
+    updateQuestion(questionHash, "questionType", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
+  // const questionDetails = {
+  //   single_select: "select one of many options",
+  //   multi_select: "select all that apply",
+  //   emjoi_sentiment: "range of emojis to gauage interest level",
+  //   open_ended: "input box for text responses",
+  // };
   // useEffect(() => {
   //   //let index = questions.findIndex((element) => element.hash === questionHash);
   //   //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
@@ -67,7 +73,8 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
                     updateQuestion(
                       question.hash,
                       "questionTitle",
-                      e.target.value
+                      e.target.value,
+                      null
                     );
                   }}
                 ></input>
@@ -92,12 +99,20 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
                           updateQuestion(
                             question.hash,
                             "numberOfAnswerChoices",
-                            num
+                            num,
+                            null
+                          );
+                          updateQuestion(
+                            question.hash,
+                            "answerChoices",
+                            num,
+                            null
                           );
                         }}
                       ></input>
                     )}
                   </div>
+
                   {hasOptions && numberOfAnswers > 0 && (
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput

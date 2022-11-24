@@ -24,17 +24,17 @@ export const MultipleChoiceInputContainer = styled.div`
 `;
 const MultipleChoiceInput = ({amount, updateQuestion, questionHash}) => {
   const [items, setItems] = useState([]);
+  // const [amount, setAmount] = useState(amount);
   const randomHash = () => {
     return Math.random().toString(36).substr(2, 10);
   };
   const removeItem = (hash) => {
     updateQuestion(questionHash, "numberOfAnswerChoices", items.length - 1);
-    console.log(amount);
     setItems((prevState) => {
       const items = [...prevState];
       let index = items.findIndex((element) => element === hash);
+      updateQuestion(questionHash, "removeAnswerChoice", null, index);
       items.splice(index, 1);
-      console.log(items.length);
       return items;
     });
   };
@@ -52,8 +52,15 @@ const MultipleChoiceInput = ({amount, updateQuestion, questionHash}) => {
           <MultipleChoiceInputContainer key={index}>
             <Input
               placeholder={`Choice #${index + 1} - ${hash}`}
-              onChange={() => {
+              onChange={(e) => {
                 console.log(`typing in ${index + 1}`);
+
+                updateQuestion(
+                  questionHash,
+                  "addAnswerChoice",
+                  e.target.value,
+                  index
+                );
               }}
             />
             <MinusCircledIcon

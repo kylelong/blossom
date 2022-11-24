@@ -38,19 +38,45 @@ const Panel = () => {
   };
 
   const updateQuestion = useCallback(
-    (hash, property, value) => {
+    (hash, property, value, answerChoiceIndex) => {
       let copy = [...questions];
+      // finds the question
       let index = copy.findIndex((element) => element.hash === hash);
-      if (property in questions[index]) {
-        if (property === "questionTitle") {
-          copy[index].questionTitle = value;
-        } else if (property === "questionType") {
-          copy[index].questionType = value;
-        } else if (property === "numberOfAnswerChoices") {
-          copy[index].numberOfAnswerChoices = value;
+      // property or manipulating answer choices
+      // if (questions[index].hasOwnProperty(property)) {
+      if (property === "questionTitle") {
+        copy[index].questionTitle = value;
+      } else if (property === "questionType") {
+        copy[index].questionType = value;
+        // just in case changing from single or multiselect
+        if (value === "emoji_sentiment" || value === "open_ended") {
+          copy[index].answerChoices = [];
+          copy[index].numberOfAnswerChoices = 0;
         }
-        setQuestions(copy);
+      } else if (property === "numberOfAnswerChoices") {
+        copy[index].numberOfAnswerChoices = value;
+      } else if (property === "answerChoices") {
+        let choices = [];
+        for (let i = 0; i < value; i++) {
+          choices.push("");
+        }
+        copy[index].answerChoices = choices;
+      } else if (property === "addAnswerChoice") {
+        if (value !== null && answerChoiceIndex !== null) {
+          let answerChoicesCopy = copy[index].answerChoices;
+          answerChoicesCopy[answerChoiceIndex] = value;
+          copy[index].answerChoices = answerChoicesCopy;
+        }
+      } else if (property === "removeAnswerChoice") {
+        if (answerChoiceIndex !== null) {
+          console.log("deleting index", answerChoiceIndex);
+          let answerChoicesCopy = copy[index].answerChoices;
+          answerChoicesCopy.splice(answerChoiceIndex, 1);
+          copy[index].answerChoices = answerChoicesCopy;
+        }
       }
+      setQuestions(copy);
+      //  }
     },
     [questions]
   );
@@ -69,8 +95,8 @@ const Panel = () => {
         {questions.map((question, index) => {
           return (
             <div key={index}>
-              {question.hash} - {question.questionTitle} -{" "}
-              {question.questionType}
+              {question.hash} - {question.questionTitle} -
+              {question.numberOfAnswerChoices} - {question.questionType}
             </div>
           );
         })}

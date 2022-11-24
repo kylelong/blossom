@@ -32,7 +32,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
               <Select.Label className="SelectLabel">question type</Select.Label>
               <SelectItem value="single_select">single select</SelectItem>
               <SelectItem value="multi_select">multi-select</SelectItem>
-              <SelectItem value="emjoi_sentiment">emoji sentiment</SelectItem>
+              <SelectItem value="emoji_sentiment">emoji sentiment</SelectItem>
               <SelectItem value="open_ended">open ended</SelectItem>
             </Select.Group>
           </Select.Viewport>
