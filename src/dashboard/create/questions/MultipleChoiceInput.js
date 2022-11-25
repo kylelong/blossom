@@ -22,9 +22,16 @@ export const MultipleChoiceInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const MultipleChoiceInput = ({amount, updateQuestion, questionHash}) => {
+const MultipleChoiceInput = ({
+  amount,
+  updateQuestion,
+  questionHash,
+  questions,
+}) => {
   const [items, setItems] = useState([]);
   // const [amount, setAmount] = useState(amount);
+  console.log(JSON.stringify(questions, null, 2));
+  let qindex = questions.findIndex((element) => element.hash === questionHash);
   const randomHash = () => {
     return Math.random().toString(36).substr(2, 10);
   };
@@ -52,6 +59,9 @@ const MultipleChoiceInput = ({amount, updateQuestion, questionHash}) => {
           <MultipleChoiceInputContainer key={index}>
             <Input
               placeholder={`Choice #${index + 1} - ${hash}`}
+              value={
+                questions.length > 0 && questions[qindex].answerChoices[index]
+              }
               onChange={(e) => {
                 console.log(`typing in ${index + 1}`);
 

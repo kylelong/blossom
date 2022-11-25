@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Label from "@radix-ui/react-label";
 import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
@@ -42,16 +42,34 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
     updateQuestion(questionHash, "questionType", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
-  // const questionDetails = {
-  //   single_select: "select one of many options",
-  //   multi_select: "select all that apply",
-  //   emjoi_sentiment: "range of emojis to gauage interest level",
-  //   open_ended: "input box for text responses",
-  // };
-  // useEffect(() => {
-  //   //let index = questions.findIndex((element) => element.hash === questionHash);
-  //   //                                                                                                                                                                                             setNumberOfAnswers(questions[index].numberOfAnswers);
-  // }, [questions, questionHash, numberOfAnswers, questionType]);
+  const questionDetails = {
+    single_select: "select one of many options",
+    multi_select: "select all that apply",
+    emoji_sentiment: "range of emojis to gauage interest level",
+    open_ended: "input box for text responses",
+  };
+
+  const questionTypeInfo = (questionType) => {
+    if (questionType.length > 0) {
+      switch (questionType) {
+        case "single_select":
+          return questionDetails.single_select;
+        case "multi_select":
+          return questionDetails.multi_select;
+        case "emoji_sentiment":
+          return questionDetails.emoji_sentiment;
+        case "open_ended":
+          return questionDetails.open_ended;
+        default:
+          return "";
+      }
+    }
+  };
+
+  useEffect(() => {
+    //let index = questions.findIndex((element) => element.hash === questionHash);
+    //setNumberOfAnswers(questions[index].numberOfAnswers);
+  }, [questions, questionHash, numberOfAnswers, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -113,12 +131,19 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
                     )}
                   </div>
 
+                  {questionType.length > 0 && (
+                    <div className="questionTypeInfo">
+                      {questionTypeInfo(question.questionType)}
+                    </div>
+                  )}
+
                   {hasOptions && numberOfAnswers > 0 && (
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput
                         amount={question.numberOfAnswerChoices}
                         updateQuestion={updateQuestion}
                         questionHash={question.hash}
+                        questions={questions}
                       />
                     </div>
                   )}
