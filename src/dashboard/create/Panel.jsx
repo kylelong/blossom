@@ -4,6 +4,7 @@ import * as Label from "@radix-ui/react-label";
 import {PlusCircledIcon} from "@radix-ui/react-icons";
 import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
+import SurveyPreveiw from "../surveyPreview/SurveyPreview";
 import "./panel.css";
 
 const Panel = () => {
@@ -11,6 +12,7 @@ const Panel = () => {
   const [data, setData] = useState("Survey Title");
   const [surveyName, setSurveyName] = useState("Survey Title");
   const [questions, setQuestions] = useState([]);
+  const [questionHash, setQuestionHash] = useState("");
 
   const addQuestion = () => {
     let data = {
@@ -90,17 +92,11 @@ const Panel = () => {
 
   return (
     <div className="panelContainer">
-      <div className="surveyContainer">
-        <div className="surveyName">{surveyName}</div>
-        {questions.map((question, index) => {
-          return (
-            <div key={index}>
-              {question.hash} - {question.questionTitle} -
-              {question.numberOfAnswerChoices} - {question.questionType}
-            </div>
-          );
-        })}
-      </div>
+      <SurveyPreveiw
+        questions={questions}
+        surveyName={surveyName}
+        questionHash={questionHash}
+      />
       <div className="formContainer">
         <form
           style={{
@@ -134,6 +130,7 @@ const Panel = () => {
                 questions={questions}
                 removeQuestion={removeQuestion}
                 updateQuestion={updateQuestion}
+                updateQuestionHash={setQuestionHash}
               />
             </Accordion.Root>
             <button

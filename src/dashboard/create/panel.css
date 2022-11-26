@@ -216,19 +216,11 @@ h3 {
   margin-top: 20px;
   display: flex;
   flex-direction: row;
-  width: 50vw;
-  justify-content: space-between;
-}
-.surveyContainer {
-  display: flex;
-  flex-direction: column;
+  width: 65vw;
+  justify-content: flex-start;
 }
 /* .formContainer {
 } */
-.surveyName {
-  font-size: 22px;
-  font-weight: bold;
-}
 .questionTitle {
   all: unset;
   width: 250px;

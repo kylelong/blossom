@@ -33,7 +33,12 @@ const AccordionContent = React.forwardRef(
   )
 );
 
-const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
+const QuestionOverview = ({
+  questions,
+  removeQuestion,
+  updateQuestion,
+  updateQuestionHash,
+}) => {
   const [questionType, setQuestionType] = useState("");
   const [questionHash, setQuestionHash] = useState("");
   const [numberOfAnswers, setNumberOfAnswers] = useState(0);
@@ -75,7 +80,13 @@ const QuestionOverview = ({questions, removeQuestion, updateQuestion}) => {
       {questions.map((question, index) => {
         let label = `Question ${index + 1}`; //question 1 - 4twerg9
         return (
-          <div key={index} onClick={() => setQuestionHash(question.hash)}>
+          <div
+            key={index}
+            onClick={() => {
+              setQuestionHash(question.hash);
+              updateQuestionHash(question.hash);
+            }}
+          >
             <Accordion.Item className="AccordionItem" value={`item-${index}`}>
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
