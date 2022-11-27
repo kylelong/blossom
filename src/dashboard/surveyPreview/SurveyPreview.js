@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import "./preview.css";
 import QuestionViewer from "./QuestionViewer";
+import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyName, questionHash}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const showQuestions = questions.length > 0;
@@ -36,8 +37,12 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
         <div className="questionNumber">Question {questionIndex + 1}</div>
       )}
       {!showQuestions && (
-        <div>
-          <div>Survey Preview</div>
+        <div className="startSurveyContainer">
+          <img src={flower} alt="sunflower" />
+
+          <p className="addDetails">
+            Add questions to start creating your new survey &#x1F60A;
+          </p>
         </div>
       )}
       {showQuestions && <QuestionViewer {...questions[questionIndex]} />}

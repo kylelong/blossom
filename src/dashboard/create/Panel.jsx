@@ -21,6 +21,7 @@ const Panel = () => {
       questionType: "",
       numberOfAnswerChoices: 0,
       answerChoices: [],
+      textResponse: "",
       hash: randomHash(),
     };
     setQuestions((questions) => [...questions, data]);
@@ -63,7 +64,7 @@ const Panel = () => {
           for (let i = 0; i < value - currLength; i++) {
             copy[index].answerChoices.push("");
           }
-        } else if (currLength == 0) {
+        } else if (currLength === 0) {
           let choices = [];
           for (let i = 0; i < value; i++) {
             choices.push("");
