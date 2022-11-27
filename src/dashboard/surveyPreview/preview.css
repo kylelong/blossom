@@ -47,3 +47,60 @@
 .questionNumber {
   text-align: left;
 }
+.surveyQuestionTitle {
+  font-size: 20px;
+  font-weight: bold;
+}
+/* question view */
+.questionViewerContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  align-items: center;
+}
+.answerChoicesContainer {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+}
+.answerChoiceButton {
+  all: unset;
+  margin-top: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 0 15px;
+  line-height: 35px;
+  height: 40px;
+  min-width: 150px;
+  background-color: white;
+  color: #355e3b;
+  box-shadow: 0 2px 10px var(--blackA7);
+}
+.answerChoiceButton:hover {
+  background-color: var(--mauve3);
+  cursor: pointer;
+}
+.answerChoiceButtonSelected {
+  all: unset;
+  background-color: #355e3b;
+  color: white;
+  margin-top: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 0 15px;
+  line-height: 35px;
+  height: 40px;
+  min-width: 150px;
+  box-shadow: 0 2px 10px var(--blackA7);
+}
+.answerChoiceButtonSelected:hover {
+  cursor: pointer;
+}

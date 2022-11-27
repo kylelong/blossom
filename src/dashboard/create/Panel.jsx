@@ -58,11 +58,18 @@ const Panel = () => {
       } else if (property === "numberOfAnswerChoices") {
         copy[index].numberOfAnswerChoices = value;
       } else if (property === "answerChoices") {
-        let choices = [];
-        for (let i = 0; i < value; i++) {
-          choices.push("");
+        let currLength = copy[index].answerChoices.length;
+        if (value > currLength && currLength > 0) {
+          for (let i = 0; i < value - currLength; i++) {
+            copy[index].answerChoices.push("");
+          }
+        } else if (currLength == 0) {
+          let choices = [];
+          for (let i = 0; i < value; i++) {
+            choices.push("");
+          }
+          copy[index].answerChoices = choices;
         }
-        copy[index].answerChoices = choices;
       } else if (property === "addAnswerChoice") {
         if (value !== null && answerChoiceIndex !== null) {
           let answerChoicesCopy = copy[index].answerChoices;
@@ -87,7 +94,7 @@ const Panel = () => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
-    console.log(JSON.stringify(questions, null, 2));
+    //console.log(JSON.stringify(questions, null, 2));
   }, [surveyName, questions]);
 
   return (

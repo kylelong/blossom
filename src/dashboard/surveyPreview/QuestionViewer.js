@@ -1,4 +1,6 @@
 import React from "react";
+import MultiSelect from "./MultiSelect";
+import SingleSelect from "./SingleSelect";
 
 const QuestionViewer = ({
   questionTitle,
@@ -8,16 +10,16 @@ const QuestionViewer = ({
   answerChoices,
   hash,
 }) => {
-  const multipleChoice =
-    questionType === "multi_select" || questionType === "single_select";
   return (
-    <div>
-      <div>{questionTitle}</div>
+    <div className="questionViewerContainer">
+      <div className="surveyQuestionTitle">{questionTitle}</div>
       <div>
-        {multipleChoice &&
-          answerChoices.map((choice, index) => {
-            return <div key={index}>{choice}</div>;
-          })}
+        {questionType === "multi_select" && (
+          <MultiSelect answerChoices={answerChoices} />
+        )}
+        {questionType === "single_select" && (
+          <SingleSelect answerChoices={answerChoices} />
+        )}
       </div>
     </div>
   );

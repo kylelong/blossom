@@ -28,18 +28,10 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
     if (index > -1) {
       setQuestionIndex(index);
     }
-  }, [questionHash]);
+  }, [questionHash, questions]);
   return (
     <div className="surveyContainer">
       <div className="surveyName">{surveyName}</div>
-      {/* {questions.map((question, index) => {
-        return (
-          <div key={index}>
-            {question.hash} - {question.questionTitle} -
-            {question.numberOfAnswerChoices} - {question.questionType}
-          </div>
-        );
-      })} */}
       {showQuestions && (
         <div className="questionNumber">Question {questionIndex + 1}</div>
       )}
