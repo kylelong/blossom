@@ -148,7 +148,7 @@ const QuestionOverview = ({
                     </div>
                   )}
 
-                  {hasOptions && numberOfAnswers > 0 && (
+                  {hasOptions && numberOfAnswers >= 0 && (
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput
                         amount={question.numberOfAnswerChoices}

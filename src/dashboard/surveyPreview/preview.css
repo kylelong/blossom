@@ -104,3 +104,15 @@
 .answerChoiceButtonSelected:hover {
   cursor: pointer;
 }
+.surveyQuestionDetail {
+  color: #525f7f;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 13px;
+}
+.loadingQuestionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
