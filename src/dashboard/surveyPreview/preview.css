@@ -143,3 +143,6 @@
   width: 24px;
   height: 24px;
 }
+.emoji:hover {
+  cursor: pointer;
+}
