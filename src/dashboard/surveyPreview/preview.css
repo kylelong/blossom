@@ -15,6 +15,7 @@
   border: 3px solid #f6f6f6;
   height: 50vh;
   margin-right: 5vw;
+  /* justify-content: center; */
 }
 .previewButtonsContainer {
   display: flex;
@@ -137,11 +138,18 @@
 .emojiContainer {
   display: flex;
   flex-direction: row;
+  align-self: center;
+  margin-top: 24px;
 }
 .emoji {
+  font-size: 25px;
   margin-right: 12px;
-  width: 24px;
-  height: 24px;
+}
+.emojiSelected {
+  font-size: 25px;
+  margin-right: 12px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #525f7f;
 }
 .emoji:hover {
   cursor: pointer;
