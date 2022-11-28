@@ -2,7 +2,12 @@ import React, {useState, useEffect} from "react";
 import "./preview.css";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
-const SurveyPreview = ({questions, surveyName, questionHash}) => {
+const SurveyPreview = ({
+  questions,
+  surveyName,
+  questionHash,
+  updateQuestion,
+}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const showQuestions = questions.length > 0;
   const handleIndex = (buttonAction) => {
@@ -29,7 +34,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
     if (index > -1) {
       setQuestionIndex(index);
     }
-  }, [questionHash, questions]);
+  }, [questionHash]);
   return (
     <div className="surveyContainer">
       <div className="surveyName">{surveyName}</div>
@@ -45,7 +50,12 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           </p>
         </div>
       )}
-      {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
+      {showQuestions && (
+        <QuestionViewer
+          {...questions[questionIndex]}
+          updateQuestion={updateQuestion}
+        />
+      )}
       <div className="previewButtonsContainer">
         <button
           className="previewButton"

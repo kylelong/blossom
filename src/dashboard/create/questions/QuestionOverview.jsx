@@ -114,9 +114,7 @@ const QuestionOverview = ({
                       defaultQuestionType={question.questionType}
                       hash={question.hash}
                     />
-                    {/* <Label.Root className="LabelRoot" htmlFor="surveyTitle">
-                      # of answer choices:
-                    </Label.Root> */}
+
                     {hasOptions && (
                       <input
                         type="text"

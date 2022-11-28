@@ -22,6 +22,7 @@ const Panel = () => {
       numberOfAnswerChoices: 0,
       answerChoices: [],
       textResponse: "",
+      emoji: "",
       hash: randomHash(),
     };
     setQuestions((questions) => [...questions, data]);
@@ -79,10 +80,13 @@ const Panel = () => {
         }
       } else if (property === "removeAnswerChoice") {
         if (answerChoiceIndex !== null) {
-          console.log("deleting index", answerChoiceIndex);
           let answerChoicesCopy = copy[index].answerChoices;
           answerChoicesCopy.splice(answerChoiceIndex, 1);
           copy[index].answerChoices = answerChoicesCopy;
+        }
+      } else if (property === "setEmoji") {
+        if (value !== null) {
+          copy[index].emoji = value;
         }
       }
       setQuestions(copy);
@@ -95,7 +99,7 @@ const Panel = () => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
-    //console.log(JSON.stringify(questions, null, 2));
+    // console.log(JSON.stringify(questions, null, 2));
   }, [surveyName, questions]);
 
   return (
@@ -104,6 +108,7 @@ const Panel = () => {
         questions={questions}
         surveyName={surveyName}
         questionHash={questionHash}
+        updateQuestion={updateQuestion}
       />
       <div className="formContainer">
         <form

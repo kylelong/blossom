@@ -11,6 +11,8 @@ const QuestionViewer = ({
   numberOfAnswerChoices,
   answerChoices,
   hash,
+  updateQuestion,
+  emoji,
 }) => {
   const questionStarted =
     questionTitle.length > 0 ||
@@ -50,7 +52,11 @@ const QuestionViewer = ({
         )}
         {questionStarted && questionType === "emoji_sentiment" && (
           <>
-            <Emojis />
+            <Emojis
+              updateQuestion={updateQuestion}
+              questionHash={hash}
+              currentEmoji={emoji}
+            />
           </>
         )}
       </div>

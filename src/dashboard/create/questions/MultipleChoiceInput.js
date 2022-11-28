@@ -63,8 +63,6 @@ const MultipleChoiceInput = ({
                 questions.length > 0 && questions[qindex].answerChoices[index]
               }
               onChange={(e) => {
-                //console.log(`typing in ${index + 1}`);
-
                 updateQuestion(
                   questionHash,
                   "addAnswerChoice",
