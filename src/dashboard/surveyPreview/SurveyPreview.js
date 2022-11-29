@@ -45,7 +45,9 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           </p>
         </div>
       )}
-      {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
+      {showQuestions && (
+        <QuestionViewer {...questions[questionIndex]} questions={questions} />
+      )}
       <div className="previewButtonsContainer">
         <button
           className="previewButton"

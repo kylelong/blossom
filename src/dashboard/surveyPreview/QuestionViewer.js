@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
@@ -14,9 +14,9 @@ const QuestionViewer = ({
   emoji,
 }) => {
   const questionStarted =
-    questionTitle.length > 0 ||
-    questionType.length > 0 ||
-    (numberOfAnswerChoices > 0 && answerChoices.length > 0);
+    questionTitle ||
+    questionType ||
+    (numberOfAnswerChoices > 0 && answerChoices);
   const preview = () => {
     if (questionStarted) {
       switch (questionType) {
