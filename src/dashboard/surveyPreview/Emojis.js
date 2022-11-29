@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 
-const Emojis = ({updateQuestion, questionHash, currentEmoji}) => {
+const Emojis = ({questionHash, currentEmoji}) => {
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -12,7 +12,6 @@ const Emojis = ({updateQuestion, questionHash, currentEmoji}) => {
   const handleEmojis = (key) => {
     if (Object.keys(emojis).includes(key)) {
       setEmoji(key);
-      updateQuestion(questionHash, "setEmoji", key, null);
     }
   };
   useEffect(() => {

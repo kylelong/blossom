@@ -48,8 +48,8 @@ const QuestionOverview = ({
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
   const questionDetails = {
-    single_select: "select one of many options",
-    multi_select: "select all that apply",
+    single_select: "select one of many options (at most 5)",
+    multi_select: "select all that apply (at most 5)",
     emoji_sentiment: "range of emojis to gauage interest level",
     open_ended: "input box for text responses",
   };

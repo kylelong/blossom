@@ -58,7 +58,7 @@ const MultipleChoiceInput = ({
         return (
           <MultipleChoiceInputContainer key={index}>
             <Input
-              placeholder={`Choice #${index + 1} - ${hash}`}
+              placeholder={`Choice #${index + 1}`}
               value={
                 questions.length > 0 && questions[qindex].answerChoices[index]
               }

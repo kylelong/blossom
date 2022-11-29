@@ -1,6 +1,10 @@
-import React from "react";
-
+import React, {useState} from "react";
 const OpenEnded = () => {
+  const [response, setResponse] = useState("");
+  const handleChange = (input) => {
+    console.log(input);
+    setResponse(input);
+  };
   return (
     <div>
       <textarea
@@ -8,6 +12,7 @@ const OpenEnded = () => {
         cols="50"
         className="openEndedTextArea"
         placeholder="Enter your answer..."
+        onChange={(e) => handleChange(e.target.value)}
       />
     </div>
   );

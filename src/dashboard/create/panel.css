@@ -35,7 +35,7 @@
 
 .publishBtn {
   all: unset;
-  margin-top: 15px;
+  margin-top: px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +52,6 @@
 }
 .addQuestionBtn {
   all: unset;
-  margin-top: 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -63,6 +62,7 @@
   line-height: 35px;
   height: 35px;
   width: 125px;
+  margin-right: 32px;
   background-color: white;
   color: #355e3b;
   box-shadow: 0 2px 10px var(--blackA7);
@@ -218,6 +218,11 @@ h3 {
   flex-direction: row;
   width: 65vw;
   justify-content: flex-start;
+}
+.panelBtnGroup {
+  display: flex;
+  flex-direction: row;
+  margin-top: 32px;
 }
 /* .formContainer {
 } */

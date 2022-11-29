@@ -21,8 +21,6 @@ const Panel = () => {
       questionType: "",
       numberOfAnswerChoices: 0,
       answerChoices: [],
-      textResponse: "",
-      emoji: "",
       hash: randomHash(),
     };
     setQuestions((questions) => [...questions, data]);
@@ -34,6 +32,7 @@ const Panel = () => {
 
   // update index
   const removeQuestion = (index) => {
+    console.log(questions.length, index);
     setQuestions((prevState) => {
       const questions = [...prevState];
       questions.splice(index, 1);
@@ -58,14 +57,25 @@ const Panel = () => {
           copy[index].numberOfAnswerChoices = 0;
         }
       } else if (property === "numberOfAnswerChoices") {
+        if (value > 5 || value < 0) return;
         copy[index].numberOfAnswerChoices = value;
       } else if (property === "answerChoices") {
+        if (value > 5 || value < 0) return;
         let currLength = copy[index].answerChoices.length;
+        //add more options
         if (value > currLength && currLength > 0) {
           for (let i = 0; i < value - currLength; i++) {
             copy[index].answerChoices.push("");
           }
+        } else if (value < currLength) {
+          //decrease answer choices
+          let choices = [];
+          for (let i = 0; i < value; i++) {
+            choices.push("");
+          }
+          copy[index].answerChoices = choices;
         } else if (currLength === 0) {
+          // empty
           let choices = [];
           for (let i = 0; i < value; i++) {
             choices.push("");
@@ -83,10 +93,6 @@ const Panel = () => {
           let answerChoicesCopy = copy[index].answerChoices;
           answerChoicesCopy.splice(answerChoiceIndex, 1);
           copy[index].answerChoices = answerChoicesCopy;
-        }
-      } else if (property === "setEmoji") {
-        if (value !== null) {
-          copy[index].emoji = value;
         }
       }
       setQuestions(copy);
@@ -108,7 +114,6 @@ const Panel = () => {
         questions={questions}
         surveyName={surveyName}
         questionHash={questionHash}
-        updateQuestion={updateQuestion}
       />
       <div className="formContainer">
         <form
@@ -136,7 +141,7 @@ const Panel = () => {
             <Accordion.Root
               className="AccordionRoot"
               type="single"
-              defaultValue="item-1"
+              defaultValue="item-0"
               collapsible
             >
               <QuestionOverview
@@ -146,6 +151,8 @@ const Panel = () => {
                 updateQuestionHash={setQuestionHash}
               />
             </Accordion.Root>
+          </div>
+          <div className="panelBtnGroup">
             <button
               className="addQuestionBtn panelBtn"
               onClick={(e) => {
@@ -155,10 +162,10 @@ const Panel = () => {
             >
               Add Question <PlusCircledIcon style={{marginLeft: "5px"}} />
             </button>
+            <button className="publishBtn panelBtn" type="submit">
+              Publish
+            </button>
           </div>
-          <button className="publishBtn panelBtn" type="submit">
-            Publish
-          </button>
         </form>
       </div>
     </div>

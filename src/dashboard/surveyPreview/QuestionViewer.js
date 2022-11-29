@@ -11,13 +11,47 @@ const QuestionViewer = ({
   numberOfAnswerChoices,
   answerChoices,
   hash,
-  updateQuestion,
   emoji,
 }) => {
   const questionStarted =
     questionTitle.length > 0 ||
     questionType.length > 0 ||
     (numberOfAnswerChoices > 0 && answerChoices.length > 0);
+  const preview = () => {
+    if (questionStarted) {
+      switch (questionType) {
+        case "multi_select":
+          return (
+            <>
+              <div className="surveyQuestionDetail">select all that apply</div>
+              <MultiSelect answerChoices={answerChoices} />
+            </>
+          );
+        case "single_select":
+          return (
+            <>
+              <div className="surveyQuestionDetail">select one option</div>
+              <SingleSelect answerChoices={answerChoices} />
+            </>
+          );
+        case "open_ended":
+          return (
+            <>
+              {" "}
+              <OpenEnded />{" "}
+            </>
+          );
+        case "emoji_sentiment":
+          return (
+            <>
+              <Emojis questionHash={hash} currentEmoji={emoji} />
+            </>
+          );
+        default:
+          return <></>;
+      }
+    }
+  };
   return (
     <div className="questionViewerContainer">
       {questionStarted && (
@@ -33,32 +67,7 @@ const QuestionViewer = ({
             </p>
           </div>
         )}
-        {questionStarted && questionType === "multi_select" && (
-          <>
-            <div className="surveyQuestionDetail">select all that apply</div>
-            <MultiSelect answerChoices={answerChoices} />
-          </>
-        )}
-        {questionStarted && questionType === "single_select" && (
-          <>
-            <div className="surveyQuestionDetail">select one option</div>
-            <SingleSelect answerChoices={answerChoices} />
-          </>
-        )}
-        {questionStarted && questionType === "open_ended" && (
-          <>
-            <OpenEnded />
-          </>
-        )}
-        {questionStarted && questionType === "emoji_sentiment" && (
-          <>
-            <Emojis
-              updateQuestion={updateQuestion}
-              questionHash={hash}
-              currentEmoji={emoji}
-            />
-          </>
-        )}
+        {preview()}
       </div>
     </div>
   );

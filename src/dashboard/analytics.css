@@ -19,6 +19,7 @@
   all: unset;
   width: 100%;
   display: inline-flex;
+  margin-bottom: 5px;
   text-align: left;
   border-radius: 4px;
   padding: 0 10px;

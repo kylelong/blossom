@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 const MultiSelect = ({answerChoices}) => {
   const [selected, setSelected] = useState([]);
@@ -14,6 +14,10 @@ const MultiSelect = ({answerChoices}) => {
       setSelected((current) => [...current, item]);
     }
   };
+
+  useEffect(() => {
+    console.log(answerChoices);
+  }, [answerChoices]);
 
   return (
     <div className="answerChoicesContainer">
