@@ -49,8 +49,8 @@ const QuestionOverview = ({
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
   const questionDetails = {
-    single_select: "select one of many options (at most 5)",
-    multi_select: "select all that apply (at most 5)",
+    single_select: "select one option (at most 5 choices)",
+    multi_select: "select all that apply (at most 5 choices)",
     emoji_sentiment: "range of emojis to gauage interest level",
     open_ended: "input box for text responses",
   };
@@ -75,7 +75,10 @@ const QuestionOverview = ({
   useEffect(() => {
     //let index = questions.findIndex((element) => element.hash === questionHash);
     //setNumberOfAnswers(questions[index].numberOfAnswers);
-    if (questionHash === "" && questions.length === 1) {
+    if (
+      (questionHash === "" && questions.length === 1) ||
+      (questionHash.length > 0 && questions.length === 1)
+    ) {
       setQuestionHash(questions[0].hash);
     }
   }, [questions, questionHash, numberOfAnswers, questionType]);

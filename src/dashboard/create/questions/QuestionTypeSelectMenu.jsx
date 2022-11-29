@@ -10,7 +10,6 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
   return (
     <Select.Root
       onValueChange={(value) => {
-        console.log(value);
         setChoice(value);
         updateQuestionType(value);
       }}

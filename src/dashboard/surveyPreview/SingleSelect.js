@@ -6,7 +6,7 @@ const SingleSelect = ({answerChoices}) => {
     setSelected(item);
   };
   useEffect(() => {
-    console.log(selected);
+    // console.log(selected);
   }, [selected]);
   return (
     <div className="answerChoicesContainer">
