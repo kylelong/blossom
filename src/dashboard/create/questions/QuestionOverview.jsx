@@ -44,6 +44,7 @@ const QuestionOverview = ({
   const [numberOfAnswers, setNumberOfAnswers] = useState(0);
   const updateQuestionType = (type) => {
     setQuestionType(type);
+    // TODO: hash is blank if not set on onChange
     updateQuestion(questionHash, "questionType", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
@@ -74,6 +75,9 @@ const QuestionOverview = ({
   useEffect(() => {
     //let index = questions.findIndex((element) => element.hash === questionHash);
     //setNumberOfAnswers(questions[index].numberOfAnswers);
+    if (questionHash === "" && questions.length === 1) {
+      setQuestionHash(questions[0].hash);
+    }
   }, [questions, questionHash, numberOfAnswers, questionType]);
   return (
     <>
@@ -109,12 +113,12 @@ const QuestionOverview = ({
                 ></input>
                 <div className="questionDetailsContainer">
                   <div className="questionTypeContainer">
+                    {/* TODO: fix question.questionType, question is randomlyundefined at times */}
                     <QuestionTypeSelectMenu
                       updateQuestionType={updateQuestionType}
                       defaultQuestionType={question.questionType}
                       hash={question.hash}
                     />
-
                     {hasOptions && (
                       <input
                         type="text"

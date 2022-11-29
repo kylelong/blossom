@@ -32,7 +32,6 @@ const Panel = () => {
 
   // update index
   const removeQuestion = (index) => {
-    console.log(questions.length, index);
     setQuestions((prevState) => {
       const questions = [...prevState];
       questions.splice(index, 1);

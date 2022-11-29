@@ -15,9 +15,7 @@ const MultiSelect = ({answerChoices}) => {
     }
   };
 
-  useEffect(() => {
-    console.log(answerChoices);
-  }, [answerChoices]);
+  useEffect(() => {}, [answerChoices]);
 
   return (
     <div className="answerChoicesContainer">

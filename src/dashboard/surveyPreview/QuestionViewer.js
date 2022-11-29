@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";

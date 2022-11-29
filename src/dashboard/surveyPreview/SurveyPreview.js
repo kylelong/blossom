@@ -7,7 +7,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
   const showQuestions = questions.length > 0;
   const handleIndex = (buttonAction) => {
     const maxIndex = questions.length - 1;
-    if (questions.length > 0) {
+    if (questions.length > 0 && ["next", "previous"].includes(buttonAction)) {
       if (buttonAction === "next") {
         if (questionIndex === maxIndex) {
           setQuestionIndex(0);
@@ -45,9 +45,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           </p>
         </div>
       )}
-      {showQuestions && (
-        <QuestionViewer {...questions[questionIndex]} questions={questions} />
-      )}
+      {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
       <div className="previewButtonsContainer">
         <button
           className="previewButton"
