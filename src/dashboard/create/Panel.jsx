@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {useForm} from "react-hook-form";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Label from "@radix-ui/react-label";
 import {PlusCircledIcon} from "@radix-ui/react-icons";
 import * as Accordion from "@radix-ui/react-accordion";
@@ -100,6 +101,22 @@ const Panel = () => {
     [questions]
   );
 
+  const publishSurvey = () => {
+    console.log("publishing surey");
+  };
+  const deleteSurvey = () => {
+    console.log("delete surey");
+    /**
+     * TODO:
+     * firebase logic to delete survey based on id
+     *  delete answer and question
+     */
+
+    // reset survey
+    setQuestions([]);
+    setQuestionHash("");
+  };
+
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
@@ -140,7 +157,7 @@ const Panel = () => {
             <Accordion.Root
               className="AccordionRoot"
               type="single"
-              defaultValue="item-0"
+              defaultValue={`item-${questions.length}`}
               collapsible
             >
               <QuestionOverview
@@ -161,10 +178,96 @@ const Panel = () => {
             >
               Add Question <PlusCircledIcon style={{marginLeft: "5px"}} />
             </button>
-            <button className="publishBtn panelBtn" type="submit">
-              Publish
-            </button>
+            {questions.length > 0 && (
+              <>
+                <AlertDialog.Root>
+                  <AlertDialog.Trigger asChild>
+                    <button className="publishBtn panelBtn" type="submit">
+                      Publish
+                    </button>
+                  </AlertDialog.Trigger>
+                  <AlertDialog.Portal>
+                    <AlertDialog.Overlay className="AlertDialogOverlay" />
+                    <AlertDialog.Content className="AlertDialogContent">
+                      <AlertDialog.Title className="AlertDialogTitle">
+                        Are you absolutely sure?
+                      </AlertDialog.Title>
+                      <AlertDialog.Description className="AlertDialogDescription">
+                        Once you publish this survey you won't be able to edit
+                        it. Delete this survey to begin a new one, otherwise it
+                        is saved as a draft until published.
+                      </AlertDialog.Description>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 25,
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <AlertDialog.Cancel asChild>
+                          <button className="Button mauve">Cancel</button>
+                        </AlertDialog.Cancel>
+                        <AlertDialog.Action asChild>
+                          <button
+                            className="Button green"
+                            onClick={() => publishSurvey()}
+                          >
+                            Yes, publish this survey
+                          </button>
+                        </AlertDialog.Action>
+                      </div>
+                    </AlertDialog.Content>
+                  </AlertDialog.Portal>
+                </AlertDialog.Root>
+              </>
+            )}
           </div>
+          {questions.length > 0 && (
+            <>
+              <AlertDialog.Root>
+                <AlertDialog.Trigger asChild>
+                  <button
+                    className="Button red"
+                    id="deleteSurvey"
+                    type="submit"
+                  >
+                    Delete
+                  </button>
+                </AlertDialog.Trigger>
+                <AlertDialog.Portal>
+                  <AlertDialog.Overlay className="AlertDialogOverlay" />
+                  <AlertDialog.Content className="AlertDialogContent">
+                    <AlertDialog.Title className="AlertDialogTitle">
+                      Are you absolutely sure?
+                    </AlertDialog.Title>
+                    <AlertDialog.Description className="AlertDialogDescription">
+                      This action cannot be reversed. Once you delete this
+                      survey, it is permanently gone.
+                    </AlertDialog.Description>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 25,
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <AlertDialog.Cancel asChild>
+                        <button className="Button mauve">Cancel</button>
+                      </AlertDialog.Cancel>
+                      <AlertDialog.Action asChild>
+                        <button
+                          className="Button red"
+                          onClick={() => deleteSurvey()}
+                        >
+                          Yes, delete survey
+                        </button>
+                      </AlertDialog.Action>
+                    </div>
+                  </AlertDialog.Content>
+                </AlertDialog.Portal>
+              </AlertDialog.Root>
+            </>
+          )}
         </form>
       </div>
     </div>

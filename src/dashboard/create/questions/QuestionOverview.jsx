@@ -94,7 +94,10 @@ const QuestionOverview = ({
               updateQuestionHash(question.hash);
             }}
           >
-            <Accordion.Item className="AccordionItem" value={`item-${index}`}>
+            <Accordion.Item
+              className="AccordionItem"
+              value={`item-${index + 1}`}
+            >
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
                 <Label.Root className="LabelRoot" htmlFor="surveyTitle">
@@ -116,7 +119,6 @@ const QuestionOverview = ({
                 ></input>
                 <div className="questionDetailsContainer">
                   <div className="questionTypeContainer">
-                    {/* TODO: fix question.questionType, question is randomlyundefined at times */}
                     <QuestionTypeSelectMenu
                       updateQuestionType={updateQuestionType}
                       defaultQuestionType={question.questionType}
