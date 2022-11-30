@@ -21,6 +21,7 @@
 .Input {
   all: unset;
   width: 100%;
+  max-width: 302px;
   display: inline-flex;
   text-align: left;
   border-radius: 4px;
@@ -345,7 +346,7 @@ button {
   box-shadow: 0 0 0 2px var(--mauve7);
 }
 #deleteSurvey {
-  margin-top: 32px;
+  margin-top: 12px;
 }
 @keyframes overlayShow {
   from {
@@ -365,4 +366,25 @@ button {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+.surveyLinkContainer {
+  margin-top: 12px;
+  text-align: left;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+.surveyLinkContainer * {
+  margin-bottom: 5px;
+}
+.surveyLinkHeader {
+  color: #525f7f;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.surveyLinkDetails {
+  font-size: 13px;
+  color: #525f7f;
+  font-weight: bold;
 }

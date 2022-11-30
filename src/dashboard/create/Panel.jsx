@@ -115,6 +115,7 @@ const Panel = () => {
     // reset survey
     setQuestions([]);
     setQuestionHash("");
+    // TODO: reset survey link
   };
 
   useEffect(() => {
@@ -221,6 +222,15 @@ const Panel = () => {
                 </AlertDialog.Root>
               </>
             )}
+          </div>
+          <div className="surveyLinkContainer">
+            <div className="surveyLinkHeader">survey link:</div>
+            <code className="surveyLink">
+              https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg?redirect_url=google.com
+            </code>
+            <div className="surveyLinkDetails">
+              (link is active once the survey is published)
+            </div>
           </div>
           {questions.length > 0 && (
             <>
