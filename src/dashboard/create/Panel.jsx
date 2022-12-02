@@ -14,6 +14,10 @@ const Panel = () => {
   const [surveyName, setSurveyName] = useState("Survey Title");
   const [questions, setQuestions] = useState([]);
   const [questionHash, setQuestionHash] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("");
+  const baseSurveyLink =
+    "https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg";
+  const [surveyLink, setSurveyLink] = useState(baseSurveyLink);
 
   const addQuestion = () => {
     let data = {
@@ -115,15 +119,27 @@ const Panel = () => {
     // reset survey
     setQuestions([]);
     setQuestionHash("");
-    // TODO: reset survey link
+    // TODO: reset survey link with validation url
+  };
+  const updateRedirectUrl = (value) => {
+    // TODO: regex
+    if (value === "") {
+      setSurveyLink(baseSurveyLink);
+    } else {
+      let survey_link = baseSurveyLink;
+      survey_link = survey_link.concat(`?redirect_url=${value}`);
+      setSurveyLink(survey_link);
+    }
+    setRedirectUrl(value);
   };
 
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
+
     // console.log(JSON.stringify(questions, null, 2));
-  }, [surveyName, questions]);
+  }, [surveyName, questions, redirectUrl]);
 
   return (
     <div className="panelContainer">
@@ -149,7 +165,7 @@ const Panel = () => {
           <input
             {...register("surveyTitle")}
             onChange={(e) => setSurveyName(e.target.value)}
-            className="Input"
+            className="surveyTitle"
             type="text"
             name="surveyTitle"
             id="surveyTitle"
@@ -225,11 +241,21 @@ const Panel = () => {
           </div>
           <div className="surveyLinkContainer">
             <div className="surveyLinkHeader">survey link:</div>
-            <code className="surveyLink">
-              https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg?redirect_url=google.com
-            </code>
             <div className="surveyLinkDetails">
               (link is active once the survey is published)
+            </div>
+            <code className="surveyLink">{surveyLink}</code>
+            <div className="redirectSection">
+              <code className="redirectUrlText">redirect_url</code>
+              <span style={{marginLeft: "5px"}}>:</span>
+              <input
+                type="text"
+                className="redirectUrl"
+                onChange={(e) => updateRedirectUrl(e.target.value)}
+              />
+              <div className="surveyLinkDetails">
+                (optional - where the user is sent after completing the survey)
+              </div>
             </div>
           </div>
           {questions.length > 0 && (

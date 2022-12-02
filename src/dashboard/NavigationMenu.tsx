@@ -34,6 +34,7 @@ const MenuContainer = styled.div`
   margin-right: -12px;
   border-right: 1.8px solid #f3f3f3;
   height: 100vh;
+  width: 250px;
   @media (max-width: 768px) {
     display: none;
   }

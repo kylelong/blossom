@@ -18,7 +18,7 @@
   color: black;
 }
 
-.Input {
+.surveyTitle {
   all: unset;
   width: 100%;
   max-width: 302px;
@@ -33,7 +33,7 @@
   background-color: white;
   box-shadow: 0 0 0 1px var(--blackA9);
 }
-.Input:focus {
+.surveyTitle:focus {
   box-shadow: 0 0 0 2px #355e3b;
 }
 
@@ -216,8 +216,11 @@ h3 {
   margin-top: 20px;
   display: flex;
   flex-direction: row;
-  width: 65vw;
-  justify-content: flex-start;
+  /* width: 100vw;
+  height: 100vh; */
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-left: 24px;
 }
 .panelBtnGroup {
   display: flex;
@@ -225,6 +228,7 @@ h3 {
   margin-top: 32px;
 }
 /* .formContainer {
+  width: 50%;
 } */
 .questionTitle {
   all: unset;
@@ -375,6 +379,9 @@ button {
   display: flex;
   flex-direction: column;
 }
+.surveyLink {
+  width: 5px;
+}
 .surveyLinkContainer * {
   margin-bottom: 5px;
 }
@@ -387,4 +394,24 @@ button {
   font-size: 13px;
   color: #525f7f;
   font-weight: bold;
+}
+
+.redirectUrlText {
+  color: rgb(60, 66, 87);
+  background: rgb(247, 250, 252);
+  border: 1px solid #efefef;
+  padding: 2px;
+  border-radius: 5px;
+}
+.redirectSection {
+  margin-top: 15px;
+}
+.redirectUrl {
+  margin-left: 5px;
+  width: 250px;
+}
+@media (max-width: 1260px) {
+  .panelContainer {
+    flex-direction: column;
+  }
 }
