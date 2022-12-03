@@ -5,12 +5,16 @@
   font-weight: bold;
   color: #525f7f;
 }
-
+.surveyContainerParent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .surveyContainer {
   display: flex;
   flex-direction: column;
   padding: 12px;
-  width: 35vw;
+  width: 41vw;
   border-radius: 5px;
   border: 2px solid #f6f6f6;
   height: 50vh;

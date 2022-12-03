@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./preview.css";
+import * as Label from "@radix-ui/react-label";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyName, questionHash}) => {
@@ -31,41 +32,46 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
     }
   }, [questionHash, questions]);
   return (
-    <div className="surveyContainer">
-      <div className="surveyName">{surveyName}</div>
-      {showQuestions && (
-        <div className="questionNumber">Question {questionIndex + 1}</div>
-      )}
-      {!showQuestions && (
-        <div className="startSurveyContainer">
-          <img src={flower} alt="sunflower" />
+    <div className="surveyContainerParent">
+      <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
+        Survey Preview:
+      </Label.Root>
+      <div className="surveyContainer">
+        <div className="surveyName">{surveyName}</div>
+        {showQuestions && (
+          <div className="questionNumber">Question {questionIndex + 1}</div>
+        )}
+        {!showQuestions && (
+          <div className="startSurveyContainer">
+            <img src={flower} alt="sunflower" />
 
-          <p className="addDetails">
-            Add questions to start creating your new survey &#x1F60A;
-          </p>
+            <p className="addDetails">
+              Add questions to start creating your new survey &#x1F60A;
+            </p>
+          </div>
+        )}
+        {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
+        <div className="previewButtonsContainer">
+          <button
+            className="previewButton"
+            name="previous"
+            onClick={(e) => {
+              handleIndex(e.target.name);
+            }}
+            style={{marginRight: "75px"}}
+          >
+            Previous
+          </button>
+          <button
+            className="previewButton"
+            name="next"
+            onClick={(e) => {
+              handleIndex(e.target.name);
+            }}
+          >
+            Next
+          </button>
         </div>
-      )}
-      {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
-      <div className="previewButtonsContainer">
-        <button
-          className="previewButton"
-          name="previous"
-          onClick={(e) => {
-            handleIndex(e.target.name);
-          }}
-          style={{marginRight: "75px"}}
-        >
-          Previous
-        </button>
-        <button
-          className="previewButton"
-          name="next"
-          onClick={(e) => {
-            handleIndex(e.target.name);
-          }}
-        >
-          Next
-        </button>
       </div>
     </div>
   );

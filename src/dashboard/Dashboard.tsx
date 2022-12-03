@@ -3,17 +3,17 @@ import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
 import {
   DashboardContainer,
-  DashboardSectionContainer,
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
+  DashboardSectionContainerCenter,
 } from "./dashboardStyles";
 
 const Dashboard = () => {
   // const [surveyCount, setSurveyCount] = useState<number>(0);
   return (
     <DashboardContainer>
-      <DashboardSectionContainer>
+      <DashboardSectionContainerCenter>
         <DashboardMenu headerText={"dashboard"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>dashboard</DashboardHeaderTextDesktop>
@@ -27,7 +27,7 @@ const Dashboard = () => {
         <MenuContainer>
           <Menu />
         </MenuContainer>
-      </DashboardSectionContainer>
+      </DashboardSectionContainerCenter>
     </DashboardContainer>
   );
 };

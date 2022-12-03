@@ -108,6 +108,7 @@ const Panel = () => {
 
   const publishSurvey = () => {
     console.log("publishing surey");
+    console.log(JSON.stringify(questions, null, 2));
   };
   const deleteSurvey = () => {
     console.log("delete surey");
@@ -121,6 +122,8 @@ const Panel = () => {
     setQuestions([]);
     setQuestionHash("");
     setRedirectUrl("");
+    setErrors([]);
+    setSurveyName("Survey Title");
     // call create survey which generates link
     // TODO: reset survey link with validation url
   };
@@ -149,6 +152,9 @@ const Panel = () => {
         if (!validUrl.test(redirectUrl)) {
           errs.push("redirect_url must be a valid url");
         }
+      }
+      if (surveyName === "Survey Title") {
+        errs.push("please enter a title for the survey");
       }
       questions.forEach((question, index) => {
         // blank title or question type
@@ -179,7 +185,7 @@ const Panel = () => {
             ids.substring(lastCommaIndex + 1);
         }
 
-        errs.push(`question(s) ${ids} need a title and/or question type`);
+        errs.push(`question(s) ${ids} needs a title and/or question type`);
       }
       if (answerErrorsIndices.length > 0) {
         let ids = answerErrorsIndices.join(", ");
@@ -191,10 +197,9 @@ const Panel = () => {
             ids.substring(lastCommaIndex + 1);
         }
 
-        errs.push(`question(s) ${ids} need complete answer choices`);
+        errs.push(`question(s) ${ids} needs complete answer choices`);
       }
       setErrors(errs);
-      console.log(errs);
     }
 
     // check answers
@@ -205,7 +210,7 @@ const Panel = () => {
       setSurveyName("Survey Title");
     }
 
-    console.log(JSON.stringify(questions, null, 2));
+    // console.log(JSON.stringify(questions, null, 2));
   }, [surveyName, questions, redirectUrl, errors]);
 
   return (
@@ -226,7 +231,7 @@ const Panel = () => {
           }}
           onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
         >
-          <Label.Root className="LabelRoot" htmlFor="surveyTitle">
+          <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
             Survey Title:
           </Label.Root>
           <input

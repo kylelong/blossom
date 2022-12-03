@@ -7,7 +7,7 @@ import {useForm} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
 import {
   DashboardContainer,
-  DashboardSectionContainer,
+  DashboardSectionContainerCenter,
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
@@ -71,7 +71,7 @@ const Account = () => {
 
   return (
     <DashboardContainer>
-      <DashboardSectionContainer>
+      <DashboardSectionContainerCenter>
         <DashboardMenu headerText={"account"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>account</DashboardHeaderTextDesktop>
@@ -108,7 +108,7 @@ const Account = () => {
         <MenuContainer>
           <Menu />
         </MenuContainer>
-      </DashboardSectionContainer>
+      </DashboardSectionContainerCenter>
     </DashboardContainer>
   );
 };

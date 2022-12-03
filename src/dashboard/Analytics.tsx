@@ -3,7 +3,7 @@ import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
 import {
   DashboardContainer,
-  DashboardSectionContainer,
+  DashboardSectionContainerCenter,
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
@@ -12,7 +12,7 @@ import {
 const Dashboard = () => {
   return (
     <DashboardContainer>
-      <DashboardSectionContainer>
+      <DashboardSectionContainerCenter>
         <DashboardMenu headerText={"analytics"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>analytics</DashboardHeaderTextDesktop>
@@ -21,7 +21,7 @@ const Dashboard = () => {
         <MenuContainer>
           <Menu />
         </MenuContainer>
-      </DashboardSectionContainer>
+      </DashboardSectionContainerCenter>
     </DashboardContainer>
   );
 };

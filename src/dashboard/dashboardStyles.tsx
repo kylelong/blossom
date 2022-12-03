@@ -6,8 +6,19 @@ export const DashboardContainer = styled.div`
   flex-direction: column;
   padding: 10px;
 `;
-
+/** justify-content: spave-between;   */
 export const DashboardSectionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+`;
+export const DashboardSectionContainerCenter = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -75,9 +86,11 @@ export const DashboardHeaderText = styled.div`
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #525f7f;
 `;
 export const DashboardHeaderTextDesktop = styled.div`
   font-size: 22px;
+  color: #525f7f;
   font-weight: bold;
   margin-bottom: 10px;
   @media (max-width: 768px) {
