@@ -15,6 +15,7 @@ const Panel = () => {
   const [questions, setQuestions] = useState([]);
   const [questionHash, setQuestionHash] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
+  const [errors, setErrors] = useState([]);
   const baseSurveyLink =
     "https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg";
   const [surveyLink, setSurveyLink] = useState(baseSurveyLink);
@@ -119,6 +120,8 @@ const Panel = () => {
     // reset survey
     setQuestions([]);
     setQuestionHash("");
+    setRedirectUrl("");
+    // call create survey which generates link
     // TODO: reset survey link with validation url
   };
   const updateRedirectUrl = (value) => {
@@ -133,13 +136,77 @@ const Panel = () => {
     setRedirectUrl(value);
   };
 
+  const checkForErrors = () => {
+    if (questions.length > 0) {
+      const errs = [];
+      setErrors([]);
+      const mc = ["multi_select", "single_select"];
+      let questionErrorsIndices = [];
+      let answerErrorsIndices = [];
+      const validUrl =
+        /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
+      if (redirectUrl) {
+        if (!validUrl.test(redirectUrl)) {
+          errs.push("redirect_url must be a valid url");
+        }
+      }
+      questions.forEach((question, index) => {
+        // blank title or question type
+        if (question.questionTitle === "" || question.questionType === "") {
+          questionErrorsIndices.push(index + 1);
+        }
+        if (mc.includes(question.questionType)) {
+          // check for no answer choices for multi_select / single_select question
+          let hasAnswers = question.answerChoices.every(
+            (choice) => choice.length > 0
+          );
+          if (
+            !hasAnswers ||
+            question.answerChoices.length === 0 ||
+            question.numberOfAnswerChoices === 0
+          ) {
+            answerErrorsIndices.push(index + 1);
+          }
+        }
+      });
+      if (questionErrorsIndices.length > 0) {
+        let ids = questionErrorsIndices.join(" ,");
+        let lastCommaIndex = ids.lastIndexOf(",");
+        if (questionErrorsIndices.length > 1) {
+          ids =
+            ids.substring(0, lastCommaIndex) +
+            " & " +
+            ids.substring(lastCommaIndex + 1);
+        }
+
+        errs.push(`question(s) ${ids} need a title and/or question type`);
+      }
+      if (answerErrorsIndices.length > 0) {
+        let ids = answerErrorsIndices.join(", ");
+        if (answerErrorsIndices.length > 1) {
+          let lastCommaIndex = ids.lastIndexOf(",");
+          ids =
+            ids.substring(0, lastCommaIndex) +
+            " & " +
+            ids.substring(lastCommaIndex + 1);
+        }
+
+        errs.push(`question(s) ${ids} need complete answer choices`);
+      }
+      setErrors(errs);
+      console.log(errs);
+    }
+
+    // check answers
+  };
+
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Title");
     }
 
-    // console.log(JSON.stringify(questions, null, 2));
-  }, [surveyName, questions, redirectUrl]);
+    console.log(JSON.stringify(questions, null, 2));
+  }, [surveyName, questions, redirectUrl, errors]);
 
   return (
     <div className="panelContainer">
@@ -199,43 +266,64 @@ const Panel = () => {
               <>
                 <AlertDialog.Root>
                   <AlertDialog.Trigger asChild>
-                    <button className="publishBtn panelBtn" type="submit">
+                    <button
+                      className="publishBtn panelBtn"
+                      type="submit"
+                      onClick={() => checkForErrors()}
+                    >
                       Publish
                     </button>
                   </AlertDialog.Trigger>
-                  <AlertDialog.Portal>
-                    <AlertDialog.Overlay className="AlertDialogOverlay" />
-                    <AlertDialog.Content className="AlertDialogContent">
-                      <AlertDialog.Title className="AlertDialogTitle">
-                        Are you absolutely sure?
-                      </AlertDialog.Title>
-                      <AlertDialog.Description className="AlertDialogDescription">
-                        Once you publish this survey you won't be able to edit
-                        it. Delete this survey to begin a new one, otherwise it
-                        is saved as a draft until published.
-                      </AlertDialog.Description>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 25,
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <AlertDialog.Cancel asChild>
-                          <button className="Button mauve">Cancel</button>
-                        </AlertDialog.Cancel>
-                        <AlertDialog.Action asChild>
-                          <button
-                            className="Button green"
-                            onClick={() => publishSurvey()}
+                  {errors.length === 0 && (
+                    <>
+                      <AlertDialog.Portal>
+                        <AlertDialog.Overlay className="AlertDialogOverlay" />
+                        <AlertDialog.Content className="AlertDialogContent">
+                          <AlertDialog.Title className="AlertDialogTitle">
+                            Are you absolutely sure?
+                          </AlertDialog.Title>
+                          <AlertDialog.Description className="AlertDialogDescription">
+                            Share the survey link to start collecting responses
+                            :). Once you publish this survey you won't be able
+                            to edit it. Delete this survey to begin a new one,
+                            otherwise it is saved as a draft until published.
+                          </AlertDialog.Description>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: 25,
+                              justifyContent: "flex-end",
+                            }}
                           >
-                            Yes, publish this survey
-                          </button>
-                        </AlertDialog.Action>
-                      </div>
-                    </AlertDialog.Content>
-                  </AlertDialog.Portal>
+                            <AlertDialog.Cancel asChild>
+                              <button className="Button mauve">Cancel</button>
+                            </AlertDialog.Cancel>
+                            <AlertDialog.Action asChild>
+                              <button
+                                className="Button green"
+                                onClick={() => publishSurvey()}
+                              >
+                                Yes, publish this survey
+                              </button>
+                            </AlertDialog.Action>
+                          </div>
+                        </AlertDialog.Content>
+                      </AlertDialog.Portal>
+                    </>
+                  )}
                 </AlertDialog.Root>
+              </>
+            )}
+          </div>
+          <div className="errorsContainer">
+            {errors.length > 0 && (
+              <>
+                <div className="errorsHeader">errors:</div>
+                <div>
+                  {errors.map((err, index) => {
+                    return <p key={index}>- {err}</p>;
+                  })}
+                </div>
               </>
             )}
           </div>

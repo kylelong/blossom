@@ -247,7 +247,18 @@ h3 {
 .questionTitle:focus {
   box-shadow: 0 0 0 2px var(--mauve11);
 }
-
+.errorsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  margin-top: 12px;
+}
+.errorsHeader {
+  color: #525f7f;
+  font-weight: bold;
+  text-align: left;
+}
 /** end of Panel.jsx **/
 
 /** alert dialog **/

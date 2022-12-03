@@ -2,7 +2,6 @@ import React, {useState} from "react";
 const OpenEnded = () => {
   const [response, setResponse] = useState("");
   const handleChange = (input) => {
-    console.log(input);
     setResponse(input);
   };
   return (
