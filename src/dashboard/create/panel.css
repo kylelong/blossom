@@ -18,7 +18,7 @@
   color: black;
 }
 
-.surveyTitle {
+.surveyName {
   all: unset;
   width: 100%;
   max-width: 302px;
@@ -33,7 +33,7 @@
   background-color: white;
   box-shadow: 0 0 0 1px var(--blackA9);
 }
-.surveyTitle:focus {
+.surveyName:focus {
   box-shadow: 0 0 0 2px #355e3b;
 }
 
@@ -159,6 +159,7 @@ h3 {
 
 .AccordionTrigger:hover {
   background-color: var(--mauve2);
+  cursor: pointer;
 }
 
 .AccordionContent {
@@ -403,6 +404,29 @@ button {
 .surveyLinkContainer * {
   margin-bottom: 5px;
 }
+.surveyLinkHeaderContainer {
+  display: flex;
+  flex-direction: row;
+}
+.copyIcon {
+  margin-top: 3px;
+  margin-left: 5px;
+}
+.copyIcon:hover {
+  cursor: pointer;
+}
+.copiedText {
+  color: #355e3b;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.copiedContainer {
+  margin-left: 10px;
+  position: relative;
+  bottom: 1px;
+  display: flex;
+  flex-direction: row;
+}
 .surveyLinkHeader {
   color: #525f7f;
   font-weight: bold;
@@ -431,5 +455,8 @@ button {
 @media (max-width: 1260px) {
   .panelContainer {
     flex-direction: column;
+  }
+  .redirectUrl {
+    margin-top: 7px;
   }
 }

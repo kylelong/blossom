@@ -1,6 +1,6 @@
 @import "@radix-ui/colors/mauve.css";
 @import "@radix-ui/colors/blackA.css";
-.surveyName {
+.surveyNameHeader {
   font-size: 22px;
   font-weight: bold;
   color: #525f7f;
@@ -164,5 +164,8 @@
   }
   .surveyContainer {
     width: 100%;
+  }
+  .surveyContainerParent {
+    margin-bottom: 24px;
   }
 }

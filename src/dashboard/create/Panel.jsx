@@ -1,25 +1,31 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import {useForm} from "react-hook-form";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Label from "@radix-ui/react-label";
-import {PlusCircledIcon} from "@radix-ui/react-icons";
+import {
+  PlusCircledIcon,
+  ClipboardCopyIcon,
+  CheckCircledIcon,
+} from "@radix-ui/react-icons";
 import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreveiw from "../surveyPreview/SurveyPreview";
+import {CopyToClipboard} from "react-copy-to-clipboard";
 import "./panel.css";
 
 const Panel = () => {
   const {register, handleSubmit} = useForm();
-  const [data, setData] = useState("Survey Title");
-  const [surveyName, setSurveyName] = useState("Survey Title");
+  const [data, setData] = useState("Survey Name");
+  const [surveyName, setSurveyName] = useState("Survey Name");
   const [questions, setQuestions] = useState([]);
   const [questionHash, setQuestionHash] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
   const [errors, setErrors] = useState([]);
+  const [showCopied, setShowCopied] = useState(false);
   const baseSurveyLink =
     "https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg";
   const [surveyLink, setSurveyLink] = useState(baseSurveyLink);
-
+  const timerRef = useRef(0);
   const addQuestion = () => {
     let data = {
       questionTitle: "",
@@ -105,10 +111,20 @@ const Panel = () => {
     },
     [questions]
   );
-
+  /**
+   * TODO: function that creates survey
+   *  creates survey link /{survey_hash}/user_id
+   * make sure to check that these values are not tapered with on survey submission
+   * const createSurvey = () => {
+   *  //start if no survey is not publised for user
+   * }
+   *  */
   const publishSurvey = () => {
     console.log("publishing surey");
     console.log(JSON.stringify(questions, null, 2));
+    /**
+     * survey needs name and my questions
+     */
   };
   const deleteSurvey = () => {
     console.log("delete surey");
@@ -123,7 +139,9 @@ const Panel = () => {
     setQuestionHash("");
     setRedirectUrl("");
     setErrors([]);
-    setSurveyName("Survey Title");
+    setSurveyName("Survey Name");
+    //TODO: make first add question onclick be the start of the survey
+    setSurveyLink(baseSurveyLink);
     // call create survey which generates link
     // TODO: reset survey link with validation url
   };
@@ -139,6 +157,15 @@ const Panel = () => {
     setRedirectUrl(value);
   };
 
+  const handleCopy = () => {
+    window.clearTimeout(timerRef.current);
+    setShowCopied(true);
+    console.log(showCopied);
+    timerRef.current = window.setTimeout(() => {
+      setShowCopied(false);
+    }, 3000);
+  };
+
   const checkForErrors = () => {
     if (questions.length > 0) {
       const errs = [];
@@ -147,14 +174,15 @@ const Panel = () => {
       let questionErrorsIndices = [];
       let answerErrorsIndices = [];
       const validUrl =
+        // eslint-disable-next-line
         /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
       if (redirectUrl) {
         if (!validUrl.test(redirectUrl)) {
           errs.push("redirect_url must be a valid url");
         }
       }
-      if (surveyName === "Survey Title") {
-        errs.push("please enter a title for the survey");
+      if (surveyName === "Survey Name") {
+        errs.push("please enter a name for the survey");
       }
       questions.forEach((question, index) => {
         // blank title or question type
@@ -207,8 +235,9 @@ const Panel = () => {
 
   useEffect(() => {
     if (surveyName.length === 0) {
-      setSurveyName("Survey Title");
+      setSurveyName("Survey Name");
     }
+    return () => clearTimeout(timerRef.current);
 
     // console.log(JSON.stringify(questions, null, 2));
   }, [surveyName, questions, redirectUrl, errors]);
@@ -231,16 +260,16 @@ const Panel = () => {
           }}
           onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
         >
-          <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
-            Survey Title:
+          <Label.Root className="surveySectionLabel" htmlFor="surveyName">
+            Survey Name:
           </Label.Root>
           <input
-            {...register("surveyTitle")}
+            {...register("surveyName")}
             onChange={(e) => setSurveyName(e.target.value)}
-            className="surveyTitle"
+            className="surveyName"
             type="text"
-            name="surveyTitle"
-            id="surveyTitle"
+            name="surveyName"
+            id="surveyName"
           />
           <div className="QuestionPanel">
             <Accordion.Root
@@ -332,25 +361,44 @@ const Panel = () => {
               </>
             )}
           </div>
-          <div className="surveyLinkContainer">
-            <div className="surveyLinkHeader">survey link:</div>
-            <div className="surveyLinkDetails">
-              (link is active once the survey is published)
-            </div>
-            <code className="surveyLink">{surveyLink}</code>
-            <div className="redirectSection">
-              <code className="redirectUrlText">redirect_url</code>
-              <span style={{marginLeft: "5px"}}>:</span>
-              <input
-                type="text"
-                className="redirectUrl"
-                onChange={(e) => updateRedirectUrl(e.target.value)}
-              />
+          {surveyLink && (
+            <div className="surveyLinkContainer">
+              <div className="surveyLinkHeaderContainer">
+                <div className="surveyLinkHeader">survey link:</div>
+                <CopyToClipboard text={surveyLink}>
+                  <ClipboardCopyIcon
+                    className="copyIcon"
+                    onClick={handleCopy}
+                  ></ClipboardCopyIcon>
+                </CopyToClipboard>
+                {showCopied && (
+                  <div className="copiedContainer">
+                    <div className="copiedText">copied to clipboard</div>
+                    <CheckCircledIcon
+                      style={{marginLeft: "3px", marginTop: "3px"}}
+                    />
+                  </div>
+                )}
+              </div>
               <div className="surveyLinkDetails">
-                (optional - where the user is sent after completing the survey)
+                (link is active once the survey is published)
+              </div>
+              <code className="surveyLink">{surveyLink}</code>
+              <div className="redirectSection">
+                <code className="redirectUrlText">redirect_url</code>
+                <span style={{marginLeft: "5px"}}>:</span>
+                <input
+                  type="text"
+                  className="redirectUrl"
+                  onChange={(e) => updateRedirectUrl(e.target.value)}
+                />
+                <div className="surveyLinkDetails">
+                  (optional - where the user is sent after completing the
+                  survey)
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {questions.length > 0 && (
             <>
               <AlertDialog.Root>

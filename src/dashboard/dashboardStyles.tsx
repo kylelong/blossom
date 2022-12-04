@@ -16,6 +16,7 @@ export const DashboardSectionContainer = styled.div`
     flex-direction: column;
     width: 100%;
     align-items: center;
+    padding: 10px;
   }
 `;
 export const DashboardSectionContainerCenter = styled.div`
