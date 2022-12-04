@@ -99,6 +99,7 @@ const Account = () => {
                 name="company"
                 id="contact"
               />
+
               <button className="updateBtn" type="submit">
                 Update
               </button>

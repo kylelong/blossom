@@ -57,7 +57,6 @@ const Panel = () => {
       // finds the question
       let index = copy.findIndex((element) => element.hash === hash);
       // property or manipulating answer choices
-      // if (questions[index].hasOwnProperty(property)) {
       if (property === "questionTitle") {
         copy[index].questionTitle = value;
       } else if (property === "questionType") {
@@ -107,7 +106,6 @@ const Panel = () => {
         }
       }
       setQuestions(copy);
-      //  }
     },
     [questions]
   );
@@ -204,7 +202,7 @@ const Panel = () => {
         }
       });
       if (questionErrorsIndices.length > 0) {
-        let ids = questionErrorsIndices.join(" ,");
+        let ids = questionErrorsIndices.join(",");
         let lastCommaIndex = ids.lastIndexOf(",");
         if (questionErrorsIndices.length > 1) {
           ids =
@@ -216,7 +214,7 @@ const Panel = () => {
         errs.push(`question(s) ${ids} needs a title and/or question type`);
       }
       if (answerErrorsIndices.length > 0) {
-        let ids = answerErrorsIndices.join(", ");
+        let ids = answerErrorsIndices.join(",");
         if (answerErrorsIndices.length > 1) {
           let lastCommaIndex = ids.lastIndexOf(",");
           ids =
