@@ -65,7 +65,7 @@ export const HeaderContainer = styled.div`
   justify-content: space-around;
   position: relative;
 
-  @media (max-width: 500px) {
+  @media (max-width: 745px) {
     flex-direction: column;
     align-items: center;
     justify-content: center;

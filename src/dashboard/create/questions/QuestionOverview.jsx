@@ -127,6 +127,7 @@ const QuestionOverview = ({
                     {hasOptions && (
                       <input
                         type="text"
+                        maxLength="1"
                         className="answerChoices"
                         placeholder="# of answers"
                         onChange={(e) => {

@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { auth } from "../firebase-config";
+import {Link} from "react-router-dom";
+import {auth} from "../firebase-config";
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 24px;
   width: 155px;
+  position: fixed;
+  right: 0px;
+  @media (max-width: 745px) {
+    position: unset;
+    right: unset;
+  }
 `;
 
 export const MenuItem = styled.div`

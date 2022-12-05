@@ -44,14 +44,15 @@ import {
 } from "./styles";
 
 const LandingPage: React.FC = () => {
+  // "AB test different user groups"
   const pricingBenefits = [
     "Unlimited Surveys",
     "Release surveys to users in minutes",
     "No coding required",
     "Advanced analytics",
-    "AB test different user groups",
     "Fast support",
   ];
+  const price = 25;
 
   return (
     <LandingPageContainer>
@@ -120,7 +121,8 @@ const LandingPage: React.FC = () => {
         <SectionHeader>Pricing</SectionHeader>
         <PriceContainer>
           <Price>
-            $25<Month>/month</Month>
+            ${price}
+            <Month>/month</Month>
           </Price>
           <PricingHeader>
             All you need to create beautiful surveys
@@ -178,7 +180,8 @@ const LandingPage: React.FC = () => {
           <QuestionContainer>
             <QuestionLabel>How much does this cost?</QuestionLabel>
             <AnswerLabel>
-              $49 / month. Start today with a 2 week free trial. Cancel anytime
+              ${price} / month. Start today with a 2 week free trial. Cancel
+              anytime
             </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>

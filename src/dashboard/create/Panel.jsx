@@ -11,6 +11,17 @@ import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreveiw from "../surveyPreview/SurveyPreview";
 import {CopyToClipboard} from "react-copy-to-clipboard";
+import {auth, app} from "../../firebase-config";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {
+  getFirestore,
+  serverTimestamp,
+  getDocs,
+  where,
+  query,
+  addDoc,
+  collection,
+} from "firebase/firestore";
 import "./panel.css";
 
 const Panel = () => {
@@ -26,6 +37,9 @@ const Panel = () => {
     "https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg";
   const [surveyLink, setSurveyLink] = useState(baseSurveyLink);
   const timerRef = useRef(0);
+  const [user] = useAuthState(auth);
+  const db = getFirestore(app);
+
   const addQuestion = () => {
     let data = {
       questionTitle: "",
@@ -117,13 +131,29 @@ const Panel = () => {
    *  //start if no survey is not publised for user
    * }
    *  */
-  const publishSurvey = () => {
+  const publishSurvey = async () => {
     console.log("publishing surey");
     console.log(JSON.stringify(questions, null, 2));
     /**
-     * survey needs name and my questions
+     * survey needs meta data before questions and questions
+     * sending to analytics / surveys
      */
+    try {
+      const surveyDoc = await addDoc(collection(db, "surveys"), {
+        surveyName: surveyName,
+        uid: user.uid,
+        createdAt: serverTimestamp(),
+        redirectUrl: redirectUrl,
+        published: true,
+        responseLimit: 0,
+        expDate: null,
+        survey: questions,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
+  // const updateSurvey = () => {};
   const deleteSurvey = () => {
     console.log("delete surey");
     /**
@@ -231,10 +261,22 @@ const Panel = () => {
     // check answers
   };
 
+  const getLatestSurvey = async (uid) => {
+    const q = query(collection(db, "surveys"), where("uid", "==", uid));
+    const querySnapShot = await getDocs(q);
+    querySnapShot.forEach((doc) => {
+      console.log(doc.id);
+    });
+  };
+
   useEffect(() => {
     if (surveyName.length === 0) {
       setSurveyName("Survey Name");
     }
+    console.log(user.uid);
+
+    getLatestSurvey(user.uid);
+
     return () => clearTimeout(timerRef.current);
 
     // console.log(JSON.stringify(questions, null, 2));
