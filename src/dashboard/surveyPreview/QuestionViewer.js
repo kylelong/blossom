@@ -63,7 +63,7 @@ const QuestionViewer = ({
             <img src={flower} alt="sunflower" />
 
             <p className="addDetails">
-              Add details to this question to see its preview &#128073;
+              add details to this question to see its preview &#128073;
             </p>
           </div>
         )}

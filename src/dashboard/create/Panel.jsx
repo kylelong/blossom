@@ -10,6 +10,7 @@ import {
 import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreveiw from "../surveyPreview/SurveyPreview";
+import Loader from "../../loader";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {auth, app} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
@@ -20,19 +21,26 @@ import {
   where,
   query,
   addDoc,
+  limit,
+  orderBy,
   collection,
+  setDoc,
+  doc,
 } from "firebase/firestore";
 import "./panel.css";
+import {redirect} from "react-router-dom";
 
 const Panel = () => {
   const {register, handleSubmit} = useForm();
-  const [data, setData] = useState("Survey Name");
-  const [surveyName, setSurveyName] = useState("Survey Name");
+  const [data, setData] = useState("survey name");
+  const [surveyName, setSurveyName] = useState("survey name");
   const [questions, setQuestions] = useState([]);
   const [questionHash, setQuestionHash] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
   const [errors, setErrors] = useState([]);
   const [showCopied, setShowCopied] = useState(false);
+  const [surveyStateLoaded, setSurveyStateLoaded] = useState(false);
+  const [latestSurveyId, setLatestSurveyId] = useState("");
   const baseSurveyLink =
     "https://www.blossomsurveys.io/d7d8e73c8a47/234rey82fg";
   const [surveyLink, setSurveyLink] = useState(baseSurveyLink);
@@ -40,7 +48,10 @@ const Panel = () => {
   const [user] = useAuthState(auth);
   const db = getFirestore(app);
 
-  const addQuestion = () => {
+  const addQuestion = async () => {
+    /**
+     *
+     * **/
     let data = {
       questionTitle: "",
       index: questions.length,
@@ -50,6 +61,25 @@ const Panel = () => {
       hash: randomHash(),
     };
     setQuestions((questions) => [...questions, data]);
+    // start a new survey if HAS_DRAFT_SURVEY === false
+    if (!localStorage.getItem("HAS_DRAFT_SURVEY")) {
+      try {
+        let result = await addDoc(collection(db, "surveys"), {
+          surveyName: surveyName,
+          uid: user.uid,
+          createdAt: serverTimestamp(),
+          redirectUrl: redirectUrl,
+          published: false,
+          responseLimit: 0,
+          expDate: null,
+          survey: questions,
+        });
+        setLatestSurveyId(result.id);
+        console.log("new survey", result.id);
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   const randomHash = () => {
@@ -137,12 +167,15 @@ const Panel = () => {
     /**
      * survey needs meta data before questions and questions
      * sending to analytics / surveys
+     *
+     * TODO: only if published === false do we want to set createdAt
      */
     try {
-      const surveyDoc = await addDoc(collection(db, "surveys"), {
+      await addDoc(collection(db, "surveys"), {
         surveyName: surveyName,
         uid: user.uid,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         redirectUrl: redirectUrl,
         published: true,
         responseLimit: 0,
@@ -153,7 +186,31 @@ const Panel = () => {
       console.log(err);
     }
   };
-  // const updateSurvey = () => {};
+  const updateSurvey = async () => {
+    if (latestSurveyId) {
+      await setDoc(
+        doc(db, "surveys", latestSurveyId),
+        {
+          survey: questions,
+        },
+        {merge: true}
+      );
+    }
+  };
+  const updateSurveyName = async (value) => {
+    setSurveyName(value);
+    // TODO: make sure only draft is being edit
+    // latestSurveyId is ONLY set for draft
+    if (latestSurveyId) {
+      await setDoc(
+        doc(db, "surveys", latestSurveyId),
+        {
+          surveyName: value,
+        },
+        {merge: true}
+      );
+    }
+  };
   const deleteSurvey = () => {
     console.log("delete surey");
     /**
@@ -209,7 +266,7 @@ const Panel = () => {
           errs.push("redirect_url must be a valid url");
         }
       }
-      if (surveyName === "Survey Name") {
+      if (surveyName === "survey name") {
         errs.push("please enter a name for the survey");
       }
       questions.forEach((question, index) => {
@@ -260,14 +317,39 @@ const Panel = () => {
 
     // check answers
   };
-
-  const getLatestSurvey = async (uid) => {
-    const q = query(collection(db, "surveys"), where("uid", "==", uid));
-    const querySnapShot = await getDocs(q);
-    querySnapShot.forEach((doc) => {
-      console.log(doc.id);
-    });
-  };
+  // always get latest state despite local storage key
+  const setLatestSurveyState = useCallback(
+    async (uid) => {
+      // draft
+      const q = query(
+        collection(db, "surveys"),
+        where("uid", "==", uid),
+        where("published", "==", false),
+        orderBy("createdAt", "desc"),
+        limit(1)
+      );
+      const querySnapShot = await getDocs(q);
+      if (querySnapShot.empty) {
+        console.log("empty");
+        localStorage.setItem("HAS_DRAFT_SURVEY", false);
+      } else {
+        localStorage.setItem("HAS_DRAFT_SURVEY", true);
+        querySnapShot.forEach((doc) => {
+          let {published, survey, surveyName, redirectUrl} = doc.data();
+          console.log(published, survey, surveyName, redirectUrl);
+          setSurveyName(surveyName);
+          setRedirectUrl(redirectUrl);
+          setQuestions(survey);
+          setLatestSurveyId(doc.id);
+          // TODO: add redirect_url if not blank then
+          let link = `https://www.blossomsurveys.io/${doc.id}/${uid}`;
+          setSurveyLink(link);
+        });
+      }
+      setSurveyStateLoaded(true);
+    },
+    [db]
+  );
 
   useEffect(() => {
     if (surveyName.length === 0) {
@@ -275,13 +357,19 @@ const Panel = () => {
     }
     console.log(user.uid);
 
-    getLatestSurvey(user.uid);
+    if (!surveyStateLoaded) {
+      setLatestSurveyState(user.uid);
+    }
+    console.log("--- ");
+    updateSurvey();
 
     return () => clearTimeout(timerRef.current);
 
     // console.log(JSON.stringify(questions, null, 2));
-  }, [surveyName, questions, redirectUrl, errors]);
-
+  }, [surveyName, questions, redirectUrl, errors, setLatestSurveyState]);
+  // if (!surveyStateLoaded) {
+  //   return <></>;
+  // }
   return (
     <div className="panelContainer">
       <SurveyPreveiw
@@ -301,14 +389,15 @@ const Panel = () => {
           onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}
         >
           <Label.Root className="surveySectionLabel" htmlFor="surveyName">
-            Survey Name:
+            survey name:
           </Label.Root>
           <input
             {...register("surveyName")}
-            onChange={(e) => setSurveyName(e.target.value)}
+            onChange={(e) => updateSurveyName(e.target.value)}
             className="surveyName"
             type="text"
             name="surveyName"
+            value={surveyName === "" ? "" : surveyName}
             id="surveyName"
           />
           <div className="QuestionPanel">
@@ -334,7 +423,7 @@ const Panel = () => {
                 e.preventDefault();
               }}
             >
-              Add Question <PlusCircledIcon style={{marginLeft: "5px"}} />
+              add question <PlusCircledIcon style={{marginLeft: "5px"}} />
             </button>
             {questions.length > 0 && (
               <>
@@ -345,7 +434,7 @@ const Panel = () => {
                       type="submit"
                       onClick={() => checkForErrors()}
                     >
-                      Publish
+                      publish
                     </button>
                   </AlertDialog.Trigger>
                   {errors.length === 0 && (
@@ -354,12 +443,12 @@ const Panel = () => {
                         <AlertDialog.Overlay className="AlertDialogOverlay" />
                         <AlertDialog.Content className="AlertDialogContent">
                           <AlertDialog.Title className="AlertDialogTitle">
-                            Are you absolutely sure?
+                            are you absolutely sure?
                           </AlertDialog.Title>
                           <AlertDialog.Description className="AlertDialogDescription">
-                            Share the survey link to start collecting responses
-                            :). Once you publish this survey you won't be able
-                            to edit it. Delete this survey to begin a new one,
+                            share the survey link to start collecting responses
+                            :). once you publish this survey you won't be able
+                            to edit it. delete this survey to begin a new one,
                             otherwise it is saved as a draft until published.
                           </AlertDialog.Description>
                           <div
@@ -370,14 +459,14 @@ const Panel = () => {
                             }}
                           >
                             <AlertDialog.Cancel asChild>
-                              <button className="Button mauve">Cancel</button>
+                              <button className="Button mauve">cancel</button>
                             </AlertDialog.Cancel>
                             <AlertDialog.Action asChild>
                               <button
                                 className="Button green"
                                 onClick={() => publishSurvey()}
                               >
-                                Yes, publish this survey
+                                yes, publish this survey
                               </button>
                             </AlertDialog.Action>
                           </div>
@@ -448,17 +537,17 @@ const Panel = () => {
                     id="deleteSurvey"
                     type="submit"
                   >
-                    Delete
+                    delete
                   </button>
                 </AlertDialog.Trigger>
                 <AlertDialog.Portal>
                   <AlertDialog.Overlay className="AlertDialogOverlay" />
                   <AlertDialog.Content className="AlertDialogContent">
                     <AlertDialog.Title className="AlertDialogTitle">
-                      Are you absolutely sure?
+                      are you absolutely sure?
                     </AlertDialog.Title>
                     <AlertDialog.Description className="AlertDialogDescription">
-                      This action cannot be reversed. Once you delete this
+                      this action cannot be reversed. once you delete this
                       survey, it is permanently gone.
                     </AlertDialog.Description>
                     <div
@@ -476,7 +565,7 @@ const Panel = () => {
                           className="Button red"
                           onClick={() => deleteSurvey()}
                         >
-                          Yes, delete survey
+                          yes, delete survey
                         </button>
                       </AlertDialog.Action>
                     </div>

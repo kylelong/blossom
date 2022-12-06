@@ -85,7 +85,7 @@ const QuestionOverview = ({
   return (
     <>
       {questions.map((question, index) => {
-        let label = `Question ${index + 1}`; //question 1 - 4twerg9
+        let label = `question ${index + 1}`; //question 1 - 4twerg9
         return (
           <div
             key={index}
@@ -101,12 +101,12 @@ const QuestionOverview = ({
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
                 <Label.Root className="LabelRoot" htmlFor="surveyTitle">
-                  Title:
+                  title:
                 </Label.Root>
                 <input
                   type="text"
                   className="questionTitle"
-                  placeholder="Question title"
+                  placeholder="question title"
                   value={question.questionTitle ? question.questionTitle : ""}
                   onChange={(e) => {
                     updateQuestion(
@@ -171,7 +171,7 @@ const QuestionOverview = ({
                     className="removeQuestionBtn panelBtn"
                     onClick={() => removeQuestion(index)}
                   >
-                    Remove
+                    remove
                     <MinusCircledIcon style={{marginLeft: "5px"}} />
                   </button>
                 </div>

@@ -34,19 +34,19 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
-        Survey Preview:
+        survey preview:
       </Label.Root>
       <div className="surveyContainer">
         <div className="surveyNameHeader">{surveyName}</div>
         {showQuestions && (
-          <div className="questionNumber">Question {questionIndex + 1}</div>
+          <div className="questionNumber">question {questionIndex + 1}</div>
         )}
         {!showQuestions && (
           <div className="startSurveyContainer">
             <img src={flower} alt="sunflower" />
 
             <p className="addDetails">
-              Add questions to start creating your new survey &#x1F60A;
+              add questions to start creating your new survey &#x1F60A;
             </p>
           </div>
         )}
@@ -60,7 +60,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
             }}
             style={{marginRight: "75px"}}
           >
-            Previous
+            previous
           </button>
           <button
             className="previewButton"
@@ -69,7 +69,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
               handleIndex(e.target.name);
             }}
           >
-            Next
+            next
           </button>
         </div>
       </div>

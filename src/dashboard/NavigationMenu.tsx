@@ -54,6 +54,8 @@ const MenuItem = styled.div`
   padding: 10px;
   border: 1px transparent solid;
   text-align: left;
+  font-weight: bold;
+  color: #525f7f;
   &:hover {
     background-color: #fa5f55;
     border: 1px white solid;
