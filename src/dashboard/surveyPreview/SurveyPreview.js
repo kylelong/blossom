@@ -37,7 +37,9 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
         survey preview:
       </Label.Root>
       <div className="surveyContainer">
-        <div className="surveyNameHeader">{surveyName}</div>
+        <div className="surveyNameHeader">
+          {surveyName === "" ? "survey name" : surveyName}
+        </div>
         {showQuestions && (
           <div className="questionNumber">question {questionIndex + 1}</div>
         )}

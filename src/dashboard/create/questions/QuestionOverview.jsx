@@ -169,7 +169,10 @@ const QuestionOverview = ({
 
                   <button
                     className="removeQuestionBtn panelBtn"
-                    onClick={() => removeQuestion(index)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeQuestion(index);
+                    }}
                   >
                     remove
                     <MinusCircledIcon style={{marginLeft: "5px"}} />
