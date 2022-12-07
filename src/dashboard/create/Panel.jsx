@@ -299,11 +299,12 @@ const Panel = () => {
   };
   const deleteSurvey = async () => {
     if (latestSurveyId) {
+      console.log(latestSurveyId);
       const surveyDoc = doc(db, "surveys", latestSurveyId);
       const surveyDocSnap = await getDoc(surveyDoc);
       if (surveyDocSnap.exists()) {
         try {
-          await deleteDoc(collection(db, "surveys", latestSurveyId));
+          await deleteDoc(doc(db, "surveys", latestSurveyId));
           resetSurveyState();
         } catch (err) {
           console.log(err);
