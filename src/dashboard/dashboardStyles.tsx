@@ -90,11 +90,15 @@ export const DashboardHeaderText = styled.div`
   color: #525f7f;
 `;
 export const DashboardHeaderTextDesktop = styled.div`
-  font-size: 22px;
+  font-size: 30px;
   color: #525f7f;
   font-weight: bold;
   margin-bottom: 10px;
   @media (max-width: 768px) {
     display: none;
   }
+`;
+export const DashboardHeaderDetail = styled.div`
+  font-weight: bold;
+  font-size: 16px;
 `;

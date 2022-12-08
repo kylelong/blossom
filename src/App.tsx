@@ -6,11 +6,11 @@ import SignUp from "./signup/SignUp";
 import ForgotPassword from "./forgotPassword/ForgotPassword";
 import AccountManagement from "./accountManagment/AccountManagement";
 import Dashboard from "./dashboard/Dashboard";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import AuthRoute from "./util/AuthRoute";
 import AuthRouteLoggedOut from "./util/AuthRouteLoggedOut";
 import Create from "./dashboard/Create";
-import Surveys from "./dashboard/Surveys";
+import Surveys from "./dashboard/surveys/Surveys";
 import Analytics from "./dashboard/Analytics";
 import Account from "./dashboard/Account";
 

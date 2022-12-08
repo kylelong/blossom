@@ -53,27 +53,31 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           </div>
         )}
         {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
-        <div className="previewButtonsContainer">
-          <button
-            className="previewButton"
-            name="previous"
-            onClick={(e) => {
-              handleIndex(e.target.name);
-            }}
-            style={{marginRight: "75px"}}
-          >
-            previous
-          </button>
-          <button
-            className="previewButton"
-            name="next"
-            onClick={(e) => {
-              handleIndex(e.target.name);
-            }}
-          >
-            next
-          </button>
-        </div>
+        {questions.length > 0 && (
+          <div className="previewButtonsContainer">
+            {questionIndex > 0 && (
+              <button
+                className="previewButton"
+                name="previous"
+                onClick={(e) => {
+                  handleIndex(e.target.name);
+                }}
+                style={{marginRight: "75px"}}
+              >
+                previous
+              </button>
+            )}
+            <button
+              className="previewButton"
+              name="next"
+              onClick={(e) => {
+                handleIndex(e.target.name);
+              }}
+            >
+              next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

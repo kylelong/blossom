@@ -7,6 +7,7 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
+  DashboardHeaderDetail,
 } from "./dashboardStyles";
 
 const Dashboard = () => {
@@ -16,7 +17,9 @@ const Dashboard = () => {
         <DashboardMenu headerText={"analytics"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>analytics</DashboardHeaderTextDesktop>
-          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+          <DashboardHeaderDetail>
+            this is a dashboard for your surveys
+          </DashboardHeaderDetail>
         </DashboardContent>
         <MenuContainer>
           <Menu />

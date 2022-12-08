@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-icons";
 import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
-import SurveyPreveiw from "../surveyPreview/SurveyPreview";
+import SurveyPreview from "../surveyPreview/SurveyPreview";
 // import Loader from "../../loader";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {auth, app} from "../../firebase-config";
@@ -95,13 +95,14 @@ const Panel = () => {
           survey: questions,
         });
         setLatestSurveyId(result.id);
-        const baseUrl = `https://www.blossomsurveys.io/${result.id}/${user.uid}`;
+        const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
         setBaseSurveyLink(baseUrl);
         setSurveyLink(baseUrl);
         console.log("new survey", result.id);
       } catch (err) {
         console.log(err);
       }
+      setHasDraft(true);
     }
   };
 
@@ -405,7 +406,7 @@ const Panel = () => {
           setRedirectUrl(redirectUrl);
           setQuestions(survey);
           setLatestSurveyId(doc.id);
-          const baseUrl = `https://www.blossomsurveys.io/${doc.id}/${uid}`;
+          const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
           setBaseSurveyLink(baseUrl);
           let link = redirectUrl
             ? `${baseUrl}?redirect_url=${redirectUrl}`
@@ -413,6 +414,7 @@ const Panel = () => {
           setSurveyLink(link);
         });
       }
+      setHasDraft(true);
       setSurveyStateLoaded(true);
     },
     [db]
@@ -446,7 +448,7 @@ const Panel = () => {
   // }
   return (
     <div className="panelContainer">
-      <SurveyPreveiw
+      <SurveyPreview
         questions={questions}
         surveyName={surveyName}
         questionHash={questionHash}

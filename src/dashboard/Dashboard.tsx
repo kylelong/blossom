@@ -7,6 +7,7 @@ import {
   DashboardHeaderTextDesktop,
   MenuContainer,
   DashboardSectionContainerCenter,
+  DashboardHeaderDetail,
 } from "./dashboardStyles";
 
 const Dashboard = () => {
@@ -17,6 +18,9 @@ const Dashboard = () => {
         <DashboardMenu headerText={"dashboard"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>dashboard</DashboardHeaderTextDesktop>
+          <DashboardHeaderDetail>
+            view information about your surveys
+          </DashboardHeaderDetail>
           {/* {surveyCount === 0 && (
             <div>
               Click here to create a survey. Once you create surveys you will

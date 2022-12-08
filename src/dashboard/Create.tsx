@@ -8,6 +8,7 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
+  DashboardHeaderDetail,
 } from "./dashboardStyles";
 
 const Dashboard = () => {
@@ -17,7 +18,9 @@ const Dashboard = () => {
         <DashboardMenu headerText={"create"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
-          <div>create a new survey below</div>
+          <DashboardHeaderDetail>
+            create a new survey below
+          </DashboardHeaderDetail>
           <Panel />
         </DashboardContent>
         <MenuContainer>

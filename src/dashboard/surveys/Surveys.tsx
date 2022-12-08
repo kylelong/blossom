@@ -1,13 +1,15 @@
 import React from "react";
-import DashboardMenu from "./DashboardMenu";
-import Menu from "../landingPage/Menu";
+import DashboardMenu from "../DashboardMenu";
+import Menu from "../../landingPage/Menu";
+import SurveysList from "./SurveysList";
 import {
   DashboardContainer,
   DashboardSectionContainerCenter,
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
-} from "./dashboardStyles";
+  DashboardHeaderDetail,
+} from "../dashboardStyles";
 
 const Dashboard = () => {
   return (
@@ -16,7 +18,10 @@ const Dashboard = () => {
         <DashboardMenu headerText={"surveys"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>surveys</DashboardHeaderTextDesktop>
-          <div>This is a dashboard for your surveys asdfasdfasdf</div>
+          <DashboardHeaderDetail>
+            view the surveys you've created
+          </DashboardHeaderDetail>
+          <SurveysList />
         </DashboardContent>
         <MenuContainer>
           <Menu />
