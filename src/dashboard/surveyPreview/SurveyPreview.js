@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import "./preview.css";
 import * as Label from "@radix-ui/react-label";
 import QuestionViewer from "./QuestionViewer";
@@ -6,6 +6,8 @@ import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyName, questionHash}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const showQuestions = questions.length > 0;
+  const prevQuestions = useRef(questions);
+
   const handleIndex = (buttonAction) => {
     const maxIndex = questions.length - 1;
     if (questions.length > 0 && ["next", "previous"].includes(buttonAction)) {
@@ -30,7 +32,11 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
     if (index > -1) {
       setQuestionIndex(index);
     }
-  }, [questionHash, questions]);
+    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
+      setQuestionIndex(0);
+    }
+    prevQuestions.current = questions;
+  }, [questions, questionHash, questionIndex]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
@@ -67,15 +73,23 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
                 previous
               </button>
             )}
-            <button
-              className="previewButton"
-              name="next"
-              onClick={(e) => {
-                handleIndex(e.target.name);
-              }}
-            >
-              next
-            </button>
+            {questionIndex !== questions.length - 1 ? (
+              <button
+                className="previewButton"
+                name="next"
+                onClick={(e) => {
+                  handleIndex(e.target.name);
+                }}
+              >
+                next
+              </button>
+            ) : (
+              <>
+                <button className="previewButton" name="submit">
+                  submit
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>

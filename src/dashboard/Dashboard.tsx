@@ -1,6 +1,7 @@
 import React from "react";
 import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
+import DashboardOverview from "./DashboardOverview";
 import {
   DashboardContainer,
   DashboardContent,
@@ -21,12 +22,7 @@ const Dashboard = () => {
           <DashboardHeaderDetail>
             view details about your surveys
           </DashboardHeaderDetail>
-          {/* {surveyCount === 0 && (
-            <div>
-              Click here to create a survey. Once you create surveys you will
-              see metrics here. This is dummy text
-            </div>
-          )} */}
+          <DashboardOverview />
         </DashboardContent>
         <MenuContainer>
           <Menu />

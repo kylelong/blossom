@@ -21,7 +21,7 @@ const SurveysList = () => {
   const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [currentSurveyindex, setCurrentSurveyIndex] = useState(0);
+  const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
 
   const loadSurveys = useCallback(async () => {
     // TODO: put in global function file
@@ -94,8 +94,10 @@ const SurveysList = () => {
   };
 
   useEffect(() => {
-    loadSurveys();
-  }, [loadSurveys]);
+    if (!loaded) {
+      loadSurveys();
+    }
+  }, [currentSurveyIndex]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
@@ -104,12 +106,18 @@ const SurveysList = () => {
 
   return (
     <div className="surveyListContainer">
-      <div className="surveySelectorContainer">
-        <div className="listHeader">created surveys</div>
-        {RadioDemo()}
-      </div>
       {surveys.length > 0 && (
-        <SurveyPreview questions={surveys[currentSurveyindex].survey} />
+        <>
+          <div className="surveySelectorContainer">
+            <div className="listHeader">created surveys</div>
+            {RadioDemo()}
+          </div>
+          <SurveyPreview
+            questions={surveys[currentSurveyIndex].survey}
+            surveyName={surveys[currentSurveyIndex].surveyName}
+            questionHash={surveys[currentSurveyIndex].survey.hash}
+          />
+        </>
       )}
     </div>
   );
