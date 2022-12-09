@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import {auth, app} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 
@@ -13,14 +13,24 @@ import {
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 import styled from "styled-components";
 import "./surveys.css";
+import flower from "../../images/scandi-330.svg";
 
-export const Container = styled.div`
+export const WelcomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-contenr: center;
+  justify-content: center;
+  height: 50vh;
 `;
-export const Welcome = styled.div``;
+export const Welcome = styled.div`
+  font-size: 20px;
+  margin-bottom: 22px;
+`;
+
+export const Flower = styled.img`
+  height: 100;
+  margin-bottom: 22px;
+`;
 
 /**
  * show list of survey ids for this user
@@ -35,7 +45,7 @@ const SurveysList = () => {
   const [surveys, setSurveys] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  const loadSurveys = async () => {
+  const loadSurveys = useCallback(async () => {
     // TODO: put in global function file
     const q = query(
       collection(db, "surveys"),
@@ -68,37 +78,38 @@ const SurveysList = () => {
       });
     }
     setLoaded(true);
-  };
+  }, [db, uid]);
 
   useEffect(() => {
     loadSurveys();
-  }, [loadSurveys]);
+  }, []);
+
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
     return (
-      <Container>
+      <WelcomeContainer>
         <Welcome>welcome to blossom &#x1F60A;</Welcome>
+        <Flower src={flower} alt="flower" />
         <a href="/create">
           <button className="createBtn">
-            create your first survey &#128073;
+            create your first survey &#128640;
           </button>
         </a>
-      </Container>
+      </WelcomeContainer>
     );
   }
 
   return (
     <div>
       {surveys.length > 0 && <SurveyPreview questions={surveys[0].survey} />}
-      {/* {surveys.map((survey, index) => {
+      {surveys.map((survey, index) => {
         return (
           <div key={index}>
-            {survey.surveyName}-{survey.date}-
-            {JSON.stringify(survey.survey, null, 2)}
+            {survey.surveyName}-{survey.date}
             <br />
           </div>
         );
-      })} */}
+      })}
     </div>
   );
 };

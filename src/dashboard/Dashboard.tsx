@@ -19,7 +19,7 @@ const Dashboard = () => {
         <DashboardContent>
           <DashboardHeaderTextDesktop>dashboard</DashboardHeaderTextDesktop>
           <DashboardHeaderDetail>
-            view information about your surveys
+            view details about your surveys
           </DashboardHeaderDetail>
           {/* {surveyCount === 0 && (
             <div>
