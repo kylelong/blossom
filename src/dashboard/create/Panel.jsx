@@ -51,22 +51,6 @@ const Panel = () => {
   const [user] = useAuthState(auth);
   const db = getFirestore(app);
 
-  const hasDraftSurvey = useCallback(async () => {
-    const uid = user.uid;
-    const q = query(
-      collection(db, "surveys"),
-      where("uid", "==", uid),
-      where("published", "==", false),
-      orderBy("createdAt", "desc"),
-      limit(1)
-    );
-    const querySnapShot = await getDocs(q);
-    //empty === true means no draft survey or null
-    //empty === false means there is a draft
-    setHasDraft(querySnapShot.empty === false);
-    return querySnapShot.empty === false;
-  }, [db, user.uid]);
-
   const addQuestion = async () => {
     /**
      *
@@ -81,6 +65,7 @@ const Panel = () => {
     };
     setQuestions((questions) => [...questions, data]);
     // start a new survey if no draft
+    console.log("hasDraft", hasDraft);
     if (!hasDraft) {
       try {
         let result = await addDoc(collection(db, "surveys"), {
@@ -99,10 +84,10 @@ const Panel = () => {
         setBaseSurveyLink(baseUrl);
         setSurveyLink(baseUrl);
         console.log("new survey", result.id);
+        setHasDraft(true);
       } catch (err) {
         console.log(err);
       }
-      setHasDraft(true);
     }
   };
 
@@ -382,39 +367,42 @@ const Panel = () => {
         errs.push(`question(s) ${ids} needs complete answer choices`);
       }
       setErrors(errs);
-      console.log("errors", errs);
     }
 
     // check answers
   };
-  // always get latest state despite local storage key
+  // sets state to published survey
   const setLatestSurveyState = useCallback(
     async (uid) => {
       // get latest draft
-      const q = query(
-        collection(db, "surveys"),
-        where("uid", "==", uid),
-        where("published", "==", false),
-        orderBy("createdAt", "desc"),
-        limit(1)
-      );
-      const querySnapShot = await getDocs(q);
-      if (!querySnapShot.empty) {
-        querySnapShot.forEach((doc) => {
-          let {survey, surveyName, redirectUrl} = doc.data();
-          setSurveyName(surveyName);
-          setRedirectUrl(redirectUrl);
-          setQuestions(survey);
-          setLatestSurveyId(doc.id);
-          const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
-          setBaseSurveyLink(baseUrl);
-          let link = redirectUrl
-            ? `${baseUrl}?redirect_url=${redirectUrl}`
-            : baseUrl;
-          setSurveyLink(link);
-        });
+      try {
+        const q = query(
+          collection(db, "surveys"),
+          where("uid", "==", uid),
+          where("published", "==", false),
+          orderBy("createdAt", "desc"),
+          limit(1)
+        );
+        const querySnapShot = await getDocs(q);
+        if (!querySnapShot.empty) {
+          querySnapShot.forEach((doc) => {
+            let {survey, surveyName, redirectUrl} = doc.data();
+            setSurveyName(surveyName);
+            setRedirectUrl(redirectUrl);
+            setQuestions(survey);
+            setLatestSurveyId(doc.id);
+            const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
+            setBaseSurveyLink(baseUrl);
+            let link = redirectUrl
+              ? `${baseUrl}?redirect_url=${redirectUrl}`
+              : baseUrl;
+            setSurveyLink(link);
+          });
+          setHasDraft(true);
+        }
+      } catch (err) {
+        console.log(err);
       }
-      setHasDraft(true);
       setSurveyStateLoaded(true);
     },
     [db]
@@ -426,7 +414,6 @@ const Panel = () => {
     }
 
     if (!surveyStateLoaded) {
-      hasDraftSurvey();
       setLatestSurveyState(user.uid);
     }
     updateSurvey();
@@ -441,7 +428,6 @@ const Panel = () => {
     surveyStateLoaded,
     updateSurvey,
     user.uid,
-    hasDraftSurvey,
   ]);
   // if (!surveyStateLoaded) {
   //   return <></>;
@@ -522,10 +508,12 @@ const Panel = () => {
                             are you absolutely sure?
                           </AlertDialog.Title>
                           <AlertDialog.Description className="AlertDialogDescription">
-                            share the survey link to start collecting responses
-                            :). once you publish this survey you won't be able
-                            to edit it. delete this survey to begin a new one,
-                            otherwise it is saved as a draft until published.
+                            share the{" "}
+                            <span className="surveyLinkText">survey link </span>
+                            to start collecting responses :). once you publish
+                            this survey you won't be able to edit it. delete
+                            this survey to begin a new one, otherwise it is
+                            saved as a draft until published.
                           </AlertDialog.Description>
                           <div
                             style={{

@@ -1,6 +1,6 @@
 import React from "react";
-import DashboardMenu from "./DashboardMenu";
-import Menu from "../landingPage/Menu";
+import DashboardMenu from "../DashboardMenu";
+import Menu from "../../landingPage/Menu";
 import {
   DashboardContainer,
   DashboardSectionContainerCenter,
@@ -8,7 +8,7 @@ import {
   DashboardHeaderTextDesktop,
   MenuContainer,
   DashboardHeaderDetail,
-} from "./dashboardStyles";
+} from "../dashboardStyles";
 
 const Dashboard = () => {
   return (

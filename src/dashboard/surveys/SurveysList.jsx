@@ -11,32 +11,9 @@ import {
   collection,
 } from "firebase/firestore";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
-import styled from "styled-components";
+import Welcome from "../Welcome";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import "./surveys.css";
-import flower from "../../images/scandi-330.svg";
-
-export const WelcomeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-`;
-export const Welcome = styled.div`
-  font-size: 20px;
-  margin-bottom: 22px;
-`;
-
-export const Flower = styled.img`
-  height: 100;
-  margin-bottom: 22px;
-`;
-
-/**
- * show list of survey ids for this user
- *  get surveys for each id
- *
- */
 
 const SurveysList = () => {
   const [user] = useAuthState(auth);
@@ -44,6 +21,7 @@ const SurveysList = () => {
   const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [currentSurveyindex, setCurrentSurveyIndex] = useState(0);
 
   const loadSurveys = useCallback(async () => {
     // TODO: put in global function file
@@ -53,23 +31,21 @@ const SurveysList = () => {
       orderBy("createdAt", "desc")
     );
     const querySnapShot = await getDocs(q);
-    if (querySnapShot.empty) {
-      console.log("empty");
-    } else {
-      console.log("not empty");
+    if (!querySnapShot.empty) {
       querySnapShot.forEach((doc) => {
         let {survey, surveyName, redirectUrl, createdAt, updatedAt} =
           doc.data();
         let date = new Date(createdAt.seconds * 1000);
         let formattedDate = date.toDateString();
         let surveyData = {
+          id: doc.id,
           survey: survey,
           surveyName: surveyName,
           redirectUrl: redirectUrl,
           date: formattedDate,
           updatedAt: updatedAt,
         };
-        console.log(surveyData);
+
         setSurveys((prevState) => {
           let current = [...prevState];
           current.push(surveyData);
@@ -80,36 +56,61 @@ const SurveysList = () => {
     setLoaded(true);
   }, [db, uid]);
 
+  const RadioDemo = () => {
+    return (
+      <>
+        <form>
+          <RadioGroup.Root
+            className="RadioGroupRoot"
+            defaultValue={0}
+            aria-label="View density"
+          >
+            {surveys.map((survey, index) => {
+              return (
+                <div
+                  style={{display: "flex", alignItems: "center"}}
+                  key={index}
+                >
+                  <RadioGroup.Item
+                    className="RadioGroupItem"
+                    value={index}
+                    id={index}
+                    onClick={() => {
+                      setCurrentSurveyIndex(index);
+                    }}
+                  >
+                    <RadioGroup.Indicator className="RadioGroupIndicator" />
+                  </RadioGroup.Item>
+                  <label className="Label" htmlFor="r1">
+                    {survey.surveyName}
+                  </label>
+                </div>
+              );
+            })}
+          </RadioGroup.Root>
+        </form>
+      </>
+    );
+  };
+
   useEffect(() => {
     loadSurveys();
-  }, []);
+  }, [loadSurveys]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
-    return (
-      <WelcomeContainer>
-        <Welcome>welcome to blossom &#x1F60A;</Welcome>
-        <Flower src={flower} alt="flower" />
-        <a href="/create">
-          <button className="createBtn">
-            create your first survey &#128640;
-          </button>
-        </a>
-      </WelcomeContainer>
-    );
+    return <Welcome />;
   }
 
   return (
-    <div>
-      {surveys.length > 0 && <SurveyPreview questions={surveys[0].survey} />}
-      {surveys.map((survey, index) => {
-        return (
-          <div key={index}>
-            {survey.surveyName}-{survey.date}
-            <br />
-          </div>
-        );
-      })}
+    <div className="surveyListContainer">
+      <div className="surveySelectorContainer">
+        <div className="listHeader">created surveys</div>
+        {RadioDemo()}
+      </div>
+      {surveys.length > 0 && (
+        <SurveyPreview questions={surveys[currentSurveyindex].survey} />
+      )}
     </div>
   );
 };

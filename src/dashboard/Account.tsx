@@ -12,7 +12,7 @@ import {
   DashboardHeaderTextDesktop,
   MenuContainer,
 } from "./dashboardStyles";
-import "./analytics.css";
+import "./account.css";
 // import User from "./types";
 import Menu from "../landingPage/Menu";
 
