@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState} from "react";
 import {auth, app} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 
@@ -22,39 +22,6 @@ const SurveysList = () => {
   const [surveys, setSurveys] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
-
-  const loadSurveys = useCallback(async () => {
-    // TODO: put in global function file
-    const q = query(
-      collection(db, "surveys"),
-      where("uid", "==", uid),
-      orderBy("createdAt", "desc")
-    );
-    const querySnapShot = await getDocs(q);
-    if (!querySnapShot.empty) {
-      querySnapShot.forEach((doc) => {
-        let {survey, surveyName, redirectUrl, createdAt, updatedAt} =
-          doc.data();
-        let date = new Date(createdAt.seconds * 1000);
-        let formattedDate = date.toDateString();
-        let surveyData = {
-          id: doc.id,
-          survey: survey,
-          surveyName: surveyName,
-          redirectUrl: redirectUrl,
-          date: formattedDate,
-          updatedAt: updatedAt,
-        };
-
-        setSurveys((prevState) => {
-          let current = [...prevState];
-          current.push(surveyData);
-          return current;
-        });
-      });
-    }
-    setLoaded(true);
-  }, [db, uid]);
 
   const RadioDemo = () => {
     return (
@@ -94,10 +61,41 @@ const SurveysList = () => {
   };
 
   useEffect(() => {
+    const loadSurveys = async () => {
+      const q = query(
+        collection(db, "surveys"),
+        where("uid", "==", uid),
+        orderBy("createdAt", "desc")
+      );
+      const querySnapShot = await getDocs(q);
+      if (!querySnapShot.empty) {
+        querySnapShot.forEach((doc) => {
+          let {survey, surveyName, redirectUrl, createdAt, updatedAt} =
+            doc.data();
+          let date = new Date(createdAt.seconds * 1000);
+          let formattedDate = date.toDateString();
+          let surveyData = {
+            id: doc.id,
+            survey: survey,
+            surveyName: surveyName,
+            redirectUrl: redirectUrl,
+            date: formattedDate,
+            updatedAt: updatedAt,
+          };
+
+          setSurveys((prevState) => {
+            let current = [...prevState];
+            current.push(surveyData);
+            return current;
+          });
+        });
+      }
+      setLoaded(true);
+    };
     if (!loaded) {
       loadSurveys();
     }
-  }, [currentSurveyIndex]);
+  }, [db, loaded, uid]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
