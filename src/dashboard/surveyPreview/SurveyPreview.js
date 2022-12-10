@@ -18,6 +18,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           setQuestionIndex(questionIndex + 1);
         }
       } else if (buttonAction === "previous") {
+        console.log(questionIndex);
         if (questionIndex === 0) {
           setQuestionIndex(maxIndex);
         } else {
@@ -36,7 +37,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
       setQuestionIndex(0);
     }
     prevQuestions.current = questions;
-  }, [questions, questionHash, questionIndex]);
+  }, [questions, questionHash]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">

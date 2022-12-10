@@ -152,14 +152,14 @@ const DashboardOverview = () => {
             <DashboardOverviewHeader>question types </DashboardOverviewHeader>
             {Object.keys(questionTypes).map((key, index) => {
               return (
-                <>
-                  <QuestionTypeItem key={index}>
+                <div key={index}>
+                  <QuestionTypeItem>
                     <QuestionTypeLabel>{key}</QuestionTypeLabel>
                     <QuestionTypeNumber>
                       {questionTypes[key]}
                     </QuestionTypeNumber>
                   </QuestionTypeItem>
-                </>
+                </div>
               );
             })}
           </QuestionTypeBreakdown>
