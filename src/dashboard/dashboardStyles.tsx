@@ -102,3 +102,86 @@ export const DashboardHeaderDetail = styled.div`
   font-weight: bold;
   font-size: 16px;
 `;
+
+/** overview */
+export const DashboardOverviewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 30vh;
+  margin-left: 50px;
+  margin-top: 48px;
+`;
+export const DashboardStatContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 32px;
+
+  justify-content: space-between;
+`;
+export const DashboardOverviewHeader = styled.div`
+  color: #525f7f;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 12px;
+  margin-right: 23px;
+`;
+export const DashboardStatHeader = styled.div`
+  color: #b8b8b8;
+  font-weight: bold;
+  margin-right: 12px;
+`;
+
+export const DashboardStat = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-right: 32px;
+`;
+
+export const DashboardNumber = styled.div`
+  font-size: 30px;
+  color: #525f7f;
+  font-weight: bold;
+`;
+
+export const SurveyButton = styled.button`
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 0 18px;
+  line-height: 38px;
+  height: 38px;
+  width: auto;
+  background-color: white;
+  color: #355e3b;
+  box-shadow: 0 2px 10px var(--blackA7);
+`;
+
+export const QuestionTypeBreakdown = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+`;
+
+export const QuestionTypeItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+export const QuestionTypeLabel = styled.div`
+  color: #b8b8b8;
+  font-weight: bold;
+  margin-right: 7px;
+`;
+
+export const QuestionTypeNumber = styled.div`
+  color: #525f7f;
+  font-weight: bold;
+  text-align: right;
+`;

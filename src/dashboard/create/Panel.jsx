@@ -429,9 +429,6 @@ const Panel = () => {
     updateSurvey,
     user.uid,
   ]);
-  // if (!surveyStateLoaded) {
-  //   return <></>;
-  // }
   return (
     <div className="panelContainer">
       <SurveyPreview

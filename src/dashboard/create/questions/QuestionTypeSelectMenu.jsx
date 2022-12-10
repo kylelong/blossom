@@ -6,12 +6,20 @@ import "./questiontypeselect.css";
 
 const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
   const [choice, setChoice] = useState(defaultQuestionType);
+  const validQuestionTypes = [
+    "single_select",
+    "multi_select",
+    "emoji_sentiment",
+    "open_ended",
+  ];
   // use value={choice}
   return (
     <Select.Root
       onValueChange={(value) => {
-        setChoice(value);
-        updateQuestionType(value);
+        if (validQuestionTypes.includes(value)) {
+          setChoice(value);
+          updateQuestionType(value);
+        }
       }}
     >
       <Select.Trigger className="SelectTrigger" aria-label="question type">

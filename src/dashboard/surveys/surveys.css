@@ -18,7 +18,7 @@
   font-size: 28px;
   margin-bottom: 12px;
   font-weight: bold;
-  border-bottom: 3px solid var(--mauve5);
+  border-bottom: 2px solid var(--mauve5);
 }
 @media (max-width: 1200px) {
   .surveyListContainer {
