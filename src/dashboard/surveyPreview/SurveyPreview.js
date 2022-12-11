@@ -18,7 +18,6 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
           setQuestionIndex(questionIndex + 1);
         }
       } else if (buttonAction === "previous") {
-        console.log(questionIndex);
         if (questionIndex === 0) {
           setQuestionIndex(maxIndex);
         } else {

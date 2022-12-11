@@ -77,7 +77,7 @@ const SurveysList = () => {
           let surveyData = {
             id: doc.id,
             survey: survey,
-            surveyName: surveyName,
+            surveyName: surveyName.length > 0 ? surveyName : `untitled survey`,
             redirectUrl: redirectUrl,
             date: formattedDate,
             updatedAt: updatedAt,

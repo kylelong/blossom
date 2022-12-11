@@ -11,7 +11,7 @@ import {
   DashboardHeaderDetail,
 } from "./dashboardStyles";
 
-const Dashboard = () => {
+const Create = () => {
   return (
     <DashboardContainer>
       <DashboardSectionContainer>
@@ -31,4 +31,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Create;

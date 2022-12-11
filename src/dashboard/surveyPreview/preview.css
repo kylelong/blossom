@@ -65,7 +65,7 @@
   align-items: center;
 }
 .answerChoicesContainer {
-  margin-top: 32px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
 }

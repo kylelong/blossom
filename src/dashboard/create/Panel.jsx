@@ -44,6 +44,7 @@ const Panel = () => {
   const [surveyLink, setSurveyLink] = useState("");
   const [baseSurveyLink, setBaseSurveyLink] = useState("");
   const [hasDraft, setHasDraft] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const timerRef = useRef(0);
   const validUrl =
     // eslint-disable-next-line
@@ -417,6 +418,7 @@ const Panel = () => {
       setLatestSurveyState(user.uid);
     }
     updateSurvey();
+    setLoaded(true);
 
     return () => clearTimeout(timerRef.current);
   }, [
@@ -431,11 +433,13 @@ const Panel = () => {
   ]);
   return (
     <div className="panelContainer">
-      <SurveyPreview
-        questions={questions}
-        surveyName={surveyName}
-        questionHash={questionHash}
-      />
+      {loaded && (
+        <SurveyPreview
+          questions={questions}
+          surveyName={surveyName}
+          questionHash={questionHash}
+        />
+      )}
       <div className="formContainer">
         <form
           style={{
