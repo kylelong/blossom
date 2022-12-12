@@ -184,8 +184,6 @@ const Panel = () => {
    * }
    *  */
   const publishSurvey = async () => {
-    console.log("publishing surey");
-    console.log(JSON.stringify(questions, null, 2));
     /**
      * survey needs meta data before questions and questions
      * sending to analytics / surveys
@@ -232,6 +230,7 @@ const Panel = () => {
         console.log(err);
       }
     }
+    window.location.href = "/surveys";
   };
   const updateSurvey = useCallback(async () => {
     if (latestSurveyId) {

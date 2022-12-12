@@ -82,8 +82,14 @@ const SurveysList = () => {
       const querySnapShot = await getDocs(q);
       if (!querySnapShot.empty) {
         querySnapShot.forEach((doc) => {
-          let {survey, surveyName, redirectUrl, createdAt, updatedAt} =
-            doc.data();
+          let {
+            survey,
+            surveyName,
+            redirectUrl,
+            createdAt,
+            updatedAt,
+            published,
+          } = doc.data();
           let date = new Date(createdAt.seconds * 1000);
           let formattedDate = date.toDateString();
           let baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
@@ -95,6 +101,7 @@ const SurveysList = () => {
             date: formattedDate,
             updatedAt: updatedAt,
             surveyLink: baseUrl,
+            published: published,
           };
 
           setSurveys((prevState) => {
@@ -132,31 +139,39 @@ const SurveysList = () => {
             />
           </div>
 
-          <div className="surveyListLinkContainer">
-            <div className="surveyLinkHeaderContainer">
-              <div className="surveyLinkHeader">survey link:</div>
-              <CopyToClipboard text={surveys[currentSurveyIndex].surveyLink}>
-                <ClipboardCopyIcon
-                  className="copyIcon"
-                  onClick={handleCopy}
-                ></ClipboardCopyIcon>
-              </CopyToClipboard>
-              {showCopied && (
-                <div className="copiedContainer">
-                  <div className="copiedText">copied to clipboard</div>
-                  <CheckCircledIcon
-                    style={{marginLeft: "3px", marginTop: "3px"}}
-                  />
-                </div>
-              )}
+          {surveys[currentSurveyIndex].published ? (
+            <div className="surveyListLinkContainer">
+              <div className="surveyLinkHeaderContainer">
+                <div className="surveyLinkHeader">survey link:</div>
+                <CopyToClipboard text={surveys[currentSurveyIndex].surveyLink}>
+                  <ClipboardCopyIcon
+                    className="copyIcon"
+                    onClick={handleCopy}
+                  ></ClipboardCopyIcon>
+                </CopyToClipboard>
+                {showCopied && (
+                  <div className="copiedContainer">
+                    <div className="copiedText">copied to clipboard</div>
+                    <CheckCircledIcon
+                      style={{marginLeft: "3px", marginTop: "3px"}}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="surveyLinkDetails">
+                (share this link to start surveying your audience)
+              </div>
+              <code className="surveyLink">
+                {surveys[currentSurveyIndex].surveyLink}
+              </code>
             </div>
-            <div className="surveyLinkDetails">
-              (link is active once the survey is published)
-            </div>
-            <code className="surveyLink">
-              {surveys[currentSurveyIndex].surveyLink}
-            </code>
-          </div>
+          ) : (
+            <a href="/create">
+              <button className="createBtn">
+                finish your draft survey {String.fromCodePoint("0x1F91D")}
+              </button>
+            </a>
+          )}
         </>
       )}
     </div>
