@@ -14,10 +14,10 @@
   display: flex;
   flex-direction: column;
   padding: 12px;
-  width: 41vw;
   border-radius: 5px;
   border: 2px solid #f6f6f6;
-  height: 50vh;
+  height: 480px;
+  width: 46vw;
   margin-right: 5vw;
   /* justify-content: center; */
 }
@@ -158,13 +158,14 @@
 .emoji:hover {
   cursor: pointer;
 }
-@media (max-width: 1260px) {
+@media (max-width: 768px) {
+  .surveyContainer {
+    width: 86vw;
+  }
   .panelContainer {
     flex-direction: column;
   }
-  .surveyContainer {
-    width: 100%;
-  }
+
   .surveyContainerParent {
     margin-bottom: 24px;
   }

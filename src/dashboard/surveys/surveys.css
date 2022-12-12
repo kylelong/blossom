@@ -2,6 +2,10 @@
 @import "@radix-ui/colors/violet.css";
 @import "@radix-ui/colors/mauve.css";
 
+.surveyListParentContainer {
+  display: flex;
+  flex-direction: column;
+}
 .surveyListContainer {
   display: flex;
   flex-direction: row;
@@ -19,16 +23,29 @@
   margin-bottom: 12px;
   font-weight: bold;
   border-bottom: 2px solid var(--mauve5);
+  max-width: 210px;
 }
-@media (max-width: 1200px) {
+.surveyListLinkContainer {
+  margin-top: 12px;
+  text-align: left;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 1260px) {
   .surveyListContainer {
     margin-top: 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: unset;
+    margin-left: 5vw;
   }
   .surveySelectorContainer {
     margin-bottom: 32px;
+  }
+  .surveyListLinkContainer {
+    margin-left: 10px;
   }
 }
 
@@ -82,4 +99,5 @@ button {
   line-height: 1;
   user-select: none;
   padding-left: 15px;
+  text-align: left;
 }
