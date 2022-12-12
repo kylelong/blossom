@@ -11,7 +11,7 @@ import AuthRoute from "./util/AuthRoute";
 import AuthRouteLoggedOut from "./util/AuthRouteLoggedOut";
 import Create from "./dashboard/Create";
 import Surveys from "./dashboard/surveys/Surveys";
-import Analytics from "./dashboard/Analytics";
+import Analytics from "./dashboard/analytics/Analytics";
 import Account from "./dashboard/Account";
 
 function App() {
