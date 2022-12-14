@@ -18,7 +18,7 @@ const Dashboard = () => {
         <DashboardContent>
           <DashboardHeaderTextDesktop>analytics</DashboardHeaderTextDesktop>
           <DashboardHeaderDetail>
-            this is a dashboard for your surveys
+            view your survey's analytics
           </DashboardHeaderDetail>
         </DashboardContent>
         <MenuContainer>

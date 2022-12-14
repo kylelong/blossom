@@ -10,7 +10,7 @@ export const DashboardContainer = styled.div`
 export const DashboardSectionContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: column;
   text-align: center;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -94,6 +94,9 @@ export const DashboardHeaderTextDesktop = styled.div`
   color: #525f7f;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
   @media (max-width: 768px) {
     display: none;
   }

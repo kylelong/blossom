@@ -34,7 +34,7 @@ const Account = () => {
   });
 
   const updateCompany = async (company: string) => {
-    if (user) {
+    if (user && company) {
       const userDoc = doc(db, "users", user.uid);
       try {
         await updateDoc(userDoc, {

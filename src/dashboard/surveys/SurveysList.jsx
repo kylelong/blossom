@@ -167,7 +167,10 @@ const SurveysList = () => {
             </div>
           ) : (
             <a href="/create">
-              <button className="createBtn">
+              <button
+                className="createBtn"
+                style={{display: "flex", marginTop: "10px"}}
+              >
                 finish your draft survey {String.fromCodePoint("0x1F91D")}
               </button>
             </a>
