@@ -48,6 +48,7 @@ const DashboardOverview = () => {
       const q = query(
         collection(db, "surveys"),
         where("uid", "==", uid),
+        where("published", "==", true),
         orderBy("createdAt", "desc")
       );
       const querySnapShot = await getDocs(q);
