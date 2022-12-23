@@ -1,6 +1,7 @@
 import React from "react";
 import DashboardMenu from "../DashboardMenu";
 import Menu from "../../landingPage/Menu";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 import {
   DashboardContainer,
   DashboardSectionContainerCenter,
@@ -20,6 +21,7 @@ const Dashboard = () => {
           <DashboardHeaderDetail>
             view your survey's analytics
           </DashboardHeaderDetail>
+          <AnalyticsDashboard />
         </DashboardContent>
         <MenuContainer>
           <Menu />
