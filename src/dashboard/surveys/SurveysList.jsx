@@ -92,7 +92,8 @@ const SurveysList = () => {
           } = doc.data();
           let date = new Date(createdAt.seconds * 1000);
           let formattedDate = date.toDateString();
-          let baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
+          //TODO: change for production - https://www.blossomsurveys.io/${doc.id}
+          let baseUrl = `http://localhost:3000/survey/${doc.id}`;
           let surveyData = {
             id: doc.id,
             survey: survey,
@@ -162,7 +163,13 @@ const SurveysList = () => {
                 (share this link to start surveying your audience)
               </div>
               <code className="surveyLink">
-                {surveys[currentSurveyIndex].surveyLink}
+                <a
+                  href={surveys[currentSurveyIndex].surveyLink}
+                  className="blossomLink"
+                  target="_blank"
+                >
+                  {surveys[currentSurveyIndex].surveyLink}
+                </a>
               </code>
             </div>
           ) : (
