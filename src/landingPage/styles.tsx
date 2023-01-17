@@ -230,6 +230,14 @@ export const PricingSectionContainer = styled.div`
   }
 `;
 
+export const Trial = styled.div`
+  color: #fa5f55;
+  font-size: 13px;
+  font-weight: bold;
+  position: relative;
+  bottom: 7px;
+  right: 9px;
+`;
 export const Footer = styled.div`
   text-align: center;
   padding-bottom: 10px;

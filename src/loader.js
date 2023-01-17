@@ -1,16 +1,9 @@
 import React from "react";
-import { ThreeDots } from "react-loader-spinner";
+import {ThreeDots} from "react-loader-spinner";
 
-const Loader = () => {
+const Loader = ({defaultStyle = true}) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80vh",
-      }}
-    >
+    <div className={!defaultStyle ? "" : "loader"}>
       <ThreeDots
         height="80"
         width="80"

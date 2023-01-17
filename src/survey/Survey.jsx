@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {auth, app} from "../firebase-config";
+import "./survey.css";
+import Logo from "../Logo";
+import flower from "../images/scandi-373.svg";
 // import {useAuthState} from "react-firebase-hooks/auth";
 /*
 getDocs,
@@ -11,38 +14,53 @@ getDocs,
   */
 
 import {getFirestore, getDoc, doc} from "firebase/firestore";
+import SurveyViewer from "./SurveyViewer";
 
 const Survey = () => {
   const params = useParams();
   const db = getFirestore(app);
   const [surveyId, setSurveyId] = useState("");
-  const [isValidSurvey, setIsValidSurvey] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const validSurvey = async () => {
-    console.log(surveyId);
-    if (surveyId) {
-      const docRef = doc(db, "surveys", surveyId);
-      const docSnap = await getDoc(docRef);
+  // const [isValidSurvey, setIsValidSurvey] = useState(false);
+  // const [loaded, setLoaded] = useState(false);
+  const [survey, setSurvey] = useState([]);
+  const [surveyName, setSurveyName] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("");
 
-      if (docSnap.exists()) {
-        console.log("document exists");
-        setIsValidSurvey(true);
-      } else {
-        console.log("doc does not exists");
-      }
-    }
-    setLoaded(true); // TODO: may need to move this
-  };
   useEffect(() => {
     setSurveyId(params.id);
-    validSurvey();
-  }, [surveyId]);
+    const loadSurvey = async () => {
+      if (surveyId) {
+        const docRef = doc(db, "surveys", surveyId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          let {survey, surveyName, redirectUrl} = docSnap.data();
+          setSurveyName(surveyName);
+          setSurvey(survey);
+          if (redirectUrl) {
+            setRedirectUrl(redirectUrl);
+          }
+          // setIsValidSurvey(true);
+        }
+      }
+      // setLoaded(true);
+    };
+    loadSurvey();
+  }, [surveyId, params.id, db]);
 
   // make sure id is valid or so error page
-  if (loaded && isValidSurvey) {
-    return <div>take survey {params.id}</div>;
-  } else {
-    return <div>{loaded && !isValidSurvey && <div>invalid survey</div>}</div>;
-  }
+  return (
+    <div className="surveyParentContainer">
+      <div className="logoContainer">
+        <Logo />
+        <img src={flower} alt="flower" className="flowerLogoImg" />
+      </div>
+      <SurveyViewer
+        questions={survey}
+        surveyName={surveyName}
+        questionHash={null}
+      />
+    </div>
+  );
 };
 export default Survey;

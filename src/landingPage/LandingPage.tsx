@@ -41,6 +41,7 @@ import {
   PriceContainer,
   PricingHeader,
   Footer,
+  Trial,
 } from "./styles";
 
 const LandingPage: React.FC = () => {
@@ -124,6 +125,7 @@ const LandingPage: React.FC = () => {
             ${price}
             <Month>/month</Month>
           </Price>
+          <Trial>start with a 2 week trial</Trial>
           <PricingHeader>
             All you need to create beautiful surveys
           </PricingHeader>
