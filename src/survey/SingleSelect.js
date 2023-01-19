@@ -1,13 +1,15 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 
-const SingleSelect = ({answerChoices, handleProceed}) => {
+const SingleSelect = ({answerChoices, handleProceed, index}) => {
   const [selected, setSelected] = useState("");
+  const indexRef = useRef(index);
   const changeSelected = (item) => {
     setSelected(item);
   };
   useEffect(() => {
-    handleProceed(selected.length !== 0);
-  }, [selected]);
+    handleProceed(index === indexRef.current);
+    indexRef.current = index;
+  }, [selected, index]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((choice, index) => {

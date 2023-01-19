@@ -9,12 +9,9 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
   const prevQuestions = useRef(questions);
 
   // can go to next question or submit
-  const handleProceed = useCallback(
-    (proceed) => {
-      setProceed(proceed);
-    },
-    [questionIndex]
-  );
+  const handleProceed = useCallback((proceed) => {
+    setProceed(proceed);
+  }, []);
 
   const handleIndex = (buttonAction) => {
     const maxIndex = questions.length - 1;
@@ -80,12 +77,13 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
                 previous
               </button>
             )}
-            {questionIndex !== questions.length - 1 && proceed ? (
+            {proceed && questionIndex !== questions.length - 1 ? (
               <button
                 className="previewButton nextBtn"
                 name="next"
                 onClick={(e) => {
                   handleIndex(e.target.name);
+                  setProceed(false);
                 }}
               >
                 next

@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 
 const MultiSelect = ({answerChoices, index, handleProceed}) => {
   const [selected, setSelected] = useState([]);
+  const indexRef = useRef(index);
   const toggleSelectedChoices = (item) => {
     if (selected.includes(item)) {
       let index = selected.indexOf(item);
@@ -16,8 +17,8 @@ const MultiSelect = ({answerChoices, index, handleProceed}) => {
   };
 
   useEffect(() => {
-    console.log("ms", selected.length !== 0);
-    handleProceed(selected.length !== 0);
+    handleProceed(index === indexRef.current);
+    indexRef.current = index;
   }, [index, selected, handleProceed]);
 
   return (

@@ -39,6 +39,7 @@ const QuestionViewer = ({
               <SingleSelect
                 answerChoices={answerChoices}
                 handleProceed={handleProceed}
+                index={index}
               />
             </>
           );
@@ -46,7 +47,7 @@ const QuestionViewer = ({
           return (
             <>
               {" "}
-              <OpenEnded handleProceed={handleProceed} />{" "}
+              <OpenEnded handleProceed={handleProceed} index={index} />{" "}
             </>
           );
         case "emoji_sentiment":
@@ -55,6 +56,7 @@ const QuestionViewer = ({
               <Emojis
                 questionHash={hash}
                 currentEmoji={emoji}
+                index={index}
                 handleProceed={handleProceed}
               />
             </>

@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 
-const Emojis = ({questionHash, currentEmoji}) => {
+const Emojis = ({questionHash, currentEmoji, index, handleProceed}) => {
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -9,6 +9,7 @@ const Emojis = ({questionHash, currentEmoji}) => {
     love: "0x1F60D",
   };
   const [emoji, setEmoji] = useState("");
+  const indexRef = useRef(index);
   const handleEmojis = (key) => {
     if (Object.keys(emojis).includes(key)) {
       setEmoji(key);
@@ -16,6 +17,8 @@ const Emojis = ({questionHash, currentEmoji}) => {
   };
   useEffect(() => {
     setEmoji(currentEmoji);
+    handleProceed(indexRef.current === index || emoji.length > 0);
+    indexRef.current = index;
   }, [currentEmoji]);
   return (
     <div className="emojiContainer">

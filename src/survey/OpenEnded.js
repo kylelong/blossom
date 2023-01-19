@@ -1,10 +1,15 @@
-import React, {useState} from "react";
-const OpenEnded = () => {
+import React, {useState, useRef, useEffect} from "react";
+const OpenEnded = ({handleProceed, index}) => {
   const [response, setResponse] = useState("");
+  const indexRef = useRef(index);
   const handleChange = (input) => {
     setResponse(input);
     console.log(response);
   };
+  useEffect(() => {
+    handleProceed(index === indexRef.current || response.length > 0);
+    indexRef.current = index;
+  }, [index]);
   return (
     <div>
       <textarea
