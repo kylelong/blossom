@@ -17,7 +17,8 @@ const MultiSelect = ({answerChoices, index, handleProceed}) => {
   };
 
   useEffect(() => {
-    handleProceed(index === indexRef.current);
+    handleProceed(index === indexRef.current && selected.length > 0);
+    console.log(`${index}`, selected);
     indexRef.current = index;
   }, [index, selected, handleProceed]);
 

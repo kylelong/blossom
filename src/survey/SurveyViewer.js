@@ -77,24 +77,26 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
                 previous
               </button>
             )}
-            {proceed && questionIndex !== questions.length - 1 ? (
+            {questionIndex !== questions.length - 1 ? (
               <button
-                className="previewButton nextBtn"
+                className={proceed ? "previewButton" : "disabledButton"}
                 name="next"
                 onClick={(e) => {
                   handleIndex(e.target.name);
                   setProceed(false);
                 }}
+                disabled={!proceed}
               >
                 next
               </button>
             ) : (
               <>
-                {proceed && (
-                  <button className="previewButton" name="submit">
-                    submit
-                  </button>
-                )}
+                <button
+                  className={proceed ? "previewButton" : "disabledButton"}
+                  name="submit disabled={!proceed}"
+                >
+                  submit
+                </button>
               </>
             )}
           </div>
