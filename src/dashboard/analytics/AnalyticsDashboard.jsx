@@ -87,8 +87,7 @@ const AnalyticsDashboard = () => {
     }
   }, [db, loaded, uid]);
   const handleSurveyName = (idx) => {
-    if (idx >= 0 && idx <= surveys.length) {
-      console.log("survey name", idx, surveys[idx]);
+    if (idx >= 0 && idx < surveys.length) {
       setSurveyIndex(idx);
       setQuestionIndex(0);
     }
@@ -96,7 +95,6 @@ const AnalyticsDashboard = () => {
   const handleQuestionTitle = (idx) => {
     console.log("questionTitle", idx);
     if (idx >= 0 && idx < surveys[surveyIndex].survey.length) {
-      console.log(surveys[surveyIndex].survey[idx]);
       setQuestionIndex(idx);
     }
   };
@@ -136,7 +134,7 @@ const AnalyticsDashboard = () => {
                     className="createBtn"
                     style={{display: "flex", marginTop: "10px"}}
                   >
-                    finish this survey {String.fromCodePoint("0x1F91D")}
+                    publish this survey {String.fromCodePoint("0x1F91D")}
                   </button>
                 </a>
               )}
