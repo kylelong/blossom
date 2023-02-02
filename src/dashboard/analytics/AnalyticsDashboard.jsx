@@ -24,6 +24,8 @@ import {
   EmojiRow,
   Emoji,
 } from "./analyticsStyles";
+import PieChart from "./PieChart";
+import {UserData} from "./Data";
 
 const AnalyticsDashboard = () => {
   const [loaded, setLoaded] = useState(false);
@@ -34,6 +36,15 @@ const AnalyticsDashboard = () => {
   const db = getFirestore(app);
   const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
+  const [userData, setUserData] = useState({
+    labels: UserData.map((data) => data.year),
+    datasets: [
+      {
+        label: "Users Gained",
+        data: UserData.map((data) => data.userGain),
+      },
+    ],
+  });
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -103,6 +114,9 @@ const AnalyticsDashboard = () => {
   }
   return (
     <>
+      <div>
+        <PieChart chartData={userData} />
+      </div>
       {loaded && (
         <AnalyticsContainer>
           <AnalyticsSection>
