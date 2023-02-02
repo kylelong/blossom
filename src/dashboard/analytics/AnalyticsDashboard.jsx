@@ -130,6 +130,16 @@ const AnalyticsDashboard = () => {
           <AnalyticsSection>
             <AnalyticsHeader>Questions</AnalyticsHeader>
             <div>
+              {!surveys[surveyIndex].published && (
+                <a href="/create">
+                  <button
+                    className="createBtn"
+                    style={{display: "flex", marginTop: "10px"}}
+                  >
+                    finish this survey {String.fromCodePoint("0x1F91D")}
+                  </button>
+                </a>
+              )}
               {surveys[surveyIndex].survey.map((question, idx) => {
                 return (
                   <div key={idx}>

@@ -61,6 +61,7 @@ export const QuestionTitleSelected = styled.div`
 `;
 export const AnswerChoice = styled.div`
   text-align: center;
+  margin-bottom: 5px;
 `;
 export const QuestionType = styled.div`
   color: rgb(60, 66, 87);
