@@ -9,7 +9,7 @@ const OpenEnded = ({handleProceed, index}) => {
   useEffect(() => {
     handleProceed(index === indexRef.current || response.length > 0);
     indexRef.current = index;
-  }, [index]);
+  }, [index, handleProceed, response.length]);
   return (
     <div>
       <textarea

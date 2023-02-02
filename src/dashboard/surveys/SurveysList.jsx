@@ -167,6 +167,7 @@ const SurveysList = () => {
                   href={surveys[currentSurveyIndex].surveyLink}
                   className="blossomLink"
                   target="_blank"
+                  rel="noreferrer"
                 >
                   {surveys[currentSurveyIndex].surveyLink}
                 </a>

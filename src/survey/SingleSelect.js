@@ -10,7 +10,7 @@ const SingleSelect = ({answerChoices, handleProceed, index}) => {
     handleProceed(index === indexRef.current && selected.length > 0);
     console.log(index, indexRef.current);
     indexRef.current = index;
-  }, [selected, index]);
+  }, [selected, index, handleProceed]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((choice, index) => {

@@ -19,7 +19,7 @@ const Emojis = ({questionHash, currentEmoji, index, handleProceed}) => {
     setEmoji(currentEmoji);
     handleProceed(indexRef.current === index || emoji.length > 0);
     indexRef.current = index;
-  }, [currentEmoji]);
+  }, [currentEmoji, handleProceed, emoji.length, index]);
   return (
     <div className="emojiContainer">
       {Object.entries(emojis).map(([key, value]) => {

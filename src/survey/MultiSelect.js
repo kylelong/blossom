@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 
-const MultiSelect = ({answerChoices, index, handleProceed}) => {
+const MultiSelect = ({answerChoices, index, handleProceed, questionIndex}) => {
   const [selected, setSelected] = useState([]);
   const indexRef = useRef(index);
   const toggleSelectedChoices = (item) => {
@@ -17,10 +17,10 @@ const MultiSelect = ({answerChoices, index, handleProceed}) => {
   };
 
   useEffect(() => {
+    console.log(questionIndex, selected);
     handleProceed(index === indexRef.current && selected.length > 0);
-    console.log(`${index}`, selected);
     indexRef.current = index;
-  }, [index, selected, handleProceed]);
+  }, [questionIndex, index, selected, handleProceed]);
 
   return (
     <div className="answerChoicesContainer">

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {auth, app} from "../firebase-config";
+import {app} from "../firebase-config";
 import "./survey.css";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
@@ -28,6 +28,7 @@ const Survey = () => {
 
   useEffect(() => {
     setSurveyId(params.id);
+    console.log(redirectUrl); //TODO: remove redirectUrl
     const loadSurvey = async () => {
       if (surveyId) {
         const docRef = doc(db, "surveys", surveyId);
@@ -46,7 +47,7 @@ const Survey = () => {
       // setLoaded(true);
     };
     loadSurvey();
-  }, [surveyId, params.id, db]);
+  }, [surveyId, params.id, db, redirectUrl]);
 
   // make sure id is valid or so error page
   return (

@@ -62,6 +62,7 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
           <QuestionViewer
             {...questions[questionIndex]}
             handleProceed={handleProceed}
+            questionIndex={questionIndex}
           />
         )}
         {questions.length > 0 && (
