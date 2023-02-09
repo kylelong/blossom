@@ -36,6 +36,7 @@ const AnalyticsDashboard = () => {
   const db = getFirestore(app);
   const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
+  // eslint-disable-next-line
   const [userData, setUserData] = useState({
     labels: UserData.map((data) => data.year),
     datasets: [

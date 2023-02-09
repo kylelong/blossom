@@ -8,7 +8,7 @@ const SingleSelect = ({answerChoices, handleProceed, index}) => {
   };
   useEffect(() => {
     handleProceed(index === indexRef.current && selected.length > 0);
-    console.log(index, indexRef.current);
+    console.log(`single select: ${selected}`);
     indexRef.current = index;
   }, [selected, index, handleProceed]);
   return (
