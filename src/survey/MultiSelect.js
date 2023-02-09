@@ -7,7 +7,7 @@ const MultiSelect = ({answerChoices, index, handleProceed, questionIndex}) => {
     if (selected.includes(item)) {
       let index = selected.indexOf(item);
       setSelected((prevState) => {
-        let copy = [...selected];
+        let copy = [...prevState];
         copy.splice(index, 1);
         return copy;
       });
@@ -18,6 +18,9 @@ const MultiSelect = ({answerChoices, index, handleProceed, questionIndex}) => {
 
   useEffect(() => {
     console.log(questionIndex, selected);
+    if (index !== indexRef.current) {
+      setSelected([]);
+    }
     handleProceed(index === indexRef.current && selected.length > 0);
     indexRef.current = index;
   }, [questionIndex, index, selected, handleProceed]);

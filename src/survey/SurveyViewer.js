@@ -17,7 +17,6 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
     const maxIndex = questions.length - 1;
     if (questions.length > 0 && ["next", "previous"].includes(buttonAction)) {
       if (buttonAction === "next") {
-        console.log("clicked next", proceed);
         if (questionIndex === maxIndex) {
           setQuestionIndex(0);
         } else {
@@ -43,7 +42,7 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
       setQuestionIndex(0);
     }
     prevQuestions.current = questions;
-  }, [questions, questionHash, questionIndex, proceed]);
+  }, [questionIndex, questions, questionHash, proceed]);
   return (
     <div className="surveyContainerParent">
       <div className="surveyContainer">

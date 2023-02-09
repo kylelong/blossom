@@ -25,6 +25,7 @@ const Survey = () => {
   const [survey, setSurvey] = useState([]);
   const [surveyName, setSurveyName] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
+  //  const [response, setResponse] = useState([]);
 
   useEffect(() => {
     setSurveyId(params.id);
@@ -38,6 +39,8 @@ const Survey = () => {
           let {survey, surveyName, redirectUrl} = docSnap.data();
           setSurveyName(surveyName);
           setSurvey(survey);
+          // let res = new Array(survey.length).fill({});
+          // setResponse(res);
           if (redirectUrl) {
             setRedirectUrl(redirectUrl);
           }

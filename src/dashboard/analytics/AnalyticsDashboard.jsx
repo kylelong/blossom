@@ -42,6 +42,15 @@ const AnalyticsDashboard = () => {
       {
         label: "Users Gained",
         data: UserData.map((data) => data.userGain),
+        backgroundColor: [
+          "rgba(75,192,192,1)",
+          "#ecf0f1",
+          "#50AF95",
+          "#f3ba2f",
+          "#2a71d0",
+        ],
+        borderColor: "black",
+        borderWidth: 2,
       },
     ],
   });
@@ -114,9 +123,11 @@ const AnalyticsDashboard = () => {
   }
   return (
     <>
-      <div>
-        <PieChart chartData={userData} />
-      </div>
+      {loaded && (
+        <div>
+          <PieChart chartData={userData} />
+        </div>
+      )}
       {loaded && (
         <AnalyticsContainer>
           <AnalyticsSection>
