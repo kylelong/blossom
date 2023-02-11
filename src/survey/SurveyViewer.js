@@ -2,7 +2,12 @@ import React, {useState, useEffect, useRef, useCallback} from "react";
 import "./survey.css";
 import QuestionViewer from "./QuestionViewer";
 import Loader from "../loader";
-const SurveyViewer = ({questions, surveyName, questionHash}) => {
+const SurveyViewer = ({
+  questions,
+  surveyName,
+  questionHash,
+  updateResponse,
+}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
   const showQuestions = questions.length > 0;
@@ -62,6 +67,7 @@ const SurveyViewer = ({questions, surveyName, questionHash}) => {
             {...questions[questionIndex]}
             handleProceed={handleProceed}
             questionIndex={questionIndex}
+            updateResponse={updateResponse}
           />
         )}
         {questions.length > 0 && (

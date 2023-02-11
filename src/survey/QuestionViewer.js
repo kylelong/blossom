@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
@@ -14,15 +14,12 @@ const QuestionViewer = ({
   emoji,
   handleProceed,
   questionIndex,
+  updateResponse,
 }) => {
   const questionStarted =
     questionTitle ||
     questionType ||
     (numberOfAnswerChoices > 0 && answerChoices);
-
-  useEffect(() => {
-    console.log("question index", questionIndex);
-  }, [questionIndex]);
 
   const preview = () => {
     if (questionStarted) {
@@ -36,6 +33,7 @@ const QuestionViewer = ({
                 index={index}
                 handleProceed={handleProceed}
                 questionIndex={questionIndex}
+                updateResponse={updateResponse}
               />
             </>
           );

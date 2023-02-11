@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import {useParams} from "react-router-dom";
 import {app} from "../firebase-config";
 import "./survey.css";
@@ -25,12 +25,13 @@ const Survey = () => {
   const [survey, setSurvey] = useState([]);
   const [surveyName, setSurveyName] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
-  //  const [response, setResponse] = useState([]);
+  const [response, setResponse] = useState([]);
 
   useEffect(() => {
     setSurveyId(params.id);
-    console.log(redirectUrl); //TODO: remove redirectUrl
+    // console.log(redirectUrl); //TODO: remove redirectUrl
     const loadSurvey = async () => {
+      console.log("CALLED");
       if (surveyId) {
         const docRef = doc(db, "surveys", surveyId);
         const docSnap = await getDoc(docRef);
@@ -39,8 +40,16 @@ const Survey = () => {
           let {survey, surveyName, redirectUrl} = docSnap.data();
           setSurveyName(surveyName);
           setSurvey(survey);
-          // let res = new Array(survey.length).fill({});
-          // setResponse(res);
+          let res = new Array(survey.length);
+          for (let i = 0; i < survey.length; i++) {
+            res[i] = {
+              questionHash: survey[i].hash,
+              answerChoices: [],
+              answerIndices: [],
+            };
+          }
+
+          setResponse(res);
           if (redirectUrl) {
             setRedirectUrl(redirectUrl);
           }
@@ -52,9 +61,27 @@ const Survey = () => {
     loadSurvey();
   }, [surveyId, params.id, db, redirectUrl]);
 
+  /**
+   * update response array with selected answer choices
+   * and answer indices
+   */
+  const updateResponse = useCallback(
+    (index, answerChoices, answerIndices) => {
+      let copy = [...response];
+      copy[index].answerChoices = answerChoices;
+      copy[index].answerIndices = answerIndices;
+      setResponse(copy);
+    },
+    [response]
+  );
+  // const updateResponse = (index, answerChoices, answerIndices) => {
+
+  // };
+
   // make sure id is valid or so error page
   return (
     <div className="surveyParentContainer">
+      <div>{JSON.stringify(response, null, 2)}</div>
       <div className="logoContainer">
         <Logo />
         <img src={flower} alt="flower" className="flowerLogoImg" />
@@ -63,6 +90,7 @@ const Survey = () => {
         questions={survey}
         surveyName={surveyName}
         questionHash={null}
+        updateResponse={updateResponse}
       />
     </div>
   );
