@@ -1,16 +1,36 @@
 import React, {useState, useEffect, useRef} from "react";
 
-const SingleSelect = ({answerChoices, handleProceed, index}) => {
+const SingleSelect = ({
+  answerChoices,
+  handleProceed,
+  index,
+  updateResponse,
+}) => {
   const [selected, setSelected] = useState("");
-  const indexRef = useRef(index);
-  const changeSelected = (item) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const indexRef = useRef(index); // question index
+  const selectedRef = useRef(selected);
+  const selectedIndexRef = useRef(selectedIndex);
+  const changeSelected = (item, index) => {
     setSelected(item);
+    setSelectedIndex(index);
   };
   useEffect(() => {
+    if (index !== indexRef.current) {
+      setSelected([]);
+      setSelectedIndex([]);
+    }
+    if (
+      selected !== selectedRef.current ||
+      selectedIndex !== selectedIndexRef.current
+    ) {
+      updateResponse(index, [selected], [selectedIndex]);
+    }
     handleProceed(index === indexRef.current && selected.length > 0);
-    console.log(`single select: ${index} ${selected}`);
     indexRef.current = index;
-  }, [selected, index, handleProceed]);
+    selectedRef.current = selected;
+    selectedIndexRef.current = selectedIndex;
+  }, [selected, index, handleProceed, selectedIndex]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((choice, index) => {
@@ -20,7 +40,7 @@ const SingleSelect = ({answerChoices, handleProceed, index}) => {
               className="answerChoiceButtonSelected"
               name={choice}
               key={index}
-              onClick={(e) => changeSelected(e.target.name)}
+              onClick={(e) => changeSelected(e.target.name, index)}
             >
               {choice}
             </button>
@@ -31,7 +51,7 @@ const SingleSelect = ({answerChoices, handleProceed, index}) => {
               className="answerChoiceButton"
               name={choice}
               key={index}
-              onClick={(e) => changeSelected(e.target.name)}
+              onClick={(e) => changeSelected(e.target.name, index)}
             >
               {choice}
             </button>

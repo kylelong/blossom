@@ -38,12 +38,15 @@ const MultiSelect = ({
   };
 
   useEffect(() => {
-    console.log(`questionIndex ${questionIndex}: `, selected, selectedIndices);
+    // console.log(`questionIndex ${questionIndex}: `, selected, selectedIndices); //TODO: remove
     if (index !== indexRef.current) {
       setSelected([]);
       setSelectedIndices([]);
     }
-    if (selected !== selectedRef || selectedIndices !== selectedIndicesRef) {
+    if (
+      selected !== selectedRef.current ||
+      selectedIndices !== selectedIndicesRef.current
+    ) {
       updateResponse(questionIndex, selected, selectedIndices);
     }
     handleProceed(index === indexRef.current && selected.length > 0);

@@ -31,7 +31,6 @@ const Survey = () => {
     setSurveyId(params.id);
     // console.log(redirectUrl); //TODO: remove redirectUrl
     const loadSurvey = async () => {
-      console.log("CALLED");
       if (surveyId) {
         const docRef = doc(db, "surveys", surveyId);
         const docSnap = await getDoc(docRef);

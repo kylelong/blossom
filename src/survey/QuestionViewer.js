@@ -11,7 +11,6 @@ const QuestionViewer = ({
   numberOfAnswerChoices,
   answerChoices,
   hash,
-  emoji,
   handleProceed,
   questionIndex,
   updateResponse,
@@ -45,6 +44,7 @@ const QuestionViewer = ({
                 answerChoices={answerChoices}
                 handleProceed={handleProceed}
                 index={index}
+                updateResponse={updateResponse}
               />
             </>
           );
@@ -52,7 +52,11 @@ const QuestionViewer = ({
           return (
             <>
               {" "}
-              <OpenEnded handleProceed={handleProceed} index={index} />{" "}
+              <OpenEnded
+                handleProceed={handleProceed}
+                index={index}
+                updateResponse={updateResponse}
+              />{" "}
             </>
           );
         case "emoji_sentiment":
@@ -60,9 +64,9 @@ const QuestionViewer = ({
             <>
               <Emojis
                 questionHash={hash}
-                currentEmoji={emoji}
                 index={index}
                 handleProceed={handleProceed}
+                updateResponse={updateResponse}
               />
             </>
           );
