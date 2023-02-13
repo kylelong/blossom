@@ -30,6 +30,7 @@ const SingleSelect = ({
     indexRef.current = index;
     selectedRef.current = selected;
     selectedIndexRef.current = selectedIndex;
+    // eslint-disable-next-line
   }, [selected, index, handleProceed, selectedIndex]);
   return (
     <div className="answerChoicesContainer">

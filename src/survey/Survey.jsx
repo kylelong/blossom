@@ -20,12 +20,12 @@ const Survey = () => {
   const params = useParams();
   const db = getFirestore(app);
   const [surveyId, setSurveyId] = useState("");
-  // const [isValidSurvey, setIsValidSurvey] = useState(false);
-  // const [loaded, setLoaded] = useState(false);
+
   const [survey, setSurvey] = useState([]);
   const [surveyName, setSurveyName] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
   const [response, setResponse] = useState([]);
+  // TODO: add response ref
 
   useEffect(() => {
     setSurveyId(params.id);
@@ -52,10 +52,8 @@ const Survey = () => {
           if (redirectUrl) {
             setRedirectUrl(redirectUrl);
           }
-          // setIsValidSurvey(true);
         }
       }
-      // setLoaded(true);
     };
     loadSurvey();
   }, [surveyId, params.id, db, redirectUrl]);
@@ -73,14 +71,14 @@ const Survey = () => {
     },
     [response]
   );
-  // const updateResponse = (index, answerChoices, answerIndices) => {
 
-  // };
+  const submitSurvey = () => {
+    console.log(response);
+  };
 
   // make sure id is valid or so error page
   return (
     <div className="surveyParentContainer">
-      <div>{JSON.stringify(response, null, 2)}</div>
       <div className="logoContainer">
         <Logo />
         <img src={flower} alt="flower" className="flowerLogoImg" />
@@ -90,6 +88,7 @@ const Survey = () => {
         surveyName={surveyName}
         questionHash={null}
         updateResponse={updateResponse}
+        submitSurvey={submitSurvey}
       />
     </div>
   );

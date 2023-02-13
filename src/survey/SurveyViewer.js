@@ -7,6 +7,7 @@ const SurveyViewer = ({
   surveyName,
   questionHash,
   updateResponse,
+  submitSurvey,
 }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
@@ -100,6 +101,7 @@ const SurveyViewer = ({
                 <button
                   className={proceed ? "previewButton" : "disabledButton"}
                   name="submit disabled={!proceed}"
+                  onClick={submitSurvey}
                 >
                   submit
                 </button>

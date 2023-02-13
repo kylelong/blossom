@@ -97,7 +97,7 @@ const LandingPage: React.FC = () => {
                 Build relevant features based on user feedback
               </BenefitsListItem>
               <BenefitsListItem>
-                Understand your target audience to make informed business
+                Understand your target audience to make better informed business
                 decisions
               </BenefitsListItem>
             </ul>
@@ -148,21 +148,6 @@ const LandingPage: React.FC = () => {
         <SectionHeader>FAQs</SectionHeader>
         <FAQContainer>
           <QuestionContainer>
-            <QuestionLabel>
-              Why not have my engineering team build surveys?
-            </QuestionLabel>
-            <AnswerLabel>
-              <DotIcon />
-              Release a survey in minutes as opposed to weeks or months of
-              engineering time
-            </AnswerLabel>
-            <AnswerLabel>
-              <DotIcon />
-              Spend time building products / feature core to your business while
-              we handle surveys
-            </AnswerLabel>
-          </QuestionContainer>
-          <QuestionContainer>
             <QuestionLabel>Why Blossom?</QuestionLabel>
 
             <AnswerLabelItem>
@@ -180,6 +165,22 @@ const LandingPage: React.FC = () => {
             </AnswerLabelItem>
           </QuestionContainer>
           <QuestionContainer>
+            <QuestionLabel>
+              Why not have my engineering team build surveys?
+            </QuestionLabel>
+            <AnswerLabel>
+              <DotIcon />
+              Release a survey in minutes compared to after weeks or months of
+              engineering time
+            </AnswerLabel>
+            <AnswerLabel>
+              <DotIcon />
+              Spend time building core products & feature for your business
+              while we handle surveys
+            </AnswerLabel>
+          </QuestionContainer>
+
+          <QuestionContainer>
             <QuestionLabel>How much does this cost?</QuestionLabel>
             <AnswerLabel>
               ${price} / month. Start today with a 2 week free trial. Cancel
@@ -190,7 +191,10 @@ const LandingPage: React.FC = () => {
       </FAQSectionContainer>
 
       <FlowerImageSection src={flower7} style={{marginBottom: "20px"}} />
-      <Footer>Copyright {new Date().getFullYear()} &copy; Blossom</Footer>
+      <Footer>
+        Copyright {new Date().getFullYear()} &copy; Blossom |
+        contact@blossomsurveys.io
+      </Footer>
     </LandingPageContainer>
   );
 };

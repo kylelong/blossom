@@ -26,6 +26,7 @@ const Emojis = ({questionHash, index, handleProceed, updateResponse}) => {
     handleProceed(indexRef.current === index || emoji.length > 0);
     indexRef.current = index;
     emojiRef.current = emoji;
+    // eslint-disable-next-line
   }, [handleProceed, emoji.length, index, emoji, emojis]);
   return (
     <div className="emojiContainer">

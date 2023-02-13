@@ -47,12 +47,13 @@ const MultiSelect = ({
       selected !== selectedRef.current ||
       selectedIndices !== selectedIndicesRef.current
     ) {
-      updateResponse(questionIndex, selected, selectedIndices);
+      updateResponse(questionIndex, selected, selectedIndices.sort());
     }
     handleProceed(index === indexRef.current && selected.length > 0);
     indexRef.current = index;
     selectedRef.current = selected;
     selectedIndicesRef.current = selectedIndices;
+    // eslint-disable-next-line
   }, [questionIndex, index, selected, handleProceed, selectedIndices]);
 
   return (
