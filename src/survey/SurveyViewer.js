@@ -10,10 +10,12 @@ const SurveyViewer = ({
   updateResponse,
   submitSurvey,
   redirectUrl,
+  surveyId,
 }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const hasCompletedSurvey = localStorage.getItem("sid") === surveyId;
   const showQuestions = questions.length > 0 && !submitted;
   const prevQuestions = useRef(questions);
 
@@ -58,15 +60,15 @@ const SurveyViewer = ({
         <div className="surveyNameHeader">
           {showQuestions && surveyName === "" ? "survey name" : surveyName}
         </div>
-        {showQuestions && !submitted && (
+        {showQuestions && !submitted && !hasCompletedSurvey && (
           <div className="questionNumber">question {questionIndex + 1}</div>
         )}
-        {!showQuestions && !submitted && (
+        {!showQuestions && !submitted && !hasCompletedSurvey && (
           <div className="startSurveyContainer">
             <Loader defaultStyle={false} />
           </div>
         )}
-        {showQuestions && !submitted && (
+        {showQuestions && !submitted && !hasCompletedSurvey && (
           <QuestionViewer
             {...questions[questionIndex]}
             handleProceed={handleProceed}
@@ -74,8 +76,10 @@ const SurveyViewer = ({
             updateResponse={updateResponse}
           />
         )}
-        {submitted ? <ThankYou redirectUrl={redirectUrl} /> : null}
-        {questions.length > 0 && (
+        {submitted || hasCompletedSurvey ? (
+          <ThankYou redirectUrl={redirectUrl} surveyId={surveyId} />
+        ) : null}
+        {questions.length > 0 && !hasCompletedSurvey && (
           <div className="previewButtonsContainer">
             {questionIndex > 0 && !submitted && (
               <button
@@ -88,7 +92,9 @@ const SurveyViewer = ({
                 previous
               </button>
             )}
-            {questionIndex !== questions.length - 1 && !submitted ? (
+            {questionIndex !== questions.length - 1 &&
+            !submitted &&
+            !hasCompletedSurvey ? (
               <button
                 className={proceed ? "previewButton" : "disabledButton"}
                 name="next"
@@ -102,7 +108,7 @@ const SurveyViewer = ({
               </button>
             ) : (
               <>
-                {!submitted && (
+                {!submitted && !hasCompletedSurvey && (
                   <button
                     className={proceed ? "previewButton" : "disabledButton"}
                     name="submit disabled={!proceed}"

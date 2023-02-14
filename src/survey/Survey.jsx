@@ -28,7 +28,7 @@ const Survey = () => {
   // TODO: add response ref
 
   useEffect(() => {
-    setSurveyId(params.id);
+    setSurveyId(params.id); //TODO: make sure survey id is
     // console.log(redirectUrl); //TODO: remove redirectUrl
     const loadSurvey = async () => {
       if (surveyId) {
@@ -91,6 +91,7 @@ const Survey = () => {
         updateResponse={updateResponse}
         submitSurvey={submitSurvey}
         redirectUrl={redirectUrl}
+        surveyId={surveyId}
       />
     </div>
   );

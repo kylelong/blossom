@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import flower3 from "../images/scandi-334.svg";
 export const Container = styled.div`
@@ -6,8 +6,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
-  top: 20px;
+  height: 100vh;
 `;
 export const Thanks = styled.div`
   font-size: 22px;
@@ -25,14 +24,26 @@ export const FlowerImage = styled.img`
   width: 60px;
   margin-bottom: 18px;
 `;
-const ThankYou = ({redirectUrl}) => {
+export const RedirectUrl = styled.div`
+  margin-top: 24px;
+`;
+
+const ThankYou = ({redirectUrl, surveyId}) => {
+  useEffect(() => {
+    if (localStorage.getItem("sid") !== surveyId) {
+      setTimeout(() => {
+        localStorage.setItem("sid", surveyId);
+        window.location.href = redirectUrl;
+      }, 3000);
+    }
+  }, [redirectUrl, surveyId]);
   return (
     <Container>
       <Thanks>thank you</Thanks>
       <FlowerImage src={flower3} />
       <Completed>survey completed</Completed>
-      {redirectUrl.length > 0 ? (
-        <div>redirecting you to {redirectUrl}</div>
+      {localStorage.getItem("sid") !== surveyId && redirectUrl.length > 0 ? (
+        <RedirectUrl>redirecting you to {redirectUrl} ...</RedirectUrl>
       ) : null}
     </Container>
   );
