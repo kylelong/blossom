@@ -23,7 +23,7 @@ const Emojis = ({questionHash, index, handleProceed, updateResponse}) => {
     if (emojiRef.current !== emoji) {
       updateResponse(index, [emojis[emoji]], [-1]);
     }
-    handleProceed(indexRef.current === index || emoji.length > 0);
+    handleProceed(indexRef.current === index && emoji.length > 0);
     indexRef.current = index;
     emojiRef.current = emoji;
     // eslint-disable-next-line

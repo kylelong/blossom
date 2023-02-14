@@ -73,6 +73,7 @@ const Survey = () => {
   );
 
   const submitSurvey = () => {
+    //TODO: set completed to true
     console.log(response);
   };
 
@@ -89,6 +90,7 @@ const Survey = () => {
         questionHash={null}
         updateResponse={updateResponse}
         submitSurvey={submitSurvey}
+        redirectUrl={redirectUrl}
       />
     </div>
   );

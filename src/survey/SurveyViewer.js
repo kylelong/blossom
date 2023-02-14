@@ -2,16 +2,19 @@ import React, {useState, useEffect, useRef, useCallback} from "react";
 import "./survey.css";
 import QuestionViewer from "./QuestionViewer";
 import Loader from "../loader";
+import ThankYou from "./ThankYou";
 const SurveyViewer = ({
   questions,
   surveyName,
   questionHash,
   updateResponse,
   submitSurvey,
+  redirectUrl,
 }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
-  const showQuestions = questions.length > 0;
+  const [submitted, setSubmitted] = useState(false);
+  const showQuestions = questions.length > 0 && !submitted;
   const prevQuestions = useRef(questions);
 
   // can go to next question or submit
@@ -55,15 +58,15 @@ const SurveyViewer = ({
         <div className="surveyNameHeader">
           {showQuestions && surveyName === "" ? "survey name" : surveyName}
         </div>
-        {showQuestions && (
+        {showQuestions && !submitted && (
           <div className="questionNumber">question {questionIndex + 1}</div>
         )}
-        {!showQuestions && (
+        {!showQuestions && !submitted && (
           <div className="startSurveyContainer">
             <Loader defaultStyle={false} />
           </div>
         )}
-        {showQuestions && (
+        {showQuestions && !submitted && (
           <QuestionViewer
             {...questions[questionIndex]}
             handleProceed={handleProceed}
@@ -71,9 +74,10 @@ const SurveyViewer = ({
             updateResponse={updateResponse}
           />
         )}
+        {submitted ? <ThankYou redirectUrl={redirectUrl} /> : null}
         {questions.length > 0 && (
           <div className="previewButtonsContainer">
-            {questionIndex > 0 && (
+            {questionIndex > 0 && !submitted && (
               <button
                 className="previewButton prevBtn"
                 name="previous"
@@ -84,7 +88,7 @@ const SurveyViewer = ({
                 previous
               </button>
             )}
-            {questionIndex !== questions.length - 1 ? (
+            {questionIndex !== questions.length - 1 && !submitted ? (
               <button
                 className={proceed ? "previewButton" : "disabledButton"}
                 name="next"
@@ -98,13 +102,18 @@ const SurveyViewer = ({
               </button>
             ) : (
               <>
-                <button
-                  className={proceed ? "previewButton" : "disabledButton"}
-                  name="submit disabled={!proceed}"
-                  onClick={submitSurvey}
-                >
-                  submit
-                </button>
+                {!submitted && (
+                  <button
+                    className={proceed ? "previewButton" : "disabledButton"}
+                    name="submit disabled={!proceed}"
+                    onClick={() => {
+                      submitSurvey();
+                      setSubmitted(true);
+                    }}
+                  >
+                    submit
+                  </button>
+                )}
               </>
             )}
           </div>

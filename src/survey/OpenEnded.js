@@ -14,7 +14,7 @@ const OpenEnded = ({handleProceed, index, updateResponse}) => {
     if (responseRef.current !== response) {
       updateResponse(index, [response], [-1]);
     }
-    handleProceed(index === indexRef.current || response.length > 0);
+    handleProceed(index === indexRef.current && response.length > 0);
     responseRef.current = response;
     indexRef.current = index;
     // eslint-disable-next-line
