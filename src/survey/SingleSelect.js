@@ -7,8 +7,31 @@ const SingleSelect = ({
   updateResponse,
   surveyId,
 }) => {
-  const [selected, setSelected] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  // prefill state from localStorage
+  const [selected, setSelected] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        if (res[index].answerChoices.length > 0) {
+          return res[index].answerChoices[0];
+        }
+      }
+    }
+    return [];
+  });
+  const [selectedIndex, setSelectedIndex] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        if (res[index].answerIndices.length > 0) {
+          return res[index].answerIndices[0];
+        }
+      }
+    }
+    return 0;
+  });
   const indexRef = useRef(index); // question index
   const selectedRef = useRef(selected);
   const selectedIndexRef = useRef(selectedIndex);
@@ -18,29 +41,9 @@ const SingleSelect = ({
   };
 
   useEffect(() => {
-    // if (index == 0 && selected.length === 0) {
-    //   if (localStorage.getItem("bsmr") !== null) {
-    //     let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-    //     if (Object.keys(bsmr).includes(surveyId)) {
-    //       let res = bsmr[surveyId];
-    //       setSelected(res[index].answerChoices);
-    //       console.log(res[index].answerChoices);
-    //       setSelectedIndex(res[index].answerIndices);
-    //     }
-    //   }
-    // }
     if (index !== indexRef.current) {
-      if (localStorage.getItem("bsmr") !== null) {
-        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        if (Object.keys(bsmr).includes(surveyId)) {
-          let res = bsmr[surveyId];
-          setSelected(res[index].answerChoices);
-          setSelectedIndex(res[index].answerIndices);
-        }
-      } else {
-        setSelected([]);
-        setSelectedIndex([]);
-      }
+      setSelected([]);
+      setSelectedIndex([]);
     }
     if (
       selected !== selectedRef.current ||
@@ -53,7 +56,7 @@ const SingleSelect = ({
     selectedRef.current = selected;
     selectedIndexRef.current = selectedIndex;
     // eslint-disable-next-line
-  }, [selected, index, handleProceed, selectedIndex]);
+  }, [selected, index, handleProceed, selectedIndex, surveyId]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((choice, index) => {

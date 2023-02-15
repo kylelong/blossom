@@ -8,8 +8,27 @@ const MultiSelect = ({
   updateResponse,
   surveyId,
 }) => {
-  const [selected, setSelected] = useState([]);
-  const [selectedIndices, setSelectedIndices] = useState([]);
+  // prefill state from localStorage
+  const [selected, setSelected] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        return res[questionIndex].answerChoices;
+      }
+    }
+    return [];
+  });
+  const [selectedIndices, setSelectedIndices] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        return res[questionIndex].answerIndices;
+      }
+    }
+    return [];
+  });
   const indexRef = useRef(index);
   const selectedRef = useRef(selected);
   const selectedIndicesRef = useRef(selectedIndices);
@@ -39,19 +58,9 @@ const MultiSelect = ({
   };
 
   useEffect(() => {
-    // console.log(`questionIndex ${questionIndex}: `, selected, selectedIndices); //TODO: remove
     if (index !== indexRef.current) {
-      if (localStorage.getItem("bsmr") !== null) {
-        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        if (Object.keys(bsmr).includes(surveyId)) {
-          let res = bsmr[surveyId];
-          setSelected(res[questionIndex].answerChoices);
-          setSelectedIndices(res[questionIndex].answerIndices);
-        }
-      } else {
-        setSelected([]);
-        setSelectedIndices([]);
-      }
+      setSelected([]);
+      setSelectedIndices([]);
     }
     if (
       selected !== selectedRef.current ||

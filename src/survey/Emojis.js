@@ -8,7 +8,22 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
     happy: "0x1F60A",
     love: "0x1F60D",
   };
-  const [emoji, setEmoji] = useState("");
+  const [emoji, setEmoji] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        if (res[index].answerChoices.length > 0) {
+          let hex = res[index].answerChoices[0];
+          const filtered = Object.entries(emojis).filter(
+            ([key, value]) => value === hex
+          );
+          return filtered[0][0];
+        }
+      }
+    }
+    return "";
+  });
   const indexRef = useRef(index);
   const emojiRef = useRef(emoji);
   const handleEmojis = (key) => {

@@ -60,7 +60,7 @@ const Survey = () => {
           if (Object.keys(bsmr).includes(surveyId)) {
             let res = bsmr[surveyId];
             setResponse(res);
-            console.log(res);
+            // console.log(res);
           }
         }
       }
@@ -89,7 +89,7 @@ const Survey = () => {
         localStorage.setItem("bsmr", JSON.stringify(bsmr));
       }
     },
-    [response]
+    [response, surveyId]
   );
 
   const submitSurvey = () => {

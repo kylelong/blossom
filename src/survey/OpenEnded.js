@@ -1,6 +1,17 @@
 import React, {useState, useRef, useEffect} from "react";
 const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState(() => {
+    if (localStorage.getItem("bsmr") !== null) {
+      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+      if (Object.keys(bsmr).includes(surveyId)) {
+        let res = bsmr[surveyId];
+        if (res[index].answerChoices.length > 0) {
+          return res[index].answerChoices[0];
+        }
+      }
+    }
+    return "";
+  });
   const indexRef = useRef(index);
   const responseRef = useRef("");
   const handleChange = (input) => {
