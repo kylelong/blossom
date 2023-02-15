@@ -15,7 +15,10 @@ const SurveyViewer = ({
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const hasCompletedSurvey = localStorage.getItem("sid") === surveyId;
+  const hasCompletedSurvey =
+    localStorage.getItem("sids") === null
+      ? false
+      : JSON.parse(localStorage.getItem("sids")).includes(surveyId);
   const showQuestions = questions.length > 0 && !submitted;
   const prevQuestions = useRef(questions);
 
@@ -74,6 +77,7 @@ const SurveyViewer = ({
             handleProceed={handleProceed}
             questionIndex={questionIndex}
             updateResponse={updateResponse}
+            surveyId={surveyId}
           />
         )}
         {submitted || hasCompletedSurvey ? (

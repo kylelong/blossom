@@ -14,6 +14,7 @@ const QuestionViewer = ({
   handleProceed,
   questionIndex,
   updateResponse,
+  surveyId,
 }) => {
   const questionStarted =
     questionTitle ||
@@ -33,6 +34,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 questionIndex={questionIndex}
                 updateResponse={updateResponse}
+                surveyId={surveyId}
               />
             </>
           );
@@ -45,6 +47,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 index={index}
                 updateResponse={updateResponse}
+                surveyId={surveyId}
               />
             </>
           );
@@ -56,6 +59,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 index={index}
                 updateResponse={updateResponse}
+                surveyId={surveyId}
               />{" "}
             </>
           );
@@ -63,10 +67,10 @@ const QuestionViewer = ({
           return (
             <>
               <Emojis
-                questionHash={hash}
                 index={index}
                 handleProceed={handleProceed}
                 updateResponse={updateResponse}
+                surveyId={surveyId}
               />
             </>
           );

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 
-const Emojis = ({questionHash, index, handleProceed, updateResponse}) => {
+const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",

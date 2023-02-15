@@ -28,7 +28,7 @@ const Survey = () => {
   // TODO: add response ref
 
   useEffect(() => {
-    setSurveyId(params.id); //TODO: make sure survey id is
+    setSurveyId(params.id); //TODO: make sure survey id is valid
     // console.log(redirectUrl); //TODO: remove redirectUrl
     const loadSurvey = async () => {
       if (surveyId) {
@@ -53,6 +53,16 @@ const Survey = () => {
             setRedirectUrl(redirectUrl);
           }
         }
+
+        // prefill answer choices from local storage
+        if (localStorage.getItem("bsmr") !== null) {
+          let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+          if (Object.keys(bsmr).includes(surveyId)) {
+            let res = bsmr[surveyId];
+            setResponse(res);
+            console.log(res);
+          }
+        }
       }
     };
     loadSurvey();
@@ -68,6 +78,16 @@ const Survey = () => {
       copy[index].answerChoices = answerChoices;
       copy[index].answerIndices = answerIndices;
       setResponse(copy);
+      let id = surveyId;
+      if (localStorage.getItem("bsmr") === null) {
+        let bsmr = {};
+        bsmr[id] = copy;
+        localStorage.setItem("bsmr", JSON.stringify(bsmr));
+      } else {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        bsmr[id] = copy;
+        localStorage.setItem("bsmr", JSON.stringify(bsmr));
+      }
     },
     [response]
   );

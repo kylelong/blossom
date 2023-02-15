@@ -6,6 +6,7 @@ const MultiSelect = ({
   handleProceed,
   questionIndex,
   updateResponse,
+  surveyId,
 }) => {
   const [selected, setSelected] = useState([]);
   const [selectedIndices, setSelectedIndices] = useState([]);
@@ -40,8 +41,17 @@ const MultiSelect = ({
   useEffect(() => {
     // console.log(`questionIndex ${questionIndex}: `, selected, selectedIndices); //TODO: remove
     if (index !== indexRef.current) {
-      setSelected([]);
-      setSelectedIndices([]);
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        if (Object.keys(bsmr).includes(surveyId)) {
+          let res = bsmr[surveyId];
+          setSelected(res[questionIndex].answerChoices);
+          setSelectedIndices(res[questionIndex].answerIndices);
+        }
+      } else {
+        setSelected([]);
+        setSelectedIndices([]);
+      }
     }
     if (
       selected !== selectedRef.current ||

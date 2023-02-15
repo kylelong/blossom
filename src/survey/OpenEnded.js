@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from "react";
-const OpenEnded = ({handleProceed, index, updateResponse}) => {
+const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
   const [response, setResponse] = useState("");
   const indexRef = useRef(index);
   const responseRef = useRef("");

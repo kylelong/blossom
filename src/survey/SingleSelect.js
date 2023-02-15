@@ -5,6 +5,7 @@ const SingleSelect = ({
   handleProceed,
   index,
   updateResponse,
+  surveyId,
 }) => {
   const [selected, setSelected] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -15,10 +16,31 @@ const SingleSelect = ({
     setSelected(item);
     setSelectedIndex(index);
   };
+
   useEffect(() => {
+    // if (index == 0 && selected.length === 0) {
+    //   if (localStorage.getItem("bsmr") !== null) {
+    //     let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+    //     if (Object.keys(bsmr).includes(surveyId)) {
+    //       let res = bsmr[surveyId];
+    //       setSelected(res[index].answerChoices);
+    //       console.log(res[index].answerChoices);
+    //       setSelectedIndex(res[index].answerIndices);
+    //     }
+    //   }
+    // }
     if (index !== indexRef.current) {
-      setSelected([]);
-      setSelectedIndex([]);
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        if (Object.keys(bsmr).includes(surveyId)) {
+          let res = bsmr[surveyId];
+          setSelected(res[index].answerChoices);
+          setSelectedIndex(res[index].answerIndices);
+        }
+      } else {
+        setSelected([]);
+        setSelectedIndex([]);
+      }
     }
     if (
       selected !== selectedRef.current ||

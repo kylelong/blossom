@@ -30,9 +30,17 @@ export const RedirectUrl = styled.div`
 
 const ThankYou = ({redirectUrl, surveyId}) => {
   useEffect(() => {
-    if (localStorage.getItem("sid") !== surveyId) {
+    if (localStorage.getItem("sids") === null) {
+      localStorage.setItem("sids", JSON.stringify([surveyId]));
+    } else {
+      let sids = JSON.parse(localStorage.getItem("sids"));
+      if (!sids.includes(surveyId)) {
+        sids.push(surveyId);
+        localStorage.setItem("sids", JSON.stringify(sids));
+      }
+    }
+    if (redirectUrl.length > 0) {
       setTimeout(() => {
-        localStorage.setItem("sid", surveyId);
         window.location.href = redirectUrl;
       }, 3000);
     }
