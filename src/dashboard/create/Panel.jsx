@@ -84,7 +84,6 @@ const Panel = () => {
         const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
         setBaseSurveyLink(baseUrl);
         setSurveyLink(baseUrl);
-        console.log("new survey", result.id);
         setHasDraft(true);
       } catch (err) {
         console.log(err);
@@ -177,7 +176,6 @@ const Panel = () => {
   );
   /**
    * TODO: function that creates survey
-   *  creates survey link /{survey_hash}/user_id
    * make sure to check that these values are not tapered with on survey submission
    * const createSurvey = () => {
    *  //start if no survey is not publised for user
@@ -187,9 +185,6 @@ const Panel = () => {
     /**
      * survey needs meta data before questions and questions
      * sending to analytics / surveys
-     *
-     * TODO: only if published === false do we want to set createdAt
-     * if publishing a draft, merge everything except createdAt
      */
     if (hasDraft) {
       try {

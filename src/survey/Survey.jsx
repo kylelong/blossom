@@ -4,16 +4,15 @@ import {app} from "../firebase-config";
 import "./survey.css";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
-// import {useAuthState} from "react-firebase-hooks/auth";
-/*
-getDocs,
-  where,
-  query,
-  orderBy,
-  collection,
-  */
 
-import {getFirestore, getDoc, doc} from "firebase/firestore";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  serverTimestamp,
+  addDoc,
+  collection,
+} from "firebase/firestore";
 import SurveyViewer from "./SurveyViewer";
 
 const Survey = () => {
@@ -92,9 +91,16 @@ const Survey = () => {
     [response, surveyId]
   );
 
-  const submitSurvey = () => {
-    //TODO: set completed to true
-    console.log(response);
+  const submitSurvey = async () => {
+    try {
+      await addDoc(collection(db, "responses"), {
+        surveyId: surveyId,
+        createdAt: serverTimestamp(),
+        response: response,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // make sure id is valid or so error page
