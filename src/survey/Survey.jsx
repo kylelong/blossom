@@ -44,6 +44,8 @@ const Survey = () => {
               questionHash: survey[i].hash,
               answerChoices: [],
               answerIndices: [],
+              questionType: survey[i].questionType,
+              numberOfAnswerChoices: survey[i].numberOfAnswerChoices,
             };
           }
 

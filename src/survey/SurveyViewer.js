@@ -117,8 +117,10 @@ const SurveyViewer = ({
                     className={proceed ? "previewButton" : "disabledButton"}
                     name="submit disabled={!proceed}"
                     onClick={() => {
-                      submitSurvey();
-                      setSubmitted(true);
+                      if (proceed) {
+                        submitSurvey();
+                        setSubmitted(true);
+                      }
                     }}
                   >
                     submit

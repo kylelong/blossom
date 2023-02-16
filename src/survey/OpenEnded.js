@@ -1,4 +1,10 @@
 import React, {useState, useRef, useEffect} from "react";
+import styled from "styled-components";
+export const TextArea = styled.textarea`
+  @media (max-width: 430px) {
+    width: 90%;
+  }
+`;
 const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
   const [response, setResponse] = useState(() => {
     if (localStorage.getItem("bsmr") !== null) {
@@ -32,14 +38,14 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
   }, [index, handleProceed, response.length, response]);
   return (
     <div>
-      <textarea
+      <TextArea
         rows="7"
         cols="50"
         className="openEndedTextArea"
         placeholder="Enter your answer..."
         onChange={(e) => handleChange(e.target.value)}
         value={response}
-      />
+      ></TextArea>
     </div>
   );
 };
