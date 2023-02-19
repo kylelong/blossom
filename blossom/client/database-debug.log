@@ -1,8 +1,0 @@
-01:14:01.663 [NamespaceSystem-akka.actor.default-dispatcher-5] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
-01:14:02.084 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
-01:14:17.674 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - blossom-8a8cb-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 172ms, init: 0ms
-01:14:17.735 [NamespaceSystem-blocking-namespace-operation-dispatcher-7] INFO com.firebase.core.namespace.StateManager - Namespace blossom-8a8cb-default-rtdb status Active to Active
-01:16:49.171 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
-01:16:49.185 [NamespaceSystem-akka.actor.default-dispatcher-9] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: blossom-8a8cb-default-rtdb
-01:16:49.195 [NamespaceSystem-akka.actor.default-dispatcher-11] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for blossom-8a8cb-default-rtdb
-01:16:49.201 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
