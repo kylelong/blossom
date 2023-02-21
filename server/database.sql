@@ -131,7 +131,7 @@ INSERT INTO response (answer_id, question_id) VALUES (4, 1);
         -- if type is open_ended || emoji then prefill
 
         # answers
-        -- only if question type is multi_select || single select
+        -- needed only if question type is multi_select || single select otherwise prefill
         SELECT choice FROM answer_choice WHERE question_id = ${current_question_id} ORDER BY index ASC;
 
 
