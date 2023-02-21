@@ -109,10 +109,10 @@ INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 
     DASHBOARD
      # of surveys
-        select count(*) from survey where user_id = ${}
+        SELECT COUNT(*) FROM survey WHERE user_id =  ${}
 
      # of questions 
-         select count(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id where s.user_id = ${}
+         SELECT COUNT(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id WHERE s.user_id = ${}
 
      # of responses 
         SELECT COUNT(r.id) FROM resposnes r INNER JOIN question q ON r.question_id = q.id WHERE q.survey_id = ${}

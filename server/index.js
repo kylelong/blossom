@@ -14,6 +14,38 @@ app.use(express.json());
   }
  */
 
+// DASHBOARD
+
+// # of surveys a user has created
+app.get("/survey_count/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM survey WHERE user_id = $1",
+      [user_id]
+    );
+    res.json(count.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// # of questions a user has created
+app.get("/question_count/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const count = await pool.query(
+      "SELECT COUNT(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id WHERE s.user_id = $1",
+      [user_id]
+    );
+    res.json(count.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// SURVEYS
+
 // get all survey titles
 app.get("/surveys/:user_id", async (req, res) => {
   try {
