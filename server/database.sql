@@ -25,10 +25,11 @@ VALUES ('google', 'kylelong9506@gmail.com', crypt('', gen_salt('bf'))) RETURNING
 CREATE TABLE survey (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    hash VARCHAR(255) NOT NULL,
+    hash VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     number_of_questions INT NOT NULL DEFAULT 1,
     user_id INT NOT NULL REFERENCES users,
+    redirect_url VARCHAR(255) NULL DEFAULT '',
     published BOOLEAN NOT NULL DEFAULT FALSE
 );
 
@@ -83,8 +84,11 @@ CREATE INDEX question_id_index_response ON response (question_id);
 */
 
 INSERT INTO survey (title, hash, user_id) VALUES ('podcast', 'd5f8c6e5a3b49c6b5e07', 1) RETURNING*;
+INSERT INTO survey (title, hash, user_id) VALUES ('running', '9d21bf3c7f3e33aebd7a', 1) RETURNING*;
+
 INSERT INTO question (survey_id, index, type) VALUES (1, 0, 'open_ended');
-INSERT INTO response (question_id, answer) VALUES (1, 'new rory & mal');
+INSERT INTO response (question_id, answer) VALUES (1, 'new rory & mal'); -- for open_ended question 
+-- INSERT INTO response (question_id, answer) VALUES (#, '0x1F60D'); -- emoji
 UPDATE question SET title = 'what is your favorite podcast?' WHERE id = 1;
 
 -- create second question for survey 1 with 5 answer choices
@@ -100,17 +104,53 @@ INSERT INTO response (answer_id, question_id) VALUES (1, 1);
 INSERT INTO response (answer_id, question_id) VALUES (2, 1);
 INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 
--- get survey id from answer_choice
-    -- select q.survey_id from question q INNER JOIN answer_choice ac ON q.id = ac.question_id WHERE q.survey_id = ${};
-
 /* 
-    QUERIES TO PULL SURVEY 
+    ALL QUERIES LABELED BY PAGE
+
+    DASHBOARD
+     # of surveys
+        select count(*) from survey where user_id = ${}
+
+     # of questions 
+         select count(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id where s.user_id = ${}
+
+     # of responses 
+        SELECT COUNT(r.id) FROM resposnes r INNER JOIN question q ON r.question_id = q.id WHERE q.survey_id = ${}
+
+    CREATE
+
+
+    SURVEYS
+
+    -- get all surveys for this users : surveys page
+        SELECT title from survey WHERE user_id = ${} ORDER BY created_at DESC; -- left panel of titles 
+
+    -- get survey for preview
+        # questions 
+        SELECT title, type, index FROM question WHERE survey_id = ${} ORDER BY index ASC;
+        -- if type is open_ended || emoji then prefill
+
+        # answers
+        -- only if question type is multi_select || single select
+        SELECT choice FROM answer_choice WHERE question_id = ${current_question_id} ORDER BY index ASC;
+
+
+
+
+
+    ANALYTICS 
 
     get survey id from answer_choice
         -- select q.survey_id from question q INNER JOIN answer_choice ac ON q.id = ac.question_id WHERE q.survey_id = ${};
 
-    get all responses for a question
+    get all questions from survey
+
+    get all answer choices for a question
         -- select ac.choice, count(ac.choice) from answer_choice ac INNER JOIN response r ON  ac.id = r.answer_id WHERE 
             r.question_id = ${} GROUP BY ac.choice;
+
+    get all responses for a survey
+
+
 
 */

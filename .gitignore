@@ -28,7 +28,7 @@ client/node_modules
 /build
 
 # misc
-.DS_Store
+.DS_Storeemj
 .env.local
 .env.development.local
 .env.test.local
