@@ -16,7 +16,7 @@ const QuestionViewer = ({
   const questionStarted =
     title || type || (numberOfAnswerChoices > 0 && answerChoices);
   useEffect(() => {
-    console.log(answerChoices, type);
+    // console.log(answerChoices, type);
   }, [index]);
   const preview = () => {
     if (questionStarted) {

@@ -4,8 +4,8 @@ import * as Label from "@radix-ui/react-label";
 import axios from "axios";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
-const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
-  const [questionIndex, setQuestionIndex] = useState(0);
+const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
+  const [index, setIndex] = useState(questionIndex);
   const [answerChoices, setAnswerChoices] = useState([]);
   const showQuestions = questions.length > 0;
   const prevQuestions = useRef(questions);
@@ -14,25 +14,26 @@ const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
     const maxIndex = questions.length - 1;
     if (questions.length > 0 && ["next", "previous"].includes(buttonAction)) {
       if (buttonAction === "next") {
-        if (questionIndex === maxIndex) {
-          setQuestionIndex(0);
+        if (index === maxIndex) {
+          setIndex(0);
         } else {
-          setQuestionIndex(questionIndex + 1);
+          setIndex(index + 1);
         }
       } else if (buttonAction === "previous") {
-        if (questionIndex === 0) {
-          setQuestionIndex(maxIndex);
+        if (index === 0) {
+          setIndex(maxIndex);
         } else {
-          setQuestionIndex(questionIndex - 1);
+          setIndex(index - 1);
         }
       }
     }
   };
 
-  const getAnswers = async (survey_id) => {
+  const getAnswers = async () => {
+    console.log(questions[index].id);
     try {
       const response = await axios.get(
-        `http://localhost:5000/answer_choices/${questions[questionIndex].id}`
+        `http://localhost:5000/answer_choices/${questions[index].id}`
       );
       const data = await response.data;
       console.log(data);
@@ -44,19 +45,18 @@ const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
 
   useEffect(() => {
     if (questions.length) {
-      console.log(questions[questionIndex].id);
+      //for multi_select && single_select
       getAnswers();
     }
-
-    // let index = questions.findIndex((element) => element.hash === questionHash);
-    // if (index > -1) {
-    //   setQuestionIndex(index);
-    // }
-    // if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
-    //   setQuestionIndex(0);
-    // }
+    let idx = questions.findIndex((element) => element.index === index);
+    if (idx > -1) {
+      setIndex(idx);
+    }
+    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
+      setIndex(0);
+    }
     prevQuestions.current = questions;
-  }, [questions, questionIndex]);
+  }, [questions, index]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
@@ -67,7 +67,7 @@ const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
           {surveyTitle === "" ? "survey name" : surveyTitle}
         </div>
         {showQuestions && (
-          <div className="questionNumber">question {questionIndex + 1}</div>
+          <div className="questionNumber">question {index + 1}</div>
         )}
         {!showQuestions && (
           <div className="startSurveyContainer">
@@ -80,14 +80,14 @@ const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
         )}
         {showQuestions && (
           <QuestionViewer
-            {...questions[questionIndex]}
-            index={questionIndex}
+            {...questions[index]}
+            index={index}
             answerChoices={answerChoices}
           />
         )}
         {questions.length > 0 && (
           <div className="previewButtonsContainer">
-            {questionIndex > 0 && (
+            {index > 0 && (
               <button
                 className="previewButton"
                 name="previous"
@@ -99,7 +99,7 @@ const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
                 previous
               </button>
             )}
-            {questionIndex !== questions.length - 1 ? (
+            {index !== questions.length - 1 ? (
               <button
                 className="previewButton"
                 name="next"

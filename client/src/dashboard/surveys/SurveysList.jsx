@@ -18,6 +18,7 @@ const SurveysList = () => {
   const [loaded, setLoaded] = useState(false);
   const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
   const [showCopied, setShowCopied] = useState(false);
+  const [link, setLink] = useState("");
   const timerRef = useRef(0);
 
   const RadioDemo = () => {
@@ -42,6 +43,7 @@ const SurveysList = () => {
                     onClick={() => {
                       setCurrentSurveyIndex(index);
                       getQuestions(survey.id);
+                      setLink(`http://localhost:3000/survey/${survey.hash}`);
                     }}
                   >
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
@@ -79,16 +81,16 @@ const SurveysList = () => {
   };
 
   useEffect(() => {
+    // loads surveys for this users
     const loadSurveys = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change id to variable
+        const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change usersid to variable
         const data = await response.data;
         setSurveys(data);
       } catch (err) {
         console.error(err.message);
       }
-      getQuestions();
-      // TODO: getAnswers()
+
       setLoaded(true);
     };
     if (!loaded) {
@@ -112,21 +114,21 @@ const SurveysList = () => {
             </div>
             <SurveyPreview
               questions={questions}
-              surveyTitle={surveys[currentSurveyIndex].surveyTitle}
-              // questionIndex={currentSurveyIndex}
+              surveyTitle={surveys[currentSurveyIndex].title}
+              questionIndex={0}
             />
           </div>
 
-          {surveys[currentSurveyIndex].published ? (
+          {surveys[currentSurveyIndex].published ? ( //TODO: test for published surveys
             <div className="surveyListLinkContainer">
               <div className="surveyLinkHeaderContainer">
                 <div className="surveyLinkHeader">survey link:</div>
-                {/* <CopyToClipboard text={surveys[currentSurveyIndex].surveyLink}>
+                <CopyToClipboard text={link}>
                   <ClipboardCopyIcon
                     className="copyIcon"
                     onClick={handleCopy}
                   ></ClipboardCopyIcon>
-                </CopyToClipboard> */}
+                </CopyToClipboard>
                 {showCopied && (
                   <div className="copiedContainer">
                     <div className="copiedText">copied to clipboard</div>
@@ -139,16 +141,16 @@ const SurveysList = () => {
               <div className="surveyLinkDetails">
                 (share this link to start surveying your audience)
               </div>
-              {/* <code className="surveyLink">
+              <code className="surveyLink">
                 <a
-                  href={surveys[currentSurveyIndex].surveyLink}
+                  href={link}
                   className="blossomLink"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {surveys[currentSurveyIndex].surveyLink}
+                  {link}
                 </a>
-              </code> */}
+              </code>
             </div>
           ) : (
             <a href="/create">
