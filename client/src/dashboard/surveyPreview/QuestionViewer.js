@@ -1,25 +1,26 @@
-import React from "react";
+import React, {useEffect} from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
 import Emojis from "./Emojis";
 import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({
-  questionTitle,
+  title,
   index,
-  questionType,
+  type,
   numberOfAnswerChoices,
   answerChoices,
   hash,
   emoji,
 }) => {
   const questionStarted =
-    questionTitle ||
-    questionType ||
-    (numberOfAnswerChoices > 0 && answerChoices);
+    title || type || (numberOfAnswerChoices > 0 && answerChoices);
+  useEffect(() => {
+    console.log(answerChoices, type);
+  }, [index]);
   const preview = () => {
     if (questionStarted) {
-      switch (questionType) {
+      switch (type) {
         case "multi_select":
           return (
             <>
@@ -54,9 +55,7 @@ const QuestionViewer = ({
   };
   return (
     <div className="questionViewerContainer">
-      {questionStarted && (
-        <div className="surveyQuestionTitle">{questionTitle}</div>
-      )}
+      {questionStarted && <div className="surveyQuestionTitle">{title}</div>}
       <div>
         {!questionStarted && (
           <div className="loadingQuestionContainer">

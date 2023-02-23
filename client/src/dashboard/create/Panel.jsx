@@ -80,6 +80,7 @@ const Panel = () => {
           expDate: null,
           survey: questions,
         });
+
         setLatestSurveyId(result.id);
         const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
         setBaseSurveyLink(baseUrl);

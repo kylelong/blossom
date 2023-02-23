@@ -1,15 +1,8 @@
 import React, {useEffect, useState, useRef} from "react";
 import {auth, app} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
+import axios from "axios";
 
-import {
-  getFirestore,
-  getDocs,
-  where,
-  query,
-  orderBy,
-  collection,
-} from "firebase/firestore";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 import Welcome from "../Welcome";
 import * as RadioGroup from "@radix-ui/react-radio-group";
@@ -19,9 +12,9 @@ import "./surveys.css";
 
 const SurveysList = () => {
   const [user] = useAuthState(auth);
-  const db = getFirestore(app);
   const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
   const [showCopied, setShowCopied] = useState(false);
@@ -40,20 +33,21 @@ const SurveysList = () => {
               return (
                 <div
                   style={{display: "flex", alignItems: "center"}}
-                  key={index}
+                  key={survey.id}
                 >
                   <RadioGroup.Item
                     className="RadioGroupItem"
-                    value={index}
-                    id={index}
+                    value={survey.id}
+                    id={survey.id}
                     onClick={() => {
                       setCurrentSurveyIndex(index);
+                      getQuestions(survey.id);
                     }}
                   >
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
                   </RadioGroup.Item>
                   <label className="Label" htmlFor="r1">
-                    {survey.surveyName}
+                    {survey.title}
                   </label>
                 </div>
               );
@@ -72,52 +66,35 @@ const SurveysList = () => {
     }, 3000);
   };
 
+  const getQuestions = async (survey_id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/questions/${survey_id}`
+      );
+      const data = await response.data;
+      setQuestions(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
     const loadSurveys = async () => {
-      const q = query(
-        collection(db, "surveys"),
-        where("uid", "==", uid),
-        orderBy("createdAt", "desc")
-      );
-      const querySnapShot = await getDocs(q);
-      if (!querySnapShot.empty) {
-        querySnapShot.forEach((doc) => {
-          let {
-            survey,
-            surveyName,
-            redirectUrl,
-            createdAt,
-            updatedAt,
-            published,
-          } = doc.data();
-          let date = new Date(createdAt.seconds * 1000);
-          let formattedDate = date.toDateString();
-          //TODO: change for production - https://www.blossomsurveys.io/${doc.id}
-          let baseUrl = `http://localhost:3000/survey/${doc.id}`;
-          let surveyData = {
-            id: doc.id,
-            survey: survey,
-            surveyName: surveyName.length > 0 ? surveyName : `untitled survey`,
-            redirectUrl: redirectUrl,
-            date: formattedDate,
-            updatedAt: updatedAt,
-            surveyLink: baseUrl,
-            published: published,
-          };
-
-          setSurveys((prevState) => {
-            let current = [...prevState];
-            current.push(surveyData);
-            return current;
-          });
-        });
+      try {
+        const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change id to variable
+        const data = await response.data;
+        setSurveys(data);
+      } catch (err) {
+        console.error(err.message);
       }
+      getQuestions();
+      // TODO: getAnswers()
       setLoaded(true);
     };
     if (!loaded) {
       loadSurveys();
     }
-  }, [db, loaded, uid]);
+  }, [loaded, uid]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
@@ -134,9 +111,9 @@ const SurveysList = () => {
               {RadioDemo()}
             </div>
             <SurveyPreview
-              questions={surveys[currentSurveyIndex].survey}
-              surveyName={surveys[currentSurveyIndex].surveyName}
-              questionHash={surveys[currentSurveyIndex].survey.hash}
+              questions={questions}
+              surveyTitle={surveys[currentSurveyIndex].surveyTitle}
+              // questionIndex={currentSurveyIndex}
             />
           </div>
 
@@ -144,12 +121,12 @@ const SurveysList = () => {
             <div className="surveyListLinkContainer">
               <div className="surveyLinkHeaderContainer">
                 <div className="surveyLinkHeader">survey link:</div>
-                <CopyToClipboard text={surveys[currentSurveyIndex].surveyLink}>
+                {/* <CopyToClipboard text={surveys[currentSurveyIndex].surveyLink}>
                   <ClipboardCopyIcon
                     className="copyIcon"
                     onClick={handleCopy}
                   ></ClipboardCopyIcon>
-                </CopyToClipboard>
+                </CopyToClipboard> */}
                 {showCopied && (
                   <div className="copiedContainer">
                     <div className="copiedText">copied to clipboard</div>
@@ -162,7 +139,7 @@ const SurveysList = () => {
               <div className="surveyLinkDetails">
                 (share this link to start surveying your audience)
               </div>
-              <code className="surveyLink">
+              {/* <code className="surveyLink">
                 <a
                   href={surveys[currentSurveyIndex].surveyLink}
                   className="blossomLink"
@@ -171,7 +148,7 @@ const SurveysList = () => {
                 >
                   {surveys[currentSurveyIndex].surveyLink}
                 </a>
-              </code>
+              </code> */}
             </div>
           ) : (
             <a href="/create">

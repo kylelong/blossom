@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useRef} from "react";
 import "./preview.css";
 import * as Label from "@radix-ui/react-label";
+import axios from "axios";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
-const SurveyPreview = ({questions, surveyName, questionHash}) => {
+const SurveyPreview = ({questions, surveyTitle, questionHash}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [answerChoices, setAnswerChoices] = useState([]);
   const showQuestions = questions.length > 0;
   const prevQuestions = useRef(questions);
 
@@ -27,16 +29,34 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
     }
   };
 
+  const getAnswers = async (survey_id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/answer_choices/${questions[questionIndex].id}`
+      );
+      const data = await response.data;
+      console.log(data);
+      setAnswerChoices(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    let index = questions.findIndex((element) => element.hash === questionHash);
-    if (index > -1) {
-      setQuestionIndex(index);
+    if (questions.length) {
+      console.log(questions[questionIndex].id);
+      getAnswers();
     }
-    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
-      setQuestionIndex(0);
-    }
+
+    // let index = questions.findIndex((element) => element.hash === questionHash);
+    // if (index > -1) {
+    //   setQuestionIndex(index);
+    // }
+    // if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
+    //   setQuestionIndex(0);
+    // }
     prevQuestions.current = questions;
-  }, [questions, questionHash]);
+  }, [questions, questionIndex]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
@@ -44,7 +64,7 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
       </Label.Root>
       <div className="surveyContainer">
         <div className="surveyNameHeader">
-          {surveyName === "" ? "survey name" : surveyName}
+          {surveyTitle === "" ? "survey name" : surveyTitle}
         </div>
         {showQuestions && (
           <div className="questionNumber">question {questionIndex + 1}</div>
@@ -58,7 +78,13 @@ const SurveyPreview = ({questions, surveyName, questionHash}) => {
             </p>
           </div>
         )}
-        {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
+        {showQuestions && (
+          <QuestionViewer
+            {...questions[questionIndex]}
+            index={questionIndex}
+            answerChoices={answerChoices}
+          />
+        )}
         {questions.length > 0 && (
           <div className="previewButtonsContainer">
             {questionIndex > 0 && (

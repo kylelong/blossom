@@ -59,7 +59,7 @@ const Welcome = () => {
           date: formattedDate,
           updatedAt: updatedAt,
         };
-        console.log(surveyData);
+        // console.log(surveyData);
         setSurveys((prevState) => {
           let current = [...prevState];
           current.push(surveyData);
