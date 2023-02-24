@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback, useRef} from "react";
 import {useForm} from "react-hook-form";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Label from "@radix-ui/react-label";
+import axios from "axios";
 import {
   PlusCircledIcon,
   ClipboardCopyIcon,
@@ -33,6 +34,13 @@ import "./panel.css";
 
 const Panel = () => {
   const {register} = useForm();
+  const [draft, setDraft] = useState({
+    hash: "",
+    id: 0,
+    published: false,
+    redirect_url: "",
+    title: "",
+  });
   const [surveyName, setSurveyName] = useState("");
   const [questions, setQuestions] = useState([]);
   const [questionHash, setQuestionHash] = useState("");
@@ -57,18 +65,20 @@ const Panel = () => {
      *
      * **/
     let data = {
-      questionTitle: "",
+      title: "",
       index: questions.length,
-      questionType: "",
-      numberOfAnswerChoices: 0,
+      type: "",
+      numberOfAnswerChoices: 0, // use this to set number of questions for survey
       answerChoices: [],
       hash: randomHash(),
     };
+    // TODO: Insert question
     setQuestions((questions) => [...questions, data]);
     // start a new survey if no draft
     console.log("hasDraft", hasDraft);
     if (!hasDraft) {
       try {
+        // TODO: Create survey
         let result = await addDoc(collection(db, "surveys"), {
           surveyName: surveyName,
           uid: user.uid,
@@ -229,29 +239,24 @@ const Panel = () => {
     window.location.href = "/surveys";
   };
   const updateSurvey = useCallback(async () => {
-    if (latestSurveyId) {
-      await setDoc(
-        doc(db, "surveys", latestSurveyId),
-        {
-          survey: questions,
-          updatedAt: serverTimestamp(),
-        },
-        {merge: true}
-      );
+    if (draft.hash) {
+      // await setDoc(
+      //   doc(db, "surveys", latestSurveyId),
+      //   {
+      //     survey: questions,
+      //     updatedAt: serverTimestamp(),
+      //   },
+      //   {merge: true}
+      // );
     }
   }, [questions, db, latestSurveyId]);
   const updateSurveyName = async (value) => {
     // TODO: regex
-    setSurveyName(value);
-    if (latestSurveyId) {
-      await setDoc(
-        doc(db, "surveys", latestSurveyId),
-        {
-          surveyName: value,
-          updatedAt: serverTimestamp(),
-        },
-        {merge: true}
-      );
+
+    if (draft.hash) {
+      console.log(draft.hash);
+      setDraft({...draft, title: value});
+      // TODO: update name in db, updatedAt based on id / hash
     }
   };
   const updateRedirectUrl = async (value) => {
@@ -370,42 +375,57 @@ const Panel = () => {
   // sets state to published survey
   const setLatestSurveyState = useCallback(
     async (uid) => {
+      // const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
       // get latest draft
       try {
-        const q = query(
-          collection(db, "surveys"),
-          where("uid", "==", uid),
-          where("published", "==", false),
-          orderBy("createdAt", "desc"),
-          limit(1)
+        const id = 1;
+        const response = await axios.get(
+          `http://localhost:5000/latest_survey/${id}`
         );
-        const querySnapShot = await getDocs(q);
-        if (!querySnapShot.empty) {
-          querySnapShot.forEach((doc) => {
-            let {survey, surveyName, redirectUrl} = doc.data();
-            setSurveyName(surveyName);
-            setRedirectUrl(redirectUrl);
-            setQuestions(survey);
-            setLatestSurveyId(doc.id);
-            const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
-            setBaseSurveyLink(baseUrl);
-            let link = redirectUrl
-              ? `${baseUrl}?redirect_url=${redirectUrl}`
-              : baseUrl;
-            setSurveyLink(link);
-          });
+        const data = await response.data;
+        if (data && data.length) {
+          setDraft(data[0]);
+          setLatestSurveyId(draft.hash);
           setHasDraft(true);
         }
       } catch (err) {
-        console.log(err);
+        console.error(err.message);
       }
+      // try {
+      //   const q = query(
+      //     collection(db, "surveys"),
+      //     where("uid", "==", uid),
+      //     where("published", "==", false),
+      //     orderBy("createdAt", "desc"),
+      //     limit(1)
+      //   );
+      //   const querySnapShot = await getDocs(q);
+      //   if (!querySnapShot.empty) {
+      //     querySnapShot.forEach((doc) => {
+      //       let {survey, surveyName, redirectUrl} = doc.data();
+      //       setSurveyName(surveyName);
+      //       setRedirectUrl(redirectUrl);
+      //       setQuestions(survey);
+      //       setLatestSurveyId(doc.id);
+      //       const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
+      //       setBaseSurveyLink(baseUrl);
+      //       let link = redirectUrl
+      //         ? `${baseUrl}?redirect_url=${redirectUrl}`
+      //         : baseUrl;
+      //       setSurveyLink(link);
+      //     });
+      //     setHasDraft(true);
+      //   }
+      // } catch (err) {
+      //   console.log(err);
+      // }
       setSurveyStateLoaded(true);
     },
     [db]
   );
 
   useEffect(() => {
-    if (surveyName.length === 0) {
+    if (surveyName && surveyName.length === 0) {
       setSurveyName("");
     }
 
@@ -428,6 +448,8 @@ const Panel = () => {
   ]);
   return (
     <div className="panelContainer">
+      <div>{JSON.stringify(draft, null, 2)}</div>
+      <div>{draft.title}</div>
       {loaded && (
         <SurveyPreview
           questions={questions}
@@ -454,7 +476,7 @@ const Panel = () => {
             className="surveyName"
             type="text"
             name="surveyName"
-            value={surveyName === "" ? "" : surveyName}
+            value={draft.title === "" ? "" : draft.title}
             id="surveyName"
           />
           <div className="QuestionPanel">
