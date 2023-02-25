@@ -13,24 +13,11 @@ import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 // import Loader from "../../loader";
 import {CopyToClipboard} from "react-copy-to-clipboard";
-import {auth, app} from "../../firebase-config";
+import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
-import {
-  getFirestore,
-  serverTimestamp,
-  getDocs,
-  getDoc,
-  deleteDoc,
-  where,
-  query,
-  addDoc,
-  limit,
-  orderBy,
-  collection,
-  setDoc,
-  doc,
-} from "firebase/firestore";
 import "./panel.css";
+
+const endpoint_url = "http://localhost:5000";
 
 const Panel = () => {
   const {register} = useForm();
@@ -48,7 +35,6 @@ const Panel = () => {
   const [errors, setErrors] = useState([]);
   const [showCopied, setShowCopied] = useState(false);
   const [surveyStateLoaded, setSurveyStateLoaded] = useState(false);
-  const [latestSurveyId, setLatestSurveyId] = useState("");
   const [surveyLink, setSurveyLink] = useState("");
   const [baseSurveyLink, setBaseSurveyLink] = useState("");
   const [hasDraft, setHasDraft] = useState(false);
@@ -58,11 +44,11 @@ const Panel = () => {
     // eslint-disable-next-line
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
   const [user] = useAuthState(auth);
-  const db = getFirestore(app);
 
   const addQuestion = async () => {
     /**
-     *
+     * insert question in question table with survey_id & questions.legnth as index
+     *  draft is updated with id: survey_id and
      * **/
     let data = {
       title: "",
@@ -70,7 +56,6 @@ const Panel = () => {
       type: "",
       numberOfAnswerChoices: 0, // use this to set number of questions for survey
       answerChoices: [],
-      hash: randomHash(),
     };
     // TODO: Insert question
     setQuestions((questions) => [...questions, data]);
@@ -79,35 +64,34 @@ const Panel = () => {
     if (!hasDraft) {
       try {
         // TODO: Create survey
-        let result = await addDoc(collection(db, "surveys"), {
-          surveyName: surveyName,
-          uid: user.uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          redirectUrl: redirectUrl,
-          published: false,
-          responseLimit: 0,
-          expDate: null,
-          survey: questions,
-        });
-
-        setLatestSurveyId(result.id);
-        const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
-        setBaseSurveyLink(baseUrl);
-        setSurveyLink(baseUrl);
-        setHasDraft(true);
+        // call /create_survey with hash, title, user_id
+        // set draft to what is return
+        // setLatestSurveyId(result.id);
+        // const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
+        // setBaseSurveyLink(baseUrl);
+        // setSurveyLink(baseUrl);
+        // setHasDraft(true);
       } catch (err) {
-        console.log(err);
+        console.error(err.message);
       }
     }
   };
 
-  const randomHash = () => {
-    return Math.random().toString(36).substr(2, 10);
-  };
+  // const randomHash = () => {
+  //   return Math.random().toString(36).substr(2, 10);
+  // };
 
   // update index
-  const removeQuestion = (index) => {
+  const removeQuestion = async (index) => {
+    const question_id = questions[index].id;
+    try {
+      const response = await axios.delete(
+        `${endpoint_url}/delete_survey/${draft.id}/${question_id}`
+      );
+      console.log(`remove questions: ${response.data}`);
+    } catch (err) {
+      console.error(err.message);
+    }
     setQuestions((prevState) => {
       const questions = [...prevState];
       questions.splice(index, 1);
@@ -123,7 +107,7 @@ const Panel = () => {
     setSurveyName("");
     setSurveyLink("");
     setBaseSurveyLink("");
-    setLatestSurveyId("");
+
     setHasDraft(false);
   };
 
@@ -193,109 +177,72 @@ const Panel = () => {
    * }
    *  */
   const publishSurvey = async () => {
-    /**
-     * survey needs meta data before questions and questions
-     * sending to analytics / surveys
-     */
     if (hasDraft) {
       try {
-        await setDoc(
-          doc(db, "surveys", latestSurveyId),
-          {
-            survey: questions,
-            updatedAt: serverTimestamp(),
-            redirectUrl: redirectUrl,
-            surveyName: surveyName,
-            published: true,
-          },
-          {merge: true}
+        const response = await axios.put(
+          `${endpoint_url}/publish_survey/${draft.id}`
         );
+        console.log(`publishing survey: `, response.data);
         resetSurveyState();
       } catch (err) {
-        console.log(err);
-      }
-    } else {
-      // new survey
-      try {
-        await setDoc(
-          collection(db, "surveys", latestSurveyId),
-          {
-            surveyName: surveyName,
-            uid: user.uid,
-            updatedAt: serverTimestamp(),
-            redirectUrl: redirectUrl,
-            published: true,
-            responseLimit: 0,
-            expDate: null,
-            survey: questions,
-          },
-          {merge: true}
-        );
-        resetSurveyState();
-      } catch (err) {
-        console.log(err);
+        console.error(err.message);
       }
     }
     window.location.href = "/surveys";
   };
-  const updateSurvey = useCallback(async () => {
-    if (draft.hash) {
-      // await setDoc(
-      //   doc(db, "surveys", latestSurveyId),
-      //   {
-      //     survey: questions,
-      //     updatedAt: serverTimestamp(),
-      //   },
-      //   {merge: true}
-      // );
-    }
-  }, [questions, db, latestSurveyId]);
-  const updateSurveyName = async (value) => {
+
+  const updateSurveyTitle = async (value) => {
     // TODO: regex
 
-    if (draft.hash) {
-      console.log(draft.hash);
+    if (draft.id > 0) {
+      const response = await axios.put(
+        `${endpoint_url}/update_survey_title/${draft.id}`,
+        {title: value}
+      );
+      console.log(`update survey title ${response.data}`);
+
       setDraft({...draft, title: value});
-      // TODO: update name in db, updatedAt based on id / hash
     }
   };
   const updateRedirectUrl = async (value) => {
     setRedirectUrl(value);
-    if (latestSurveyId) {
+    if (draft.id) {
       if (value === "") {
         setSurveyLink(baseSurveyLink);
+        setDraft({...draft, redirect_url: baseSurveyLink});
       }
       // can be invalid url just for preview
       if (value.length > 0) {
         let survey_link = baseSurveyLink;
         survey_link = survey_link.concat(`?redirect_url=${value}`);
+        setDraft({...draft, redirect_url: survey_link});
         setSurveyLink(survey_link);
       }
 
       if (validUrl.test(value) || value.length === 0) {
-        await setDoc(
-          doc(db, "surveys", latestSurveyId),
-          {
-            redirectUrl: value,
-            updatedAt: serverTimestamp(),
-          },
-          {merge: true}
-        );
+        try {
+          const response = await axios.put(
+            `${endpoint_url}/update_redirect_url/${draft.id}`,
+            {redirect_url: value}
+          );
+          setDraft({...draft, redirect_url: value});
+          console.log(`update url: ${response.data}`);
+        } catch (err) {
+          console.error(err.message);
+        }
       }
     }
   };
   const deleteSurvey = async () => {
-    if (latestSurveyId) {
-      console.log(latestSurveyId);
-      const surveyDoc = doc(db, "surveys", latestSurveyId);
-      const surveyDocSnap = await getDoc(surveyDoc);
-      if (surveyDocSnap.exists()) {
-        try {
-          await deleteDoc(doc(db, "surveys", latestSurveyId));
-          resetSurveyState();
-        } catch (err) {
-          console.log(err);
-        }
+    if (draft.id) {
+      try {
+        const response = await axios.get(
+          `${endpoint_url}/delete_survey/${draft.id}`
+        );
+        console.log(`delete survey: ${response.data}`);
+        resetSurveyState();
+      } catch (err) {
+        console.error(err.message);
       }
     }
   };
@@ -375,53 +322,28 @@ const Panel = () => {
   // sets state to published survey
   const setLatestSurveyState = useCallback(
     async (uid) => {
-      // const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
-      // get latest draft
+      // get draft (if it exists)
       try {
         const id = 1;
-        const response = await axios.get(
-          `http://localhost:5000/latest_survey/${id}`
-        );
+        const response = await axios.get(`${endpoint_url}/latest_survey/${id}`);
         const data = await response.data;
         if (data && data.length) {
           setDraft(data[0]);
-          setLatestSurveyId(draft.hash);
+          const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
+          setBaseSurveyLink(baseUrl);
+          let link = redirectUrl
+            ? `${baseUrl}?redirect_url=${redirectUrl}`
+            : baseUrl;
+          setSurveyLink(link);
           setHasDraft(true);
         }
       } catch (err) {
         console.error(err.message);
       }
-      // try {
-      //   const q = query(
-      //     collection(db, "surveys"),
-      //     where("uid", "==", uid),
-      //     where("published", "==", false),
-      //     orderBy("createdAt", "desc"),
-      //     limit(1)
-      //   );
-      //   const querySnapShot = await getDocs(q);
-      //   if (!querySnapShot.empty) {
-      //     querySnapShot.forEach((doc) => {
-      //       let {survey, surveyName, redirectUrl} = doc.data();
-      //       setSurveyName(surveyName);
-      //       setRedirectUrl(redirectUrl);
-      //       setQuestions(survey);
-      //       setLatestSurveyId(doc.id);
-      //       const baseUrl = `https://www.blossomsurveys.io/${doc.id}`;
-      //       setBaseSurveyLink(baseUrl);
-      //       let link = redirectUrl
-      //         ? `${baseUrl}?redirect_url=${redirectUrl}`
-      //         : baseUrl;
-      //       setSurveyLink(link);
-      //     });
-      //     setHasDraft(true);
-      //   }
-      // } catch (err) {
-      //   console.log(err);
-      // }
+
       setSurveyStateLoaded(true);
     },
-    [db]
+    [redirectUrl]
   );
 
   useEffect(() => {
@@ -432,7 +354,7 @@ const Panel = () => {
     if (!surveyStateLoaded) {
       setLatestSurveyState(user.uid);
     }
-    updateSurvey();
+
     setLoaded(true);
 
     return () => clearTimeout(timerRef.current);
@@ -443,13 +365,12 @@ const Panel = () => {
     errors,
     setLatestSurveyState,
     surveyStateLoaded,
-    updateSurvey,
     user.uid,
   ]);
   return (
     <div className="panelContainer">
-      <div>{JSON.stringify(draft, null, 2)}</div>
-      <div>{draft.title}</div>
+      {/* <div>{JSON.stringify(draft, null, 2)}</div> */}
+      {/* <div>{draft.title}</div> */}
       {loaded && (
         <SurveyPreview
           questions={questions}
@@ -472,7 +393,7 @@ const Panel = () => {
           </Label.Root>
           <input
             {...register("surveyName")}
-            onChange={(e) => updateSurveyName(e.target.value)}
+            onChange={(e) => updateSurveyTitle(e.target.value)}
             className="surveyName"
             type="text"
             name="surveyName"
