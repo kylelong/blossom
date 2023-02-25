@@ -37,15 +37,15 @@ const QuestionOverview = ({
   questions,
   removeQuestion,
   updateQuestion,
-  updateQuestionHash,
+  updateQuestionId,
 }) => {
   const [questionType, setQuestionType] = useState("");
-  const [questionHash, setQuestionHash] = useState("");
+  const [questionId, setQuestionId] = useState(0);
   const [numberOfAnswers, setNumberOfAnswers] = useState(0);
   const updateQuestionType = (type) => {
     setQuestionType(type);
     // TODO: hash is blank if not set on onChange
-    updateQuestion(questionHash, "questionType", type, null);
+    updateQuestion(questionId, "type", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
   const questionDetails = {
@@ -73,15 +73,15 @@ const QuestionOverview = ({
   };
 
   useEffect(() => {
-    //let index = questions.findIndex((element) => element.hash === questionHash);
+    //let index = questions.findIndex((element) => element.hash === questionId);
     //setNumberOfAnswers(questions[index].numberOfAnswers);
     if (
-      (questionHash === "" && questions.length === 1) ||
-      (questionHash.length > 0 && questions.length === 1)
+      (questionId === 0 && questions.length === 1) ||
+      (questionId && questions.length === 1)
     ) {
-      setQuestionHash(questions[0].hash);
+      setQuestionId(questions[0].id);
     }
-  }, [questions, questionHash, numberOfAnswers, questionType]);
+  }, [questions, questionId, numberOfAnswers, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -90,8 +90,8 @@ const QuestionOverview = ({
           <div
             key={index}
             onClick={() => {
-              setQuestionHash(question.hash);
-              updateQuestionHash(question.hash);
+              setQuestionId(question.hash);
+              updateQuestionId(question.id);
             }}
           >
             <Accordion.Item
@@ -107,11 +107,11 @@ const QuestionOverview = ({
                   type="text"
                   className="questionTitle"
                   placeholder="question title"
-                  value={question.questionTitle ? question.questionTitle : ""}
+                  value={question.title ? question.title : ""}
                   onChange={(e) => {
                     updateQuestion(
                       question.hash,
-                      "questionTitle",
+                      "title",
                       e.target.value,
                       null
                     );
@@ -121,7 +121,7 @@ const QuestionOverview = ({
                   <div className="questionTypeContainer">
                     <QuestionTypeSelectMenu
                       updateQuestionType={updateQuestionType}
-                      defaultQuestionType={question.questionType}
+                      defaultQuestionType={question.type}
                       hash={question.hash}
                     />
                     {hasOptions && (
@@ -161,7 +161,7 @@ const QuestionOverview = ({
                       <MultipleChoiceInput
                         amount={question.numberOfAnswerChoices}
                         updateQuestion={updateQuestion}
-                        questionHash={question.hash}
+                        questionId={question.id}
                         questions={questions}
                       />
                     </div>

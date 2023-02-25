@@ -17,7 +17,7 @@ import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 import "./panel.css";
 
-const endpoint_url = "http://localhost:5000";
+const endpoint = "http://localhost:5000";
 
 const Panel = () => {
   const {register} = useForm();
@@ -29,9 +29,8 @@ const Panel = () => {
     title: "",
   });
   const [surveyName, setSurveyName] = useState("");
-  const [questions, setQuestions] = useState([]);
-  const [questionHash, setQuestionHash] = useState("");
-  const [redirectUrl, setRedirectUrl] = useState("");
+  const [questions, setQuestions] = useState([]); // load questions
+  const [questionId, setQuestionId] = useState(0);
   const [errors, setErrors] = useState([]);
   const [showCopied, setShowCopied] = useState(false);
   const [surveyStateLoaded, setSurveyStateLoaded] = useState(false);
@@ -43,7 +42,7 @@ const Panel = () => {
   const validUrl =
     // eslint-disable-next-line
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
-  const [user] = useAuthState(auth);
+  const [user] = useAuthState(auth); // TODO: get user_id from postgres
 
   const addQuestion = async () => {
     /**
@@ -54,18 +53,41 @@ const Panel = () => {
       title: "",
       index: questions.length,
       type: "",
-      numberOfAnswerChoices: 0, // use this to set number of questions for survey
+      numberOfAnswerChoices: 0,
       answerChoices: [],
     };
+    //TODO: // use numberOfAnswerChoices to set number of questions for survey
     // TODO: Insert question
-    setQuestions((questions) => [...questions, data]);
     // start a new survey if no draft
     console.log("hasDraft", hasDraft);
-    if (!hasDraft) {
+    if (hasDraft) {
+      // add question to current draft
+      try {
+        const response = await axios.post(`${endpoint}/add_question`, {
+          survey_id: draft.id,
+          index: questions.length,
+        });
+        data.id = response.data.id;
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
       try {
         // TODO: Create survey
+        /**
+         *  
+         *  try {
+        const response = await axios.post(`${endpoint}/create_survey`, {
+          title: draft.title,
+          hash: '',
+          user_id:
+        });
+      } catch (err) {
+        console.error(err.message);
+      }
+         */
         // call /create_survey with hash, title, user_id
-        // set draft to what is return
+        // set draft to what is return (id,hash)
         // setLatestSurveyId(result.id);
         // const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
         // setBaseSurveyLink(baseUrl);
@@ -75,6 +97,7 @@ const Panel = () => {
         console.error(err.message);
       }
     }
+    setQuestions((questions) => [...questions, data]);
   };
 
   // const randomHash = () => {
@@ -86,7 +109,7 @@ const Panel = () => {
     const question_id = questions[index].id;
     try {
       const response = await axios.delete(
-        `${endpoint_url}/delete_survey/${draft.id}/${question_id}`
+        `${endpoint}/delete_survey/${draft.id}/${question_id}`
       );
       console.log(`remove questions: ${response.data}`);
     } catch (err) {
@@ -100,9 +123,9 @@ const Panel = () => {
   };
 
   const resetSurveyState = () => {
+    setDraft({});
     setQuestions([]);
-    setQuestionHash("");
-    setRedirectUrl("");
+    setQuestionId(0);
     setErrors([]);
     setSurveyName("");
     setSurveyLink("");
@@ -112,15 +135,15 @@ const Panel = () => {
   };
 
   const updateQuestion = useCallback(
-    (hash, property, value, answerChoiceIndex) => {
+    (id, property, value, answerChoiceIndex) => {
       let copy = [...questions];
       // finds the question
-      let index = copy.findIndex((element) => element.hash === hash);
+      let index = copy.findIndex((element) => element.id === id);
       // property or manipulating answer choices
-      if (property === "questionTitle") {
-        copy[index].questionTitle = value;
-      } else if (property === "questionType") {
-        copy[index].questionType = value;
+      if (property === "title") {
+        copy[index].title = value;
+      } else if (property === "type") {
+        copy[index].type = value;
         // just in case changing from single or multiselect
         if (value === "emoji_sentiment" || value === "open_ended") {
           copy[index].answerChoices = [];
@@ -180,7 +203,7 @@ const Panel = () => {
     if (hasDraft) {
       try {
         const response = await axios.put(
-          `${endpoint_url}/publish_survey/${draft.id}`
+          `${endpoint}/publish_survey/${draft.id}`
         );
         console.log(`publishing survey: `, response.data);
         resetSurveyState();
@@ -196,7 +219,7 @@ const Panel = () => {
 
     if (draft.id > 0) {
       const response = await axios.put(
-        `${endpoint_url}/update_survey_title/${draft.id}`,
+        `${endpoint}/update_survey_title/${draft.id}`,
         {title: value}
       );
       console.log(`update survey title ${response.data}`);
@@ -205,7 +228,6 @@ const Panel = () => {
     }
   };
   const updateRedirectUrl = async (value) => {
-    setRedirectUrl(value);
     if (draft.id) {
       if (value === "") {
         setSurveyLink(baseSurveyLink);
@@ -222,7 +244,7 @@ const Panel = () => {
       if (validUrl.test(value) || value.length === 0) {
         try {
           const response = await axios.put(
-            `${endpoint_url}/update_redirect_url/${draft.id}`,
+            `${endpoint}/update_redirect_url/${draft.id}`,
             {redirect_url: value}
           );
           setDraft({...draft, redirect_url: value});
@@ -237,7 +259,7 @@ const Panel = () => {
     if (draft.id) {
       try {
         const response = await axios.get(
-          `${endpoint_url}/delete_survey/${draft.id}`
+          `${endpoint}/delete_survey/${draft.id}`
         );
         console.log(`delete survey: ${response.data}`);
         resetSurveyState();
@@ -263,8 +285,8 @@ const Panel = () => {
       let questionErrorsIndices = [];
       let answerErrorsIndices = [];
 
-      if (redirectUrl) {
-        if (!validUrl.test(redirectUrl)) {
+      if (draft.redirect_url) {
+        if (!validUrl.test(draft.redirect_url)) {
           errs.push("redirect_url must be a valid url");
         }
       }
@@ -273,10 +295,10 @@ const Panel = () => {
       }
       questions.forEach((question, index) => {
         // blank title or question type
-        if (question.questionTitle === "" || question.questionType === "") {
+        if (question.title === "" || question.type === "") {
           questionErrorsIndices.push(index + 1);
         }
-        if (mc.includes(question.questionType)) {
+        if (mc.includes(question.type)) {
           // check for no answer choices for multi_select / single_select question
           let hasAnswers = question.answerChoices.every(
             (choice) => choice.length > 0
@@ -319,23 +341,37 @@ const Panel = () => {
 
     // check answers
   };
+  const loadQuestions = async (survey_id) => {
+    try {
+      const response = await axios.get(`${endpoint}/questions/${survey_id}`);
+      const data = await response.data;
+      console.log(data);
+      setQuestions(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   // sets state to published survey
   const setLatestSurveyState = useCallback(
     async (uid) => {
       // get draft (if it exists)
       try {
         const id = 1;
-        const response = await axios.get(`${endpoint_url}/latest_survey/${id}`);
+        const response = await axios.get(`${endpoint}/latest_survey/${id}`);
         const data = await response.data;
         if (data && data.length) {
           setDraft(data[0]);
           const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
           setBaseSurveyLink(baseUrl);
-          let link = redirectUrl
-            ? `${baseUrl}?redirect_url=${redirectUrl}`
+          let link = draft.redirect_url
+            ? `${baseUrl}?redirect_url=${draft.redirect_url}`
             : baseUrl;
           setSurveyLink(link);
           setHasDraft(true);
+
+          loadQuestions(data[0].id);
+
+          // TODO: set questions
         }
       } catch (err) {
         console.error(err.message);
@@ -343,7 +379,7 @@ const Panel = () => {
 
       setSurveyStateLoaded(true);
     },
-    [redirectUrl]
+    [draft.redirect_url]
   );
 
   useEffect(() => {
@@ -361,7 +397,7 @@ const Panel = () => {
   }, [
     surveyName,
     questions,
-    redirectUrl,
+    draft.redirect_url,
     errors,
     setLatestSurveyState,
     surveyStateLoaded,
@@ -375,7 +411,7 @@ const Panel = () => {
         <SurveyPreview
           questions={questions}
           surveyName={surveyName}
-          questionHash={questionHash}
+          questionIndex={0}
         />
       )}
       <div className="formContainer">
@@ -411,7 +447,7 @@ const Panel = () => {
                 questions={questions}
                 removeQuestion={removeQuestion}
                 updateQuestion={updateQuestion}
-                updateQuestionHash={setQuestionHash}
+                updateQuestionId={setQuestionId}
               />
             </Accordion.Root>
           </div>
@@ -524,7 +560,7 @@ const Panel = () => {
                 <input
                   type="text"
                   className="redirectUrl"
-                  value={redirectUrl === "" ? "" : redirectUrl}
+                  value={draft.redirect_url === "" ? "" : draft.redirect_url}
                   onChange={(e) => updateRedirectUrl(e.target.value)}
                 />
                 <div className="surveyLinkDetails">

@@ -25,22 +25,22 @@ export const MultipleChoiceInputContainer = styled.div`
 const MultipleChoiceInput = ({
   amount,
   updateQuestion,
-  questionHash,
+  questionId,
   questions,
 }) => {
   const [items, setItems] = useState([]);
   // const [amount, setAmount] = useState(amount);
   // console.log(JSON.stringify(questions, null, 2));
-  let qindex = questions.findIndex((element) => element.hash === questionHash);
+  let qindex = questions.findIndex((element) => element.id === questionId);
   const randomHash = () => {
     return Math.random().toString(36).substr(2, 10);
   };
   const removeItem = (hash) => {
-    updateQuestion(questionHash, "numberOfAnswerChoices", items.length - 1);
+    updateQuestion(questionId, "numberOfAnswerChoices", items.length - 1);
     setItems((prevState) => {
       const items = [...prevState];
       let index = items.findIndex((element) => element === hash);
-      updateQuestion(questionHash, "removeAnswerChoice", null, index);
+      updateQuestion(questionId, "removeAnswerChoice", null, index);
       items.splice(index, 1);
       return items;
     });
@@ -64,7 +64,7 @@ const MultipleChoiceInput = ({
               }
               onChange={(e) => {
                 updateQuestion(
-                  questionHash,
+                  questionId,
                   "addAnswerChoice",
                   e.target.value,
                   index

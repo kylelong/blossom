@@ -30,7 +30,7 @@ const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
   };
 
   const getAnswers = async () => {
-    console.log(questions[index].id);
+    console.log(questions[index].id, questions[index].type);
     try {
       const response = await axios.get(
         `http://localhost:5000/answer_choices/${questions[index].id}`
