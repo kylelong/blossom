@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
@@ -14,9 +14,7 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (numberOfAnswerChoices > 0 && answerChoices); //TODO: remove / update numberOfAnswerChoices
-  useEffect(() => {
-    // console.log(answerChoices, type);
-  }, []);
+
   const preview = () => {
     if (questionStarted) {
       switch (type) {

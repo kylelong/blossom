@@ -19,14 +19,14 @@ const MultiSelect = ({answerChoices}) => {
 
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((answer) => {
-        const {choice, id} = answer;
+      {answerChoices.map((answer, index) => {
+        const {choice} = answer;
         if (selected.includes(choice)) {
           return (
             <button
               className="answerChoiceButtonSelected"
               name={choice}
-              key={id}
+              key={index}
               onClick={(e) => toggleSelectedChoices(e.target.name)}
             >
               {choice}
@@ -37,7 +37,7 @@ const MultiSelect = ({answerChoices}) => {
             <button
               className="answerChoiceButton"
               name={choice}
-              key={id}
+              key={index}
               onClick={(e) => toggleSelectedChoices(e.target.name)}
             >
               {choice}

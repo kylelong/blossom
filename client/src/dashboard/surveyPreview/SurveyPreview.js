@@ -36,7 +36,7 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
       setQuestionIndex(0);
     }
     prevQuestions.current = questions;
-  }, [questions, questionId]);
+  }, [questions, questionId, questionIndex]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">

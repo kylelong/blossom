@@ -39,12 +39,11 @@ const QuestionOverview = ({
   updateQuestion,
   updateQuestionId,
 }) => {
-  const [questionType, setQuestionType] = useState(""); //TODO: make questions[question_index].type
+  const [questionType, setQuestionType] = useState("");
   const [questionId, setQuestionId] = useState(0);
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
   const updateQuestionType = (type) => {
     setQuestionType(type);
-    // TODO: hash is blank if not set on onChange
     updateQuestion(questionId, "type", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
@@ -78,7 +77,7 @@ const QuestionOverview = ({
   return (
     <>
       {questions.map((question, index) => {
-        let label = `question ${index + 1}`; //question 1 - 4twerg9
+        let label = `question ${index + 1}`;
         return (
           <div
             key={index}
@@ -118,21 +117,26 @@ const QuestionOverview = ({
                         maxLength="1"
                         className="answerChoices"
                         placeholder="# of answers"
+                        // value={
+                        //   question.numberOfAnswerChoices > 0
+                        //     ? question.numberOfAnswerChoices
+                        //     : ""
+                        // }
                         onChange={(e) => {
                           let num = e.target.value;
-                          setNumberOfAnswers(num); //TODO: fix this
-                          // updateQuestion(
-                          //   question.id,
-                          //   "numberOfAnswerChoices",
-                          //   num,
-                          //   null
-                          // );
-                          // updateQuestion(
-                          //   question.id,
-                          //   "answerChoices",
-                          //   num,
-                          //   null
-                          // );
+                          setNumberOfAnswers(num);
+                          updateQuestion(
+                            question.id,
+                            "numberOfAnswerChoices",
+                            num,
+                            null
+                          );
+                          updateQuestion(
+                            question.id,
+                            "answerChoices",
+                            num,
+                            null
+                          );
                         }}
                       ></input>
                     )}

@@ -54,7 +54,7 @@ const MultipleChoiceInput = ({
     <>
       {items.map((hash, index) => {
         return (
-          <MultipleChoiceInputContainer key={index}>
+          <MultipleChoiceInputContainer key={hash}>
             <Input
               placeholder={`Choice #${index + 1}`}
               value={
