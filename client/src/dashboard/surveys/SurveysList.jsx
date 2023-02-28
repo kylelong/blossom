@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-import {auth, app} from "../../firebase-config";
+import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 import axios from "axios";
 

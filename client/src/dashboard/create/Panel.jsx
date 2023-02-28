@@ -109,9 +109,10 @@ const Panel = () => {
     const question_id = questions[index].id;
     try {
       const response = await axios.delete(
-        `${endpoint}/delete_survey/${draft.id}/${question_id}`
+        `${endpoint}/delete_question/${draft.id}`,
+        {question_id: question_id}
       );
-      console.log(`remove questions: ${response.data}`);
+      console.log(`remove question: ${response.data}`);
     } catch (err) {
       console.error(err.message);
     }
@@ -125,7 +126,6 @@ const Panel = () => {
   const resetSurveyState = () => {
     setDraft({});
     setQuestions([]);
-    setQuestionId(0);
     setErrors([]);
     setSurveyName("");
     setSurveyLink("");
@@ -142,8 +142,14 @@ const Panel = () => {
       // property or manipulating answer choices
       if (property === "title") {
         copy[index].title = value;
+
+        // TODO: call updateTitle
+        updateQuestionTitle(draft.id, id, value);
       } else if (property === "type") {
         copy[index].type = value;
+        // TODO: call updateType
+        updateQuestionType(draft.id, id, value);
+
         // just in case changing from single or multiselect
         if (value === "emoji_sentiment" || value === "open_ended") {
           copy[index].answerChoices = [];
@@ -190,7 +196,7 @@ const Panel = () => {
       }
       setQuestions(copy);
     },
-    [questions]
+    [questions, draft.id]
   );
   /**
    * TODO: function that creates survey
@@ -218,15 +224,49 @@ const Panel = () => {
     // TODO: regex
 
     if (draft.id > 0) {
-      const response = await axios.put(
-        `${endpoint}/update_survey_title/${draft.id}`,
-        {title: value}
-      );
-      console.log(`update survey title ${response.data}`);
-
-      setDraft({...draft, title: value});
+      try {
+        // eslint-disable-next-line
+        const response = await axios.put(
+          `${endpoint}/update_survey_title/${draft.id}`,
+          {title: value}
+        );
+        setDraft({...draft, title: value});
+      } catch (err) {
+        console.error(err.message);
+      }
     }
   };
+
+  const updateQuestionTitle = async (survey_id, question_id, title) => {
+    try {
+      const response = await axios.put(
+        `${endpoint}/update_question_title/${survey_id}`,
+        {
+          question_id: question_id,
+          title: title,
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const updateQuestionType = async (survey_id, question_id, type) => {
+    try {
+      const response = await axios.put(
+        `${endpoint}/update_question_type/${survey_id}`,
+        {
+          question_id: question_id,
+          type: type,
+        }
+      );
+      console.log(response.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const updateRedirectUrl = async (value) => {
     if (draft.id) {
       if (value === "") {
@@ -341,15 +381,40 @@ const Panel = () => {
 
     // check answers
   };
-  const loadQuestions = async (survey_id) => {
+  const loadQuestions = useCallback(async (survey_id) => {
     try {
       const response = await axios.get(`${endpoint}/questions/${survey_id}`);
       const data = await response.data;
-      console.log(data);
       setQuestions(data);
+      loadAnswers(data);
     } catch (err) {
       console.error(err.message);
     }
+  }, []);
+  //
+  const loadAnswers = async (questions) => {
+    //TODO: for each question if type is single_select / multi_select
+    let question_copy = [];
+    for (let i = 0; i < questions.length; i++) {
+      let question = questions[i];
+
+      let {id} = question;
+      let question_array = questions.filter((question) => question.id === id);
+
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/answer_choices/${id}`
+        );
+        const data = await response.data;
+        question_array[0].answerChoices = data;
+        question_array[0].numberOfAnswerChoices = data.length;
+        question_copy.push(question_array);
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+
+    setQuestions(question_copy.flat());
   };
   // sets state to published survey
   const setLatestSurveyState = useCallback(
@@ -370,8 +435,6 @@ const Panel = () => {
           setHasDraft(true);
 
           loadQuestions(data[0].id);
-
-          // TODO: set questions
         }
       } catch (err) {
         console.error(err.message);
@@ -379,7 +442,7 @@ const Panel = () => {
 
       setSurveyStateLoaded(true);
     },
-    [draft.redirect_url]
+    [draft.redirect_url, loadQuestions]
   );
 
   useEffect(() => {
@@ -402,6 +465,7 @@ const Panel = () => {
     setLatestSurveyState,
     surveyStateLoaded,
     user.uid,
+    questionId,
   ]);
   return (
     <div className="panelContainer">
@@ -411,7 +475,7 @@ const Panel = () => {
         <SurveyPreview
           questions={questions}
           surveyName={surveyName}
-          questionIndex={0}
+          questionId={questionId}
         />
       )}
       <div className="formContainer">

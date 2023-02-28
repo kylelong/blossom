@@ -1,12 +1,10 @@
 import React, {useState, useEffect, useRef} from "react";
 import "./preview.css";
 import * as Label from "@radix-ui/react-label";
-import axios from "axios";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
-const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
-  const [index, setIndex] = useState(questionIndex);
-  const [answerChoices, setAnswerChoices] = useState([]);
+const SurveyPreview = ({questions, surveyTitle, questionId}) => {
+  const [questionIndex, setQuestionIndex] = useState(0);
   const showQuestions = questions.length > 0;
   const prevQuestions = useRef(questions);
 
@@ -14,49 +12,31 @@ const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
     const maxIndex = questions.length - 1;
     if (questions.length > 0 && ["next", "previous"].includes(buttonAction)) {
       if (buttonAction === "next") {
-        if (index === maxIndex) {
-          setIndex(0);
+        if (questionIndex === maxIndex) {
+          setQuestionIndex(0);
         } else {
-          setIndex(index + 1);
+          setQuestionIndex(questionIndex + 1);
         }
       } else if (buttonAction === "previous") {
-        if (index === 0) {
-          setIndex(maxIndex);
+        if (questionIndex === 0) {
+          setQuestionIndex(maxIndex);
         } else {
-          setIndex(index - 1);
+          setQuestionIndex(questionIndex - 1);
         }
       }
     }
   };
 
-  const getAnswers = async () => {
-    console.log(questions[index].id, questions[index].type);
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/answer_choices/${questions[index].id}`
-      );
-      const data = await response.data;
-      console.log(data);
-      setAnswerChoices(data);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
   useEffect(() => {
-    if (questions.length) {
-      //for multi_select && single_select
-      getAnswers();
-    }
-    let idx = questions.findIndex((element) => element.index === index);
+    let idx = questions.findIndex((element) => element.id === questionId);
     if (idx > -1) {
-      setIndex(idx);
+      setQuestionIndex(idx);
     }
     if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
-      setIndex(0);
+      setQuestionIndex(0);
     }
     prevQuestions.current = questions;
-  }, [questions, index]);
+  }, [questions, questionId]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
@@ -67,7 +47,7 @@ const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
           {surveyTitle === "" ? "survey name" : surveyTitle}
         </div>
         {showQuestions && (
-          <div className="questionNumber">question {index + 1}</div>
+          <div className="questionNumber">question {questionIndex + 1}</div>
         )}
         {!showQuestions && (
           <div className="startSurveyContainer">
@@ -78,16 +58,10 @@ const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
             </p>
           </div>
         )}
-        {showQuestions && (
-          <QuestionViewer
-            {...questions[index]}
-            index={index}
-            answerChoices={answerChoices}
-          />
-        )}
+        {showQuestions && <QuestionViewer {...questions[questionIndex]} />}
         {questions.length > 0 && (
           <div className="previewButtonsContainer">
-            {index > 0 && (
+            {questionIndex > 0 && (
               <button
                 className="previewButton"
                 name="previous"
@@ -99,7 +73,7 @@ const SurveyPreview = ({questions, surveyTitle, questionIndex}) => {
                 previous
               </button>
             )}
-            {index !== questions.length - 1 ? (
+            {questionIndex !== questions.length - 1 ? (
               <button
                 className="previewButton"
                 name="next"

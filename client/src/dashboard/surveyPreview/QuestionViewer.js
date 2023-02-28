@@ -6,7 +6,6 @@ import Emojis from "./Emojis";
 import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({
   title,
-  index,
   type,
   numberOfAnswerChoices,
   answerChoices,
@@ -14,10 +13,10 @@ const QuestionViewer = ({
   emoji,
 }) => {
   const questionStarted =
-    title || type || (numberOfAnswerChoices > 0 && answerChoices);
+    title || type || (numberOfAnswerChoices > 0 && answerChoices); //TODO: remove / update numberOfAnswerChoices
   useEffect(() => {
     // console.log(answerChoices, type);
-  }, [index]);
+  }, []);
   const preview = () => {
     if (questionStarted) {
       switch (type) {

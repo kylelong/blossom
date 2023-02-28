@@ -39,15 +39,16 @@ const QuestionOverview = ({
   updateQuestion,
   updateQuestionId,
 }) => {
-  const [questionType, setQuestionType] = useState("");
+  const [questionType, setQuestionType] = useState(""); //TODO: make questions[question_index].type
   const [questionId, setQuestionId] = useState(0);
-  const [numberOfAnswers, setNumberOfAnswers] = useState(0);
+  const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
   const updateQuestionType = (type) => {
     setQuestionType(type);
     // TODO: hash is blank if not set on onChange
     updateQuestion(questionId, "type", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
+
   const questionDetails = {
     single_select: "select one option (at most 5 choices)",
     multi_select: "select all that apply (at most 5 choices)",
@@ -55,8 +56,9 @@ const QuestionOverview = ({
     open_ended: "input box for text responses",
   };
 
+  // snippet below all question options (title, type, and # of answers selector)
   const questionTypeInfo = (questionType) => {
-    if (questionType.length > 0) {
+    if (questionType && questionType.length > 0) {
       switch (questionType) {
         case "single_select":
           return questionDetails.single_select;
@@ -72,16 +74,7 @@ const QuestionOverview = ({
     }
   };
 
-  useEffect(() => {
-    //let index = questions.findIndex((element) => element.hash === questionId);
-    //setNumberOfAnswers(questions[index].numberOfAnswers);
-    if (
-      (questionId === 0 && questions.length === 1) ||
-      (questionId && questions.length === 1)
-    ) {
-      setQuestionId(questions[0].id);
-    }
-  }, [questions, questionId, numberOfAnswers, questionType]);
+  useEffect(() => {}, [questions, questionId, questionType]);
   return (
     <>
       {questions.map((question, index) => {
@@ -90,7 +83,8 @@ const QuestionOverview = ({
           <div
             key={index}
             onClick={() => {
-              setQuestionId(question.hash);
+              setQuestionType(questions[index].type);
+              setQuestionId(question.id);
               updateQuestionId(question.id);
             }}
           >
@@ -109,12 +103,7 @@ const QuestionOverview = ({
                   placeholder="question title"
                   value={question.title ? question.title : ""}
                   onChange={(e) => {
-                    updateQuestion(
-                      question.hash,
-                      "title",
-                      e.target.value,
-                      null
-                    );
+                    updateQuestion(question.id, "title", e.target.value, null);
                   }}
                 ></input>
                 <div className="questionDetailsContainer">
@@ -122,7 +111,6 @@ const QuestionOverview = ({
                     <QuestionTypeSelectMenu
                       updateQuestionType={updateQuestionType}
                       defaultQuestionType={question.type}
-                      hash={question.hash}
                     />
                     {hasOptions && (
                       <input
@@ -132,19 +120,19 @@ const QuestionOverview = ({
                         placeholder="# of answers"
                         onChange={(e) => {
                           let num = e.target.value;
-                          setNumberOfAnswers(num);
-                          updateQuestion(
-                            question.hash,
-                            "numberOfAnswerChoices",
-                            num,
-                            null
-                          );
-                          updateQuestion(
-                            question.hash,
-                            "answerChoices",
-                            num,
-                            null
-                          );
+                          setNumberOfAnswers(num); //TODO: fix this
+                          // updateQuestion(
+                          //   question.id,
+                          //   "numberOfAnswerChoices",
+                          //   num,
+                          //   null
+                          // );
+                          // updateQuestion(
+                          //   question.id,
+                          //   "answerChoices",
+                          //   num,
+                          //   null
+                          // );
                         }}
                       ></input>
                     )}

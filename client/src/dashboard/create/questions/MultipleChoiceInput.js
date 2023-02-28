@@ -29,8 +29,6 @@ const MultipleChoiceInput = ({
   questions,
 }) => {
   const [items, setItems] = useState([]);
-  // const [amount, setAmount] = useState(amount);
-  // console.log(JSON.stringify(questions, null, 2));
   let qindex = questions.findIndex((element) => element.id === questionId);
   const randomHash = () => {
     return Math.random().toString(36).substr(2, 10);
@@ -60,7 +58,8 @@ const MultipleChoiceInput = ({
             <Input
               placeholder={`Choice #${index + 1}`}
               value={
-                questions.length > 0 && questions[qindex].answerChoices[index]
+                questions.length > 0 &&
+                questions[qindex].answerChoices[index].choice
               }
               onChange={(e) => {
                 updateQuestion(

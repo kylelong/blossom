@@ -24,7 +24,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
     >
       <Select.Trigger className="SelectTrigger" aria-label="question type">
         <Select.Value
-          placeholder={choice.length > 0 ? choice : "question type"}
+          placeholder={choice && choice.length > 0 ? choice : "question type"}
         />
         <Select.Icon className="SelectIcon">
           <ChevronDownIcon />
