@@ -122,21 +122,21 @@ const Panel = () => {
      *  reload state
      */
 
-    const question_id = questions[index].id;
     try {
       const response = await axios.delete(
         `${endpoint}/delete_question/${draft.id}`,
-        {question_id: question_id}
+        {question_id: id}
       );
       console.log(`remove question: ${response.data}`);
     } catch (err) {
       console.error(err.message);
     }
-    setQuestions((prevState) => {
-      const questions = [...prevState];
-      questions.splice(index, 1);
-      return questions;
-    });
+    // remove index
+    // setQuestions((prevState) => {
+    //   const questions = [...prevState];
+    //   questions.splice(index, 1);
+    //   return questions;
+    // });
   };
 
   const resetSurveyState = () => {
