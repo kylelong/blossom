@@ -12,6 +12,7 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     company VARCHAR(255) NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
+    hash VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     premium BOOLEAN NOT NULL DEFAULT FALSE,
     confirmed BOOLEAN NOT NULL DEFAULT FALSE
@@ -43,7 +44,7 @@ CREATE TABLE question (
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     title VARCHAR(255) NOT NULL DEFAULT '',
     index INT NOT NULL,
-    type VARCHAR(255) NOT NULL
+    type VARCHAR(255) NOT NULL DEFAULT ''
 );
 
 CREATE INDEX survey_id_index ON question (survey_id);
@@ -93,11 +94,11 @@ UPDATE question SET title = 'what is your favorite podcast?' WHERE id = 1;
 
 -- create second question for survey 1 with 5 answer choices
 INSERT INTO question (survey_id, title, index, type) VALUES (1, 'what platforms do you use to access your podcasts?', 1, 'multi_select');
-INSERT INTO answer_choice (choice, index, question_id) VALUES ('spotify', 0, 1);
-INSERT INTO answer_choice (choice, index, question_id) VALUES ('youtube', 1, 1);
-INSERT INTO answer_choice (choice, index, question_id) VALUES ('apple podcast', 2, 1);
-INSERT INTO answer_choice (choice, index, question_id) VALUES ('tik tok', 3, 1);
-INSERT INTO answer_choice (choice, index, question_id) VALUES ('stitcher', 4, 1);
+INSERT INTO answer_choice (choice, index, question_id) VALUES ('spotify', 0, 2);
+INSERT INTO answer_choice (choice, index, question_id) VALUES ('youtube', 1, 2);
+INSERT INTO answer_choice (choice, index, question_id) VALUES ('apple podcast', 2, 2);
+INSERT INTO answer_choice (choice, index, question_id) VALUES ('tik tok', 3, 2);
+INSERT INTO answer_choice (choice, index, question_id) VALUES ('stitcher', 4, 2);
 
 -- response
 INSERT INTO response (answer_id, question_id) VALUES (1, 1);
@@ -121,6 +122,8 @@ INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 
 
     SURVEYS
+
+    ** UPDATE NUMBER OF QUESTIONS AT END OF SURVEY **
 
     -- get all surveys for this users : surveys page
         SELECT title from survey WHERE user_id = ${} ORDER BY created_at DESC; -- left panel of titles 

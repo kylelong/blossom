@@ -105,7 +105,23 @@ const Panel = () => {
   // };
 
   // update index
-  const removeQuestion = async (index) => {
+  const removeQuestion = async (id) => {
+    /**
+     * REMOVE ANSWERS
+     *  remove answers first for qeustion
+     *  delete * from answer_choice where question_id =
+     */
+
+    /**
+     * REMOVE QUESTION
+     *  remove from question where id = question.id
+     *  update indices
+     *
+     *  if index is questions.length, just remove
+     *  else every index after the index getting deleted is decremented by 1
+     *  reload state
+     */
+
     const question_id = questions[index].id;
     try {
       const response = await axios.delete(

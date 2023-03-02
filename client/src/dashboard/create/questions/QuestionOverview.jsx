@@ -163,7 +163,8 @@ const QuestionOverview = ({
                     className="removeQuestionBtn panelBtn"
                     onClick={(e) => {
                       e.preventDefault();
-                      removeQuestion(index);
+                      console.log(`removing question: `, question);
+                      // removeQuestion(index);
                     }}
                   >
                     remove
