@@ -105,13 +105,7 @@ const Panel = () => {
   // };
 
   // update index
-  const removeQuestion = async (id) => {
-    /**
-     * REMOVE ANSWERS
-     *  remove answers first for qeustion
-     *  delete * from answer_choice where question_id =
-     */
-
+  const removeQuestion = async (id, index) => {
     /**
      * REMOVE QUESTION
      *  remove from question where id = question.id
@@ -121,16 +115,53 @@ const Panel = () => {
      *  else every index after the index getting deleted is decremented by 1
      *  reload state
      */
-
+    // delete question
+    console.log(
+      `deleting question at id ${id} and index ${index} for survey with id ${draft.id}`
+    );
     try {
       const response = await axios.delete(
         `${endpoint}/delete_question/${draft.id}`,
-        {question_id: id}
+        {question_id: id, question_index: index}
       );
-      console.log(`remove question: ${response.data}`);
+      console.log(response.data);
     } catch (err) {
       console.error(err.message);
     }
+
+    /**
+     * REMOVE ANSWERS (multi_select & single_select only)
+     *  remove answers first for qeustion
+     *  delete * from answer_choice where question_id =
+     */
+
+    // update indices for other
+
+    // remove 1 + removal question start index
+    let start = questions.findIndex((question) => question.id === id);
+    if (start !== questions.length - 1) {
+      // no need to update index if last question was removed
+      for (let i = start + 1; i < questions.length; i++) {
+        let {question_id, question_index} = questions[i];
+        try {
+          const response = await axios.put(
+            `${endpoint}/update_question_index/${draft.id}`,
+            {
+              question_id: question_id,
+              question_index: question_index,
+            }
+          );
+          console.log(response.data);
+        } catch (err) {
+          console.error(err.message);
+        }
+      }
+    }
+    // reload survey
+    loadSurvey(user.uid);
+
+    // update all indices
+
     // remove index
     // setQuestions((prevState) => {
     //   const questions = [...prevState];
@@ -432,8 +463,9 @@ const Panel = () => {
 
     setQuestions(question_copy.flat());
   };
+
   // sets state to published survey
-  const setLatestSurveyState = useCallback(
+  const loadSurvey = useCallback(
     async (uid) => {
       // get draft (if it exists)
       try {
@@ -467,7 +499,7 @@ const Panel = () => {
     }
 
     if (!surveyStateLoaded) {
-      setLatestSurveyState(user.uid);
+      loadSurvey(user.uid);
     }
 
     setLoaded(true);
@@ -478,7 +510,7 @@ const Panel = () => {
     questions,
     draft.redirect_url,
     errors,
-    setLatestSurveyState,
+    loadSurvey,
     surveyStateLoaded,
     user.uid,
     questionId,
