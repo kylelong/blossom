@@ -97,7 +97,7 @@ app.put("/update_question_title/:survey_id", async (req, res) => {
     );
     res.json("question title updated!");
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
@@ -112,7 +112,7 @@ app.put("/update_question_type/:survey_id", async (req, res) => {
     );
     res.json("question type updated!");
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
@@ -126,7 +126,7 @@ app.put("/publish_survey/:survey_id", async (req, res) => {
     );
     res.json("survey published!");
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
@@ -141,7 +141,7 @@ app.put("/update_survey_title/:survey_id", async (req, res) => {
     );
     res.json("survey title updated!");
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
@@ -156,7 +156,7 @@ app.put("/update_redirect_url/:survey_id", async (req, res) => {
     );
     res.json("redirect_url updated!");
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
@@ -167,26 +167,66 @@ app.delete("/delete_survey/:survey_id", async (req, res) => {
     const deletion = await pool.query("DELETE FROM survey WHERE id = $1", [
       survey_id,
     ]);
-    res.json(`survey #${id} deleted!`);
+    res.json(`survey deleted!`);
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message);
   }
 });
 
-// delete question
-app.delete("/delete_question/:survey_id", async (req, res) => {
+// ** --DELETING A QUESTION-- **
+
+// delete question when removing a question
+app.delete("/delete_question/:question_id", async (req, res) => {
   try {
-    const {survey_id} = req.params;
-    const {question_id} = req.body;
-    const deletion = await pool.query(
-      "DELETE FROM question WHERE survey_id = $1 AND question_id = $2",
-      [survey_id, question_id]
-    );
-    res.json(`survey #${id} deleted!`);
+    const {question_id} = req.params;
+    const deletion = await pool.query("DELETE FROM question WHERE id = $1", [
+      question_id,
+    ]);
+    res.json(`question deleted!`);
   } catch (err) {
-    console.error(error.message);
+    console.error(err.message, "deleting survey");
   }
 });
+
+// update question index based on survey_id after removing the question
+app.put("/update_question_index/:survey_id", async (req, res) => {
+  try {
+    const {survey_id} = req.params;
+    const {question_id, question_index} = req.body;
+    const update = await pool.query(
+      "UPDATE question SET index = index - 1 WHERE survey_id = $1 AND id = $2 AND index = $3",
+      [survey_id, question_id, question_index]
+    );
+    res.json(`question index updated!`);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// remove all answers for question id when removing a question
+app.delete("/delete_answers", async (req, res) => {
+  try {
+    const {question_id} = req.body;
+    const deletion = await pool.query(
+      "DELETE * FROM answer_choice WHERE question_id = $1",
+      [question_id]
+    );
+    res.json("answer choices deleted!");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// ** --END OF DELETING A QUESTION-- **
+
+// ** EDIT ANSWER CHOICE **
+// update index
+
+// ** REMOVE ANSWER CHOICE **
+
+// ** END OF REMOVING ANSWER CHOICE **
+
+// update other answer indices
 
 // ** SURVEYS **
 

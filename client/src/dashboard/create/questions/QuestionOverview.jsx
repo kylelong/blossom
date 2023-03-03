@@ -44,6 +44,7 @@ const QuestionOverview = ({
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
   const updateQuestionType = (type) => {
     setQuestionType(type);
+    console.log(type);
     updateQuestion(questionId, "type", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
@@ -144,7 +145,7 @@ const QuestionOverview = ({
 
                   {questionType.length > 0 && (
                     <div className="questionTypeInfo">
-                      {questionTypeInfo(question.questionType)}
+                      {questionTypeInfo(question.type)}
                     </div>
                   )}
 
@@ -163,9 +164,8 @@ const QuestionOverview = ({
                     className="removeQuestionBtn panelBtn"
                     onClick={(e) => {
                       e.preventDefault();
-                      const {id, index} = question;
-
-                      removeQuestion(id, index);
+                      const {id} = question;
+                      removeQuestion(id);
                     }}
                   >
                     remove

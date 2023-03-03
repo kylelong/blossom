@@ -98,6 +98,7 @@ const Panel = () => {
       }
     }
     setQuestions((questions) => [...questions, data]);
+    loadSurvey();
   };
 
   // const randomHash = () => {
@@ -105,7 +106,15 @@ const Panel = () => {
   // };
 
   // update index
-  const removeQuestion = async (id, index) => {
+  const removeQuestion = async (id) => {
+    /**
+     *  remove answers first because they reference question id
+     *
+     * REMOVE ANSWERS (multi_select & single_select only)
+     *  remove answers first for qeustion
+     *  delete * from answer_choice where question_id =
+     */
+
     /**
      * REMOVE QUESTION
      *  remove from question where id = question.id
@@ -116,39 +125,29 @@ const Panel = () => {
      *  reload state
      */
     // delete question
-    console.log(
-      `deleting question at id ${id} and index ${index} for survey with id ${draft.id}`
-    );
+
     try {
-      const response = await axios.delete(
-        `${endpoint}/delete_question/${draft.id}`,
-        {question_id: id, question_index: index}
-      );
+      const response = await axios.delete(`${endpoint}/delete_question/${id}`);
       console.log(response.data);
     } catch (err) {
       console.error(err.message);
     }
 
-    /**
-     * REMOVE ANSWERS (multi_select & single_select only)
-     *  remove answers first for qeustion
-     *  delete * from answer_choice where question_id =
-     */
-
-    // update indices for other
+    // update indices for other questions
 
     // remove 1 + removal question start index
     let start = questions.findIndex((question) => question.id === id);
     if (start !== questions.length - 1) {
       // no need to update index if last question was removed
       for (let i = start + 1; i < questions.length; i++) {
-        let {question_id, question_index} = questions[i];
+        let {id, index} = questions[i];
+
         try {
           const response = await axios.put(
             `${endpoint}/update_question_index/${draft.id}`,
             {
-              question_id: question_id,
-              question_index: question_index,
+              question_id: id,
+              question_index: index,
             }
           );
           console.log(response.data);
@@ -159,15 +158,6 @@ const Panel = () => {
     }
     // reload survey
     loadSurvey(user.uid);
-
-    // update all indices
-
-    // remove index
-    // setQuestions((prevState) => {
-    //   const questions = [...prevState];
-    //   questions.splice(index, 1);
-    //   return questions;
-    // });
   };
 
   const resetSurveyState = () => {
@@ -203,6 +193,7 @@ const Panel = () => {
           copy[index].numberOfAnswerChoices = 0;
         }
       } else if (property === "numberOfAnswerChoices") {
+        // set # of answer choices from input
         if (value > 5 || value < 0) return;
         copy[index].numberOfAnswerChoices = value;
       } else if (property === "answerChoices") {
@@ -507,6 +498,7 @@ const Panel = () => {
     return () => clearTimeout(timerRef.current);
   }, [
     surveyName,
+    draft,
     questions,
     draft.redirect_url,
     errors,

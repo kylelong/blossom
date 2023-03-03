@@ -8,14 +8,14 @@ const SingleSelect = ({answerChoices}) => {
   return (
     <div className="answerChoicesContainer">
       {answerChoices &&
-        answerChoices.map((answer) => {
+        answerChoices.map((answer, index) => {
           const {choice, id} = answer;
           if (choice && selected === choice) {
             return (
               <button
                 className="answerChoiceButtonSelected"
                 name={choice}
-                key={id}
+                key={index}
                 onClick={(e) => changeSelected(e.target.name)}
               >
                 {choice}
@@ -26,7 +26,7 @@ const SingleSelect = ({answerChoices}) => {
               <button
                 className="answerChoiceButton"
                 name={choice}
-                key={id}
+                key={index}
                 onClick={(e) => changeSelected(e.target.name)}
               >
                 {choice}

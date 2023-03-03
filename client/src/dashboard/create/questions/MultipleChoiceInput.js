@@ -59,6 +59,7 @@ const MultipleChoiceInput = ({
               placeholder={`Choice #${index + 1}`}
               value={
                 questions.length > 0 &&
+                questions[qindex].answerChoices[index].choice !== null &&
                 questions[qindex].answerChoices[index].choice
               }
               onChange={(e) => {
