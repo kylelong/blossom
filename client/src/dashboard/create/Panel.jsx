@@ -21,6 +21,7 @@ const endpoint = "http://localhost:5000";
 
 const Panel = () => {
   const {register} = useForm();
+  // survey
   const [draft, setDraft] = useState({
     hash: "",
     id: 0,
@@ -98,7 +99,7 @@ const Panel = () => {
       }
     }
     setQuestions((questions) => [...questions, data]);
-    loadSurvey();
+    loadSurvey(user.uid);
   };
 
   // const randomHash = () => {
@@ -108,6 +109,7 @@ const Panel = () => {
   // update index
   const removeQuestion = async (id) => {
     /**
+     * TODO: remove answers
      *  remove answers first because they reference question id
      *
      * REMOVE ANSWERS (multi_select & single_select only)
@@ -194,9 +196,13 @@ const Panel = () => {
         }
       } else if (property === "numberOfAnswerChoices") {
         // set # of answer choices from input
+        value = value.length === 0 ? 0 : value;
         if (value > 5 || value < 0) return;
         copy[index].numberOfAnswerChoices = value;
       } else if (property === "answerChoices") {
+        if (value === "") {
+          copy[index].answerChoices = [];
+        }
         if (value > 5 || value < 0) return;
         let currLength = copy[index].answerChoices.length;
         //add more options
@@ -204,15 +210,8 @@ const Panel = () => {
           for (let i = 0; i < value - currLength; i++) {
             copy[index].answerChoices.push("");
           }
-        } else if (value < currLength) {
-          //decrease answer choices
-          let choices = [];
-          for (let i = 0; i < value; i++) {
-            choices.push("");
-          }
-          copy[index].answerChoices = choices;
-        } else if (currLength === 0) {
-          // empty
+        } else if (value < currLength || currLength === 0) {
+          //decrease answer choices || is empty and adding
           let choices = [];
           for (let i = 0; i < value; i++) {
             choices.push("");
@@ -233,6 +232,7 @@ const Panel = () => {
         }
       }
       setQuestions(copy);
+      loadSurvey();
     },
     [questions, draft.id]
   );

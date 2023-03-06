@@ -118,14 +118,15 @@ const QuestionOverview = ({
                         maxLength="1"
                         className="answerChoices"
                         placeholder="# of answers"
-                        // value={
-                        //   question.numberOfAnswerChoices > 0
-                        //     ? question.numberOfAnswerChoices
-                        //     : ""
-                        // }
+                        value={
+                          question.numberOfAnswerChoices > 0
+                            ? question.numberOfAnswerChoices
+                            : ""
+                        }
                         onChange={(e) => {
                           let num = e.target.value;
                           setNumberOfAnswers(num);
+
                           updateQuestion(
                             question.id,
                             "numberOfAnswerChoices",

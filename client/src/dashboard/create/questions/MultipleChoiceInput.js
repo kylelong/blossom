@@ -44,6 +44,12 @@ const MultipleChoiceInput = ({
     });
   };
   useEffect(() => {
+    /**
+     *     questions.length > 0 &&
+                questions[qindex].answerChoices[index].choice !== null &&
+                questions[qindex].answerChoices[index].choice
+     */
+    console.log(questions);
     let inputs = [];
     for (let i = 0; i < amount; i++) {
       inputs.push(randomHash());
@@ -57,12 +63,11 @@ const MultipleChoiceInput = ({
           <MultipleChoiceInputContainer key={hash}>
             <Input
               placeholder={`Choice #${index + 1}`}
-              value={
-                questions.length > 0 &&
-                questions[qindex].answerChoices[index].choice !== null &&
-                questions[qindex].answerChoices[index].choice
-              }
               onChange={(e) => {
+                console.log(
+                  `editing answers for question ${questions[qindex]} ${e.target.value}`
+                );
+                // updateAnswerChoice(questionId, e.target.value, index, "add")
                 updateQuestion(
                   questionId,
                   "addAnswerChoice",
