@@ -126,7 +126,7 @@ const QuestionOverview = ({
                         onChange={(e) => {
                           let num = e.target.value;
                           setNumberOfAnswers(num);
-
+                          // updateAnswerChoice(questionId, value)
                           updateQuestion(
                             question.id,
                             "numberOfAnswerChoices",

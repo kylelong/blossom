@@ -92,10 +92,10 @@ app.put("/update_question_title/:survey_id", async (req, res) => {
     const {survey_id} = req.params;
     const {question_id, title} = req.body;
     const update = await pool.query(
-      "UPDATE question SET title = $1 WHERE id = $2 AND survey_id = $3",
+      "UPDATE question SET title = $1 WHERE id = $2 AND survey_id = $3 RETURNING title",
       [title, question_id, survey_id]
     );
-    res.json("question title updated!");
+    res.json(update.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -107,10 +107,10 @@ app.put("/update_question_type/:survey_id", async (req, res) => {
     const {survey_id} = req.params;
     const {question_id, type} = req.body;
     const update = await pool.query(
-      "UPDATE question SET type = $1 WHERE id = $2 AND survey_id = $3",
+      "UPDATE question SET type = $1 WHERE id = $2 AND survey_id = $3 RETURNING type",
       [type, question_id, survey_id]
     );
-    res.json("question type updated!");
+    res.json(update.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -136,7 +136,7 @@ app.put("/update_survey_title/:survey_id", async (req, res) => {
     const {survey_id} = req.params;
     const {title} = req.body;
     const update = await pool.query(
-      "UPDATE survey SET title = $1 WHERE id = $2",
+      "UPDATE survey SET title = $1 WHERE id = $2 RETURNING title",
       [title, survey_id]
     );
     res.json("survey title updated!");
@@ -179,10 +179,11 @@ app.delete("/delete_survey/:survey_id", async (req, res) => {
 app.delete("/delete_question/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
-    const deletion = await pool.query("DELETE FROM question WHERE id = $1", [
-      question_id,
-    ]);
-    res.json(`question deleted!`);
+    const deletion = await pool.query(
+      "DELETE FROM question WHERE id = $1 RETURNING id",
+      [question_id]
+    );
+    res.json(deletion.rows[0]);
   } catch (err) {
     console.error(err.message, "deleting survey");
   }
@@ -194,21 +195,21 @@ app.put("/update_question_index/:survey_id", async (req, res) => {
     const {survey_id} = req.params;
     const {question_id, question_index} = req.body;
     const update = await pool.query(
-      "UPDATE question SET index = index - 1 WHERE survey_id = $1 AND id = $2 AND index = $3",
+      "UPDATE question SET index = index - 1 WHERE survey_id = $1 AND id = $2 AND index = $3 RETURNING index",
       [survey_id, question_id, question_index]
     );
-    res.json(`question index updated!`);
+    res.json(update.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
 });
 
 // remove all answers for question id when removing a question
-app.delete("/delete_answers", async (req, res) => {
+app.delete("/delete_answers/:question_id", async (req, res) => {
   try {
-    const {question_id} = req.body;
+    const {question_id} = req.params;
     const deletion = await pool.query(
-      "DELETE * FROM answer_choice WHERE question_id = $1",
+      "DELETE FROM answer_choice WHERE question_id = $1",
       [question_id]
     );
     res.json("answer choices deleted!");
@@ -220,9 +221,62 @@ app.delete("/delete_answers", async (req, res) => {
 // ** --END OF DELETING A QUESTION-- **
 
 // ** EDIT ANSWER CHOICE **
+// add blank answer choice to survey
+app.post("/add_answer_choice/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const {index, choice} = req.body;
+    const answer_choice = await pool.query(
+      "INSERT INTO answer_choice (choice, index, question_id) VALUES($1, $2, $3) RETURNING id, question_id, choice, index",
+      [choice, index, question_id]
+    );
+    res.json(answer_choice.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 // update index
+app.put("/update_answer_index/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const {answer_index, answer_id} = req.body;
+    const update = await pool.query(
+      "UPDATE answer_choice SET index = index - 1 WHERE id =  $1 AND question_id = $2 AND index = $3 RETURNING index",
+      [answer_id, question_id, answer_index]
+    );
+    res.json(update.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+// update text for answer
+app.put("/update_answer_choice/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const {answer_id, choice, index} = req.body;
+    const update = await pool.query(
+      "UPDATE answer_choice SET choice = $1 WHERE id = $2 AND question_id = $3 AND index = $4 RETURNING choice",
+      [choice, answer_id, question_id, index]
+    );
+    res.json(update.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // ** REMOVE ANSWER CHOICE **
+app.delete("/delete_answer_choice/:answer_id", async (req, res) => {
+  try {
+    const {answer_id} = req.params;
+    const deletion = await pool.query(
+      "DELETE FROM answer_choice WHERE id = $1 RETURNING id",
+      [answer_id]
+    );
+    res.json(deletion.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // ** END OF REMOVING ANSWER CHOICE **
 

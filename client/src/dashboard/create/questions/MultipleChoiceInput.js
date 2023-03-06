@@ -49,7 +49,6 @@ const MultipleChoiceInput = ({
                 questions[qindex].answerChoices[index].choice !== null &&
                 questions[qindex].answerChoices[index].choice
      */
-    console.log(questions);
     let inputs = [];
     for (let i = 0; i < amount; i++) {
       inputs.push(randomHash());
@@ -59,20 +58,22 @@ const MultipleChoiceInput = ({
   return (
     <>
       {items.map((hash, index) => {
+        let {choice, id} = questions[qindex].answerChoices[index];
+        console.log(id);
         return (
           <MultipleChoiceInputContainer key={hash}>
             <Input
               placeholder={`Choice #${index + 1}`}
+              value={questions.length > 0 && choice}
               onChange={(e) => {
                 console.log(
                   `editing answers for question ${questions[qindex]} ${e.target.value}`
                 );
-                // updateAnswerChoice(questionId, e.target.value, index, "add")
                 updateQuestion(
                   questionId,
                   "addAnswerChoice",
                   e.target.value,
-                  index
+                  index //TODO: replace with id
                 );
               }}
             />

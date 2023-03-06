@@ -45,6 +45,71 @@ const Panel = () => {
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
   const [user] = useAuthState(auth); // TODO: get user_id from postgres
 
+  const loadQuestions = useCallback(async (survey_id) => {
+    try {
+      const response = await axios.get(`${endpoint}/questions/${survey_id}`);
+      const data = await response.data;
+      setQuestions(data);
+      loadAnswers(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }, []);
+  //
+  const loadAnswers = async (questions) => {
+    //TODO: for each question if type is single_select / multi_select
+    let question_copy = [];
+    for (let i = 0; i < questions.length; i++) {
+      let question = questions[i];
+
+      let {id} = question;
+      let question_array = questions.filter((question) => question.id === id);
+
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/answer_choices/${id}`
+        );
+        const data = await response.data;
+        question_array[0].answerChoices = data;
+        question_array[0].numberOfAnswerChoices = data.length;
+        question_copy.push(question_array);
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+
+    setQuestions(question_copy.flat());
+  };
+
+  // sets state to published survey
+  const loadSurvey = useCallback(
+    async (uid) => {
+      // get draft (if it exists)
+      try {
+        const id = 1;
+        const response = await axios.get(`${endpoint}/latest_survey/${id}`);
+        const data = await response.data;
+        if (data && data.length) {
+          setDraft(data[0]);
+          const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
+          setBaseSurveyLink(baseUrl);
+          let link = draft.redirect_url
+            ? `${baseUrl}?redirect_url=${draft.redirect_url}`
+            : baseUrl;
+          setSurveyLink(link);
+          setHasDraft(true);
+
+          loadQuestions(data[0].id);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+
+      setSurveyStateLoaded(true);
+    },
+    [draft.redirect_url, loadQuestions]
+  );
+
   const addQuestion = async () => {
     /**
      * insert question in question table with survey_id & questions.legnth as index
@@ -99,7 +164,6 @@ const Panel = () => {
       }
     }
     setQuestions((questions) => [...questions, data]);
-    loadSurvey(user.uid);
   };
 
   // const randomHash = () => {
@@ -108,29 +172,18 @@ const Panel = () => {
 
   // update index
   const removeQuestion = async (id) => {
-    /**
-     * TODO: remove answers
-     *  remove answers first because they reference question id
-     *
-     * REMOVE ANSWERS (multi_select & single_select only)
-     *  remove answers first for qeustion
-     *  delete * from answer_choice where question_id =
-     */
+    // remove answers first because they reference question id
+    removeAnswerChoices(id);
 
-    /**
-     * REMOVE QUESTION
-     *  remove from question where id = question.id
-     *  update indices
-     *
-     *  if index is questions.length, just remove
-     *  else every index after the index getting deleted is decremented by 1
-     *  reload state
-     */
     // delete question
-
     try {
       const response = await axios.delete(`${endpoint}/delete_question/${id}`);
-      console.log(response.data);
+      let idx = getQuestionIndex(response.data.id);
+      setQuestions((prevState) => {
+        const questions = [...prevState];
+        questions.splice(idx, 1);
+        return questions;
+      });
     } catch (err) {
       console.error(err.message);
     }
@@ -152,14 +205,15 @@ const Panel = () => {
               question_index: index,
             }
           );
-          console.log(response.data);
+          let copy = [...questions];
+          let idx = getQuestionIndex(id);
+          copy[idx].index = response.data.index;
+          setQuestions(copy);
         } catch (err) {
           console.error(err.message);
         }
       }
     }
-    // reload survey
-    loadSurvey(user.uid);
   };
 
   const resetSurveyState = () => {
@@ -173,69 +227,155 @@ const Panel = () => {
     setHasDraft(false);
   };
 
+  const getQuestionIndex = useCallback(
+    (question_id) => {
+      return questions.findIndex((element) => element.id === question_id);
+    },
+    [questions]
+  );
+
+  const addAnswerChoice = useCallback(
+    async (choice, index, question_id) => {
+      try {
+        const response = await axios.post(
+          `${endpoint}/add_answer_choice/${question_id}`,
+          {
+            choice: choice,
+            index: index,
+          }
+        );
+        let copy = [...questions];
+        let idx = getQuestionIndex(question_id);
+        copy[idx].answerChoices.push(response.data);
+        setQuestions(copy);
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    [getQuestionIndex, questions]
+  );
+  const removeAnswerChoices = useCallback(
+    async (question_id) => {
+      try {
+        const response = await axios.delete(
+          `${endpoint}/delete_answers/${question_id}`
+        );
+        console.log(response.data);
+        let copy = [...questions];
+        let idx = getQuestionIndex(question_id);
+        copy[idx].answerChoices = [];
+        copy[idx].numberOfAnswerChoices = 0;
+        setQuestions(copy);
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    [getQuestionIndex, questions]
+  );
+
+  const updateQuestionTitle = useCallback(
+    async (survey_id, question_id, title) => {
+      try {
+        const response = await axios.put(
+          `${endpoint}/update_question_title/${survey_id}`,
+          {
+            question_id: question_id,
+            title: title,
+          }
+        );
+        // TODO: put this in helper function to reduce repeating logic
+        let copy = [...questions];
+        let idx = getQuestionIndex(question_id);
+        copy[idx].title = response.data.title;
+        setQuestions(copy);
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    [getQuestionIndex, questions]
+  );
+
+  const updateQuestionType = useCallback(
+    async (survey_id, question_id, type) => {
+      try {
+        const response = await axios.put(
+          `${endpoint}/update_question_type/${survey_id}`,
+          {
+            question_id: question_id,
+            type: type,
+          }
+        );
+        let copy = [...questions];
+        let idx = getQuestionIndex(question_id);
+        copy[idx].type = response.data.type;
+        setQuestions(copy);
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    [questions, getQuestionIndex]
+  );
   const updateQuestion = useCallback(
     (id, property, value, answerChoiceIndex) => {
       let copy = [...questions];
       // finds the question
-      let index = copy.findIndex((element) => element.id === id);
+      let index = getQuestionIndex(id);
       // property or manipulating answer choices
       if (property === "title") {
-        copy[index].title = value;
-
-        // TODO: call updateTitle
         updateQuestionTitle(draft.id, id, value);
       } else if (property === "type") {
-        copy[index].type = value;
-        // TODO: call updateType
         updateQuestionType(draft.id, id, value);
-
         // just in case changing from single or multiselect
         if (value === "emoji_sentiment" || value === "open_ended") {
-          copy[index].answerChoices = [];
-          copy[index].numberOfAnswerChoices = 0;
+          removeAnswerChoices(id);
         }
       } else if (property === "numberOfAnswerChoices") {
+        // if empty erase all answrs and restart
+        if (value === "") {
+          // remove exisiting answers
+          removeAnswerChoices(id);
+        }
         // set # of answer choices from input
         value = value.length === 0 ? 0 : value;
         if (value > 5 || value < 0) return;
         copy[index].numberOfAnswerChoices = value;
       } else if (property === "answerChoices") {
-        if (value === "") {
-          copy[index].answerChoices = [];
-        }
-        if (value > 5 || value < 0) return;
+        if (value > 5 || value < 0 || value === "") return;
         let currLength = copy[index].answerChoices.length;
-        //add more options
-        if (value > currLength && currLength > 0) {
-          for (let i = 0; i < value - currLength; i++) {
-            copy[index].answerChoices.push("");
-          }
-        } else if (value < currLength || currLength === 0) {
-          //decrease answer choices || is empty and adding
-          let choices = [];
+        if (currLength === 0) {
           for (let i = 0; i < value; i++) {
-            choices.push("");
+            addAnswerChoice("", i, id);
           }
-          copy[index].answerChoices = choices;
         }
       } else if (property === "addAnswerChoice") {
         if (value !== null && answerChoiceIndex !== null) {
           let answerChoicesCopy = copy[index].answerChoices;
           answerChoicesCopy[answerChoiceIndex] = value;
           copy[index].answerChoices = answerChoicesCopy;
+          // update answer choice
         }
       } else if (property === "removeAnswerChoice") {
         if (answerChoiceIndex !== null) {
           let answerChoicesCopy = copy[index].answerChoices;
           answerChoicesCopy.splice(answerChoiceIndex, 1);
           copy[index].answerChoices = answerChoicesCopy;
+          // update_answer_index/question_id
         }
       }
       setQuestions(copy);
-      loadSurvey();
+      //loadSurvey();
     },
-    [questions, draft.id]
+    [
+      questions,
+      draft.id,
+      addAnswerChoice,
+      getQuestionIndex,
+      removeAnswerChoices,
+      updateQuestionTitle,
+      updateQuestionType,
+    ]
   );
+
   /**
    * TODO: function that creates survey
    * make sure to check that these values are not tapered with on survey submission
@@ -272,36 +412,6 @@ const Panel = () => {
       } catch (err) {
         console.error(err.message);
       }
-    }
-  };
-
-  const updateQuestionTitle = async (survey_id, question_id, title) => {
-    try {
-      const response = await axios.put(
-        `${endpoint}/update_question_title/${survey_id}`,
-        {
-          question_id: question_id,
-          title: title,
-        }
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
-  const updateQuestionType = async (survey_id, question_id, type) => {
-    try {
-      const response = await axios.put(
-        `${endpoint}/update_question_type/${survey_id}`,
-        {
-          question_id: question_id,
-          type: type,
-        }
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.error(err.message);
     }
   };
 
@@ -419,71 +529,6 @@ const Panel = () => {
 
     // check answers
   };
-  const loadQuestions = useCallback(async (survey_id) => {
-    try {
-      const response = await axios.get(`${endpoint}/questions/${survey_id}`);
-      const data = await response.data;
-      setQuestions(data);
-      loadAnswers(data);
-    } catch (err) {
-      console.error(err.message);
-    }
-  }, []);
-  //
-  const loadAnswers = async (questions) => {
-    //TODO: for each question if type is single_select / multi_select
-    let question_copy = [];
-    for (let i = 0; i < questions.length; i++) {
-      let question = questions[i];
-
-      let {id} = question;
-      let question_array = questions.filter((question) => question.id === id);
-
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/answer_choices/${id}`
-        );
-        const data = await response.data;
-        question_array[0].answerChoices = data;
-        question_array[0].numberOfAnswerChoices = data.length;
-        question_copy.push(question_array);
-      } catch (err) {
-        console.error(err.message);
-      }
-    }
-
-    setQuestions(question_copy.flat());
-  };
-
-  // sets state to published survey
-  const loadSurvey = useCallback(
-    async (uid) => {
-      // get draft (if it exists)
-      try {
-        const id = 1;
-        const response = await axios.get(`${endpoint}/latest_survey/${id}`);
-        const data = await response.data;
-        if (data && data.length) {
-          setDraft(data[0]);
-          const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
-          setBaseSurveyLink(baseUrl);
-          let link = draft.redirect_url
-            ? `${baseUrl}?redirect_url=${draft.redirect_url}`
-            : baseUrl;
-          setSurveyLink(link);
-          setHasDraft(true);
-
-          loadQuestions(data[0].id);
-        }
-      } catch (err) {
-        console.error(err.message);
-      }
-
-      setSurveyStateLoaded(true);
-    },
-    [draft.redirect_url, loadQuestions]
-  );
-
   useEffect(() => {
     if (surveyName && surveyName.length === 0) {
       setSurveyName("");
@@ -492,6 +537,7 @@ const Panel = () => {
     if (!surveyStateLoaded) {
       loadSurvey(user.uid);
     }
+    console.log(questions);
 
     setLoaded(true);
 
