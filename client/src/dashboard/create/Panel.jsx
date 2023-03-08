@@ -134,12 +134,13 @@ const Panel = () => {
           index: questions.length,
         });
         data.id = response.data.id;
+        setQuestionId(response.data.id);
       } catch (err) {
         console.error(err.message);
       }
     } else {
       try {
-        // TODO: Create survey
+        // TODO: Create survey with unique hash
         /**
          *  
          *  try {
@@ -184,6 +185,9 @@ const Panel = () => {
         questions.splice(idx, 1);
         return questions;
       });
+      if (questions.length > 0) {
+        setQuestionId(questions[0].id);
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -254,13 +258,31 @@ const Panel = () => {
     },
     [getQuestionIndex, questions]
   );
+  const updateAnswerChoice = useCallback(
+    async (question_id, answer_id, choice) => {
+      try {
+        await axios.put(`${endpoint}/update_answer_choice/${question_id}`, {
+          answer_id: answer_id,
+          choice: choice,
+        });
+        let copy = [...questions];
+        let question = copy.filter((q) => q.id === question_id);
+        question[0].answerChoices.filter(
+          (ac) => ac.id === answer_id
+        )[0].choice = choice;
+        setQuestions(copy);
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+    [questions]
+  );
+  // delete all answer choices for a question
   const removeAnswerChoices = useCallback(
     async (question_id) => {
       try {
-        const response = await axios.delete(
-          `${endpoint}/delete_answers/${question_id}`
-        );
-        console.log(response.data);
+        await axios.delete(`${endpoint}/delete_answers/${question_id}`);
+        // console.log(response.data);
         let copy = [...questions];
         let idx = getQuestionIndex(question_id);
         copy[idx].answerChoices = [];
@@ -272,6 +294,19 @@ const Panel = () => {
     },
     [getQuestionIndex, questions]
   );
+
+  const removeAnswer = useCallback(async (answer_id) => {
+    // try {
+    //   await axios.delete(`${endpoint}/delete_answer_choice/${answer_id}`);
+    //   // TODO: remove answer from question
+    //    let copy = [...questions];
+    //    let question = copy.filter((q) => q.id === questionId);
+    //    question[0].answerChoices.findIndex((ac) => ac.id === answer_id)
+    //    setQuestions(copy);
+    // } catch (err) {
+    //   console.error(err.message);
+    // }
+  }, []);
 
   const updateQuestionTitle = useCallback(
     async (survey_id, question_id, title) => {
@@ -316,9 +351,10 @@ const Panel = () => {
     [questions, getQuestionIndex]
   );
   const updateQuestion = useCallback(
-    (id, property, value, answerChoiceIndex) => {
-      let copy = [...questions];
+    (id, property, value, answerChoiceId) => {
+      // id is the question id
       // finds the question
+      let copy = [...questions];
       let index = getQuestionIndex(id);
       // property or manipulating answer choices
       if (property === "title") {
@@ -348,22 +384,16 @@ const Panel = () => {
           }
         }
       } else if (property === "addAnswerChoice") {
-        if (value !== null && answerChoiceIndex !== null) {
-          let answerChoicesCopy = copy[index].answerChoices;
-          answerChoicesCopy[answerChoiceIndex] = value;
-          copy[index].answerChoices = answerChoicesCopy;
-          // update answer choice
+        if (value !== null && answerChoiceId !== null) {
+          // update answer choice call to backend
+          updateAnswerChoice(id, answerChoiceId, value);
         }
       } else if (property === "removeAnswerChoice") {
-        if (answerChoiceIndex !== null) {
-          let answerChoicesCopy = copy[index].answerChoices;
-          answerChoicesCopy.splice(answerChoiceIndex, 1);
-          copy[index].answerChoices = answerChoicesCopy;
-          // update_answer_index/question_id
+        if (answerChoiceId !== null) {
+          removeAnswer(answerChoiceId);
         }
       }
       setQuestions(copy);
-      //loadSurvey();
     },
     [
       questions,
@@ -373,6 +403,8 @@ const Panel = () => {
       removeAnswerChoices,
       updateQuestionTitle,
       updateQuestionType,
+      updateAnswerChoice,
+      removeAnswer,
     ]
   );
 
@@ -537,7 +569,8 @@ const Panel = () => {
     if (!surveyStateLoaded) {
       loadSurvey(user.uid);
     }
-    console.log(questions);
+
+    // console.log(questions);
 
     setLoaded(true);
 

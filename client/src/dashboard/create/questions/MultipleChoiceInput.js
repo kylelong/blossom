@@ -22,75 +22,56 @@ export const MultipleChoiceInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const MultipleChoiceInput = ({
-  amount,
-  updateQuestion,
-  questionId,
-  questions,
-}) => {
-  const [items, setItems] = useState([]);
-  let qindex = questions.findIndex((element) => element.id === questionId);
-  const randomHash = () => {
-    return Math.random().toString(36).substr(2, 10);
-  };
-  const removeItem = (hash) => {
-    updateQuestion(questionId, "numberOfAnswerChoices", items.length - 1);
-    setItems((prevState) => {
-      const items = [...prevState];
-      let index = items.findIndex((element) => element === hash);
-      updateQuestion(questionId, "removeAnswerChoice", null, index);
-      items.splice(index, 1);
-      return items;
-    });
+const MultipleChoiceInput = ({updateQuestion, questionId, question}) => {
+  const [hasAnswerChoices, setHasAnswerChoices] = useState(
+    question.answerChoices.length > 0
+  );
+  const removeItem = (id) => {
+    updateQuestion(
+      questionId,
+      "numberOfAnswerChoices",
+      question.answerChoices.length - 1
+    );
+    updateQuestion(questionId, "removeAnswerChoice", null, id);
   };
   useEffect(() => {
-    /**
-     *     questions.length > 0 &&
-                questions[qindex].answerChoices[index].choice !== null &&
-                questions[qindex].answerChoices[index].choice
-     */
-    let inputs = [];
-    for (let i = 0; i < amount; i++) {
-      inputs.push(randomHash());
-    }
-    setItems(inputs);
-  }, [amount]);
+    console.log(question);
+    setHasAnswerChoices(question.answerChoices.length > 0);
+  }, [question, hasAnswerChoices]);
   return (
     <>
-      {items.map((hash, index) => {
-        let {choice, id} = questions[qindex].answerChoices[index];
-        console.log(id);
-        return (
-          <MultipleChoiceInputContainer key={hash}>
-            <Input
-              placeholder={`Choice #${index + 1}`}
-              value={questions.length > 0 && choice}
-              onChange={(e) => {
-                console.log(
-                  `editing answers for question ${questions[qindex]} ${e.target.value}`
-                );
-                updateQuestion(
-                  questionId,
-                  "addAnswerChoice",
-                  e.target.value,
-                  index //TODO: replace with id
-                );
-              }}
-            />
-            <MinusCircledIcon
-              onClick={() => {
-                removeItem(hash);
-              }}
-              style={{
-                marginLeft: "7px",
-                width: "17px",
-                height: "17px",
-                marginBottom: "12px",
-              }}
-            />
-          </MultipleChoiceInputContainer>
-        );
-      })}
+      {hasAnswerChoices &&
+        question.answerChoices.map((answer, index) => {
+          let {choice, id} = answer;
+
+          return (
+            <MultipleChoiceInputContainer key={id}>
+              <Input
+                placeholder={`Choice #${index + 1}`}
+                value={choice}
+                onChange={(e) => {
+                  updateQuestion(
+                    questionId,
+                    "addAnswerChoice",
+                    e.target.value,
+                    id
+                  );
+                }}
+              />
+              <MinusCircledIcon
+                onClick={() => {
+                  removeItem(id);
+                }}
+                style={{
+                  marginLeft: "7px",
+                  width: "17px",
+                  height: "17px",
+                  marginBottom: "12px",
+                }}
+              />
+            </MultipleChoiceInputContainer>
+          );
+        })}
     </>
   );
 };

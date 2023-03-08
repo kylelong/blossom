@@ -253,10 +253,10 @@ app.put("/update_answer_index/:question_id", async (req, res) => {
 app.put("/update_answer_choice/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
-    const {answer_id, choice, index} = req.body;
+    const {answer_id, choice} = req.body;
     const update = await pool.query(
-      "UPDATE answer_choice SET choice = $1 WHERE id = $2 AND question_id = $3 AND index = $4 RETURNING choice",
-      [choice, answer_id, question_id, index]
+      "UPDATE answer_choice SET choice = $1 WHERE id = $2 AND question_id = $3 RETURNING choice",
+      [choice, answer_id, question_id]
     );
     res.json(update.rows[0]);
   } catch (err) {

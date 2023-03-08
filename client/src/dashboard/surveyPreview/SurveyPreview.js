@@ -32,10 +32,10 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
     if (idx > -1) {
       setQuestionIndex(idx);
     }
-    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
-      setQuestionIndex(0);
-    }
-    prevQuestions.current = questions;
+    // if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
+    //   setQuestionIndex(0);
+    // }
+    // prevQuestions.current = questions;
   }, [questions, questionId, questionIndex]);
   return (
     <div className="surveyContainerParent">

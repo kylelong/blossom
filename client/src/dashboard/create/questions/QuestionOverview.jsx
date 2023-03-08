@@ -44,7 +44,6 @@ const QuestionOverview = ({
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
   const updateQuestionType = (type) => {
     setQuestionType(type);
-    console.log(type);
     updateQuestion(questionId, "type", type, null);
   };
   const hasOptions = ["single_select", "multi_select"].includes(questionType);
@@ -74,7 +73,7 @@ const QuestionOverview = ({
     }
   };
 
-  useEffect(() => {}, [questions, questionId, questionType]);
+  useEffect(() => {}, [questions, questionId, questionType, numberOfAnswers]);
   return (
     <>
       {questions.map((question, index) => {
@@ -125,8 +124,8 @@ const QuestionOverview = ({
                         }
                         onChange={(e) => {
                           let num = e.target.value;
-                          setNumberOfAnswers(num);
-                          // updateAnswerChoice(questionId, value)
+                          setNumberOfAnswers(num === "" ? 0 : num);
+                          // creates new blank answer choices
                           updateQuestion(
                             question.id,
                             "numberOfAnswerChoices",
@@ -150,13 +149,12 @@ const QuestionOverview = ({
                     </div>
                   )}
 
-                  {hasOptions && numberOfAnswers >= 0 && (
+                  {hasOptions && (
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput
-                        amount={question.numberOfAnswerChoices}
                         updateQuestion={updateQuestion}
                         questionId={question.id}
-                        questions={questions}
+                        question={question}
                       />
                     </div>
                   )}
