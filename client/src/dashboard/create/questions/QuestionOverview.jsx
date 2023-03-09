@@ -38,9 +38,10 @@ const QuestionOverview = ({
   removeQuestion,
   updateQuestion,
   updateQuestionId,
+  qId,
 }) => {
   const [questionType, setQuestionType] = useState("");
-  const [questionId, setQuestionId] = useState(0);
+  const [questionId, setQuestionId] = useState(qId);
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
   const updateQuestionType = (type) => {
     setQuestionType(type);
@@ -73,7 +74,9 @@ const QuestionOverview = ({
     }
   };
 
-  useEffect(() => {}, [questions, questionId, questionType, numberOfAnswers]);
+  useEffect(() => {
+    //console.log(questions);
+  }, [questions, questionType, numberOfAnswers]);
   return (
     <>
       {questions.map((question, index) => {
@@ -87,10 +90,7 @@ const QuestionOverview = ({
               updateQuestionId(question.id);
             }}
           >
-            <Accordion.Item
-              className="AccordionItem"
-              value={`item-${index + 1}`}
-            >
+            <Accordion.Item className="AccordionItem" value={question.id}>
               <AccordionTrigger>{label}</AccordionTrigger>
               <AccordionContent>
                 <Label.Root className="LabelRoot" htmlFor="surveyTitle">
@@ -118,20 +118,15 @@ const QuestionOverview = ({
                         className="answerChoices"
                         placeholder="# of answers"
                         value={
-                          question.numberOfAnswerChoices > 0
-                            ? question.numberOfAnswerChoices
+                          question.answerChoices &&
+                          question.answerChoices.length > 0
+                            ? question.answerChoices.length
                             : ""
                         }
                         onChange={(e) => {
                           let num = e.target.value;
                           setNumberOfAnswers(num === "" ? 0 : num);
                           // creates new blank answer choices
-                          updateQuestion(
-                            question.id,
-                            "numberOfAnswerChoices",
-                            num,
-                            null
-                          );
                           updateQuestion(
                             question.id,
                             "answerChoices",
@@ -153,8 +148,8 @@ const QuestionOverview = ({
                     <div className="MultipleChoiceInputContainer">
                       <MultipleChoiceInput
                         updateQuestion={updateQuestion}
-                        questionId={question.id}
-                        question={question}
+                        questionId={questionId}
+                        questions={questions}
                       />
                     </div>
                   )}

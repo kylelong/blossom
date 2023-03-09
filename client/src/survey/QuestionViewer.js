@@ -8,7 +8,6 @@ const QuestionViewer = ({
   questionTitle,
   index,
   questionType,
-  numberOfAnswerChoices,
   answerChoices,
   hash,
   handleProceed,
@@ -17,9 +16,7 @@ const QuestionViewer = ({
   surveyId,
 }) => {
   const questionStarted =
-    questionTitle ||
-    questionType ||
-    (numberOfAnswerChoices > 0 && answerChoices);
+    questionTitle || questionType || (answerChoices && answerChoices.length);
 
   const preview = () => {
     if (questionStarted) {

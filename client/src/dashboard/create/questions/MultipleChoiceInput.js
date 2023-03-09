@@ -22,56 +22,48 @@ export const MultipleChoiceInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
 `;
-const MultipleChoiceInput = ({updateQuestion, questionId, question}) => {
-  const [hasAnswerChoices, setHasAnswerChoices] = useState(
-    question.answerChoices.length > 0
-  );
+const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
+  const [question, setQuestion] = useState([]);
   const removeItem = (id) => {
-    updateQuestion(
-      questionId,
-      "numberOfAnswerChoices",
-      question.answerChoices.length - 1
-    );
     updateQuestion(questionId, "removeAnswerChoice", null, id);
   };
   useEffect(() => {
-    console.log(question);
-    setHasAnswerChoices(question.answerChoices.length > 0);
-  }, [question, hasAnswerChoices]);
+    setQuestion(questions.filter((q) => q.id === questionId)[0]);
+  }, [questions, questionId]);
   return (
     <>
-      {hasAnswerChoices &&
-        question.answerChoices.map((answer, index) => {
-          let {choice, id} = answer;
-
-          return (
-            <MultipleChoiceInputContainer key={id}>
-              <Input
-                placeholder={`Choice #${index + 1}`}
-                value={choice}
-                onChange={(e) => {
-                  updateQuestion(
-                    questionId,
-                    "addAnswerChoice",
-                    e.target.value,
-                    id
-                  );
-                }}
-              />
-              <MinusCircledIcon
-                onClick={() => {
-                  removeItem(id);
-                }}
-                style={{
-                  marginLeft: "7px",
-                  width: "17px",
-                  height: "17px",
-                  marginBottom: "12px",
-                }}
-              />
-            </MultipleChoiceInputContainer>
-          );
-        })}
+      {question.answerChoices
+        ? question.answerChoices.map((answer, index) => {
+            let {choice, id} = answer;
+            return (
+              <MultipleChoiceInputContainer key={id}>
+                <Input
+                  placeholder={`Choice #${index + 1}`}
+                  value={choice}
+                  onChange={(e) => {
+                    updateQuestion(
+                      questionId,
+                      "addAnswerChoice",
+                      e.target.value,
+                      id
+                    );
+                  }}
+                />
+                <MinusCircledIcon
+                  onClick={() => {
+                    removeItem(id);
+                  }}
+                  style={{
+                    marginLeft: "7px",
+                    width: "17px",
+                    height: "17px",
+                    marginBottom: "12px",
+                  }}
+                />
+              </MultipleChoiceInputContainer>
+            );
+          })
+        : null}
     </>
   );
 };

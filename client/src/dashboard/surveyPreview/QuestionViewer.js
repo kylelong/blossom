@@ -5,16 +5,15 @@ import OpenEnded from "./OpenEnded";
 import Emojis from "./Emojis";
 import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({
+  id,
   title,
   type,
-  numberOfAnswerChoices,
   answerChoices,
   hash,
   emoji,
 }) => {
   const questionStarted =
-    title || type || (numberOfAnswerChoices > 0 && answerChoices); //TODO: remove / update numberOfAnswerChoices
-
+    (title && title.length > 0) || (type && type.length > 0); // title, type, can be changes by user 
   const preview = () => {
     if (questionStarted) {
       switch (type) {

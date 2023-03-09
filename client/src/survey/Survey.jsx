@@ -40,6 +40,7 @@ const Survey = () => {
           setSurvey(survey);
           let res = new Array(survey.length);
           for (let i = 0; i < survey.length; i++) {
+            // TODO: refactor
             res[i] = {
               questionHash: survey[i].hash,
               answerChoices: [],

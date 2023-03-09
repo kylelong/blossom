@@ -71,7 +71,6 @@ const Panel = () => {
         );
         const data = await response.data;
         question_array[0].answerChoices = data;
-        question_array[0].numberOfAnswerChoices = data.length;
         question_copy.push(question_array);
       } catch (err) {
         console.error(err.message);
@@ -119,13 +118,11 @@ const Panel = () => {
       title: "",
       index: questions.length,
       type: "",
-      numberOfAnswerChoices: 0,
       answerChoices: [],
     };
     //TODO: // use numberOfAnswerChoices to set number of questions for survey
     // TODO: Insert question
     // start a new survey if no draft
-    console.log("hasDraft", hasDraft);
     if (hasDraft) {
       // add question to current draft
       try {
@@ -134,7 +131,6 @@ const Panel = () => {
           index: questions.length,
         });
         data.id = response.data.id;
-        setQuestionId(response.data.id);
       } catch (err) {
         console.error(err.message);
       }
@@ -185,9 +181,9 @@ const Panel = () => {
         questions.splice(idx, 1);
         return questions;
       });
-      if (questions.length > 0) {
-        setQuestionId(questions[0].id);
-      }
+      // if (questions.length > 0) {
+      //   setQuestionId(questions[0].id);
+      // }
     } catch (err) {
       console.error(err.message);
     }
@@ -218,6 +214,7 @@ const Panel = () => {
         }
       }
     }
+    loadSurvey(); // reload beacause questionOverView accordian keeps last question id open
   };
 
   const resetSurveyState = () => {
@@ -286,7 +283,6 @@ const Panel = () => {
         let copy = [...questions];
         let idx = getQuestionIndex(question_id);
         copy[idx].answerChoices = [];
-        copy[idx].numberOfAnswerChoices = 0;
         setQuestions(copy);
       } catch (err) {
         console.error(err.message);
@@ -342,6 +338,7 @@ const Panel = () => {
         );
         let copy = [...questions];
         let idx = getQuestionIndex(question_id);
+        console.log(copy, idx, question_id);
         copy[idx].type = response.data.type;
         setQuestions(copy);
       } catch (err) {
@@ -365,17 +362,11 @@ const Panel = () => {
         if (value === "emoji_sentiment" || value === "open_ended") {
           removeAnswerChoices(id);
         }
-      } else if (property === "numberOfAnswerChoices") {
-        // if empty erase all answrs and restart
+      } else if (property === "answerChoices") {
         if (value === "") {
           // remove exisiting answers
           removeAnswerChoices(id);
         }
-        // set # of answer choices from input
-        value = value.length === 0 ? 0 : value;
-        if (value > 5 || value < 0) return;
-        copy[index].numberOfAnswerChoices = value;
-      } else if (property === "answerChoices") {
         if (value > 5 || value < 0 || value === "") return;
         let currLength = copy[index].answerChoices.length;
         if (currLength === 0) {
@@ -523,11 +514,7 @@ const Panel = () => {
           let hasAnswers = question.answerChoices.every(
             (choice) => choice.length > 0
           );
-          if (
-            !hasAnswers ||
-            question.answerChoices.length === 0 ||
-            question.numberOfAnswerChoices === 0
-          ) {
+          if (!hasAnswers || question.answerChoices.length === 0) {
             answerErrorsIndices.push(index + 1);
           }
         }
@@ -569,8 +556,6 @@ const Panel = () => {
     if (!surveyStateLoaded) {
       loadSurvey(user.uid);
     }
-
-    // console.log(questions);
 
     setLoaded(true);
 
@@ -631,6 +616,7 @@ const Panel = () => {
                 removeQuestion={removeQuestion}
                 updateQuestion={updateQuestion}
                 updateQuestionId={setQuestionId}
+                qId={questionId}
               />
             </Accordion.Root>
           </div>
