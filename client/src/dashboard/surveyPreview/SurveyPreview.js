@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import "./preview.css";
 import * as Label from "@radix-ui/react-label";
 import QuestionViewer from "./QuestionViewer";
@@ -6,7 +6,6 @@ import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyTitle, questionId}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const showQuestions = questions.length > 0;
-  const prevQuestions = useRef(questions);
 
   const handleIndex = (buttonAction) => {
     const maxIndex = questions.length - 1;
@@ -28,15 +27,12 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
   };
 
   useEffect(() => {
+    // sets it on questionId change / questions update
     let idx = questions.findIndex((element) => element.id === questionId);
     if (idx > -1) {
       setQuestionIndex(idx);
     }
-    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
-      setQuestionIndex(0);
-    }
-    prevQuestions.current = questions;
-  }, [questions, questionId, questionIndex]);
+  }, [questions, questionId]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">

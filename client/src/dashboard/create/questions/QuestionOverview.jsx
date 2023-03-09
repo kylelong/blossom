@@ -100,7 +100,7 @@ const QuestionOverview = ({
                   type="text"
                   className="questionTitle"
                   placeholder="question title"
-                  value={question.title ? question.title : ""}
+                  value={question.title}
                   onChange={(e) => {
                     updateQuestion(question.id, "title", e.target.value, null);
                   }}

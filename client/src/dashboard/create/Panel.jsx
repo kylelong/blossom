@@ -307,17 +307,14 @@ const Panel = () => {
   const updateQuestionTitle = useCallback(
     async (survey_id, question_id, title) => {
       try {
-        const response = await axios.put(
-          `${endpoint}/update_question_title/${survey_id}`,
-          {
-            question_id: question_id,
-            title: title,
-          }
-        );
+        await axios.put(`${endpoint}/update_question_title/${survey_id}`, {
+          question_id: question_id,
+          title: title,
+        });
         // TODO: put this in helper function to reduce repeating logic
         let copy = [...questions];
         let idx = getQuestionIndex(question_id);
-        copy[idx].title = response.data.title;
+        copy[idx].title = title;
         setQuestions(copy);
       } catch (err) {
         console.error(err.message);
@@ -352,7 +349,7 @@ const Panel = () => {
       // id is the question id
       // finds the question
       let copy = [...questions];
-      let index = getQuestionIndex(id);
+
       // property or manipulating answer choices
       if (property === "title") {
         updateQuestionTitle(draft.id, id, value);
@@ -368,15 +365,13 @@ const Panel = () => {
           removeAnswerChoices(id);
         }
         if (value > 5 || value < 0 || value === "") return;
-        let currLength = copy[index].answerChoices.length;
-        if (currLength === 0) {
-          async function insertChoice() {
-            for (let i = 0; i < value; i++) {
-              await addAnswerChoice("", i, id);
-            }
+
+        async function insertChoice() {
+          for (let i = 0; i < value; i++) {
+            await addAnswerChoice("", i, id);
           }
-          insertChoice();
         }
+        insertChoice();
       } else if (property === "addAnswerChoice") {
         if (value !== null && answerChoiceId !== null) {
           // update answer choice call to backend
@@ -393,7 +388,6 @@ const Panel = () => {
       questions,
       draft.id,
       addAnswerChoice,
-      getQuestionIndex,
       removeAnswerChoices,
       updateQuestionTitle,
       updateQuestionType,
@@ -429,11 +423,9 @@ const Panel = () => {
 
     if (draft.id > 0) {
       try {
-        // eslint-disable-next-line
-        const response = await axios.put(
-          `${endpoint}/update_survey_title/${draft.id}`,
-          {title: value}
-        );
+        await axios.put(`${endpoint}/update_survey_title/${draft.id}`, {
+          title: value,
+        });
         setDraft({...draft, title: value});
       } catch (err) {
         console.error(err.message);
@@ -576,8 +568,6 @@ const Panel = () => {
   ]);
   return (
     <div className="panelContainer">
-      {/* <div>{JSON.stringify(draft, null, 2)}</div> */}
-      {/* <div>{draft.title}</div> */}
       {loaded && (
         <SurveyPreview
           questions={questions}
