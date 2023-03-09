@@ -370,9 +370,12 @@ const Panel = () => {
         if (value > 5 || value < 0 || value === "") return;
         let currLength = copy[index].answerChoices.length;
         if (currLength === 0) {
-          for (let i = 0; i < value; i++) {
-            addAnswerChoice("", i, id);
+          async function insertChoice() {
+            for (let i = 0; i < value; i++) {
+              await addAnswerChoice("", i, id);
+            }
           }
+          insertChoice();
         }
       } else if (property === "addAnswerChoice") {
         if (value !== null && answerChoiceId !== null) {

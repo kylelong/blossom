@@ -32,7 +32,7 @@ const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
   }, [questions, questionId]);
   return (
     <>
-      {question.answerChoices
+      {question && question.answerChoices
         ? question.answerChoices.map((answer, index) => {
             let {choice, id} = answer;
             return (
