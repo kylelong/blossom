@@ -38,7 +38,6 @@ const Panel = () => {
   const [surveyLink, setSurveyLink] = useState("");
   const [baseSurveyLink, setBaseSurveyLink] = useState("");
   const [hasDraft, setHasDraft] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const timerRef = useRef(0);
   const validUrl =
     // eslint-disable-next-line
@@ -57,7 +56,6 @@ const Panel = () => {
   }, []);
   //
   const loadAnswers = async (questions) => {
-    //TODO: for each question if type is single_select / multi_select
     let question_copy = [];
     for (let i = 0; i < questions.length; i++) {
       let question = questions[i];
@@ -92,20 +90,20 @@ const Panel = () => {
           setDraft(data[0]);
           const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
           setBaseSurveyLink(baseUrl);
-          let link = draft.redirect_url
-            ? `${baseUrl}?redirect_url=${draft.redirect_url}`
-            : baseUrl;
+          let link =
+            draft.redirect_url.length > 0
+              ? `${baseUrl}?redirect_url=${draft.redirect_url}`
+              : baseUrl;
           setSurveyLink(link);
           setSurveyTitle(data[0].title);
           setHasDraft(true);
 
           loadQuestions(data[0].id);
         }
+        setSurveyStateLoaded(true);
       } catch (err) {
         console.error(err.message);
       }
-
-      setSurveyStateLoaded(true);
     },
     [draft.redirect_url, loadQuestions]
   );
@@ -121,7 +119,6 @@ const Panel = () => {
       type: "",
       answerChoices: [],
     };
-    //TODO: // use numberOfAnswerChoices to set number of questions for survey
     // TODO: Insert question
     // start a new survey if no draft
     if (hasDraft) {
@@ -178,9 +175,6 @@ const Panel = () => {
         questions.splice(idx, 1);
         return questions;
       });
-      // if (questions.length > 0) {
-      //   setQuestionId(questions[0].id);
-      // }
     } catch (err) {
       console.error(err.message);
     }
@@ -221,8 +215,8 @@ const Panel = () => {
     setSurveyTitle("");
     setSurveyLink("");
     setBaseSurveyLink("");
-
     setHasDraft(false);
+    setSurveyStateLoaded(false);
   };
 
   const getQuestionIndex = useCallback(
@@ -358,7 +352,6 @@ const Panel = () => {
         );
         let copy = [...questions];
         let idx = getQuestionIndex(question_id);
-        console.log(copy, idx, question_id);
         copy[idx].type = response.data.type;
         setQuestions(copy);
       } catch (err) {
@@ -429,10 +422,7 @@ const Panel = () => {
   const publishSurvey = async () => {
     if (hasDraft) {
       try {
-        const response = await axios.put(
-          `${endpoint}/publish_survey/${draft.id}`
-        );
-        console.log(`publishing survey: `, response.data);
+        await axios.put(`${endpoint}/publish_survey/${draft.id}`);
         resetSurveyState();
       } catch (err) {
         console.error(err.message);
@@ -460,24 +450,22 @@ const Panel = () => {
     if (draft.id) {
       if (value === "") {
         setSurveyLink(baseSurveyLink);
-        setDraft({...draft, redirect_url: baseSurveyLink});
+        setDraft({...draft, redirect_url: value});
       }
       // can be invalid url just for preview
       if (value.length > 0) {
         let survey_link = baseSurveyLink;
         survey_link = survey_link.concat(`?redirect_url=${value}`);
-        setDraft({...draft, redirect_url: survey_link});
         setSurveyLink(survey_link);
+        setDraft({...draft, redirect_url: value});
       }
 
       if (validUrl.test(value) || value.length === 0) {
         try {
-          const response = await axios.put(
-            `${endpoint}/update_redirect_url/${draft.id}`,
-            {redirect_url: value}
-          );
+          await axios.put(`${endpoint}/update_redirect_url/${draft.id}`, {
+            redirect_url: value,
+          });
           setDraft({...draft, redirect_url: value});
-          console.log(`update url: ${response.data}`);
         } catch (err) {
           console.error(err.message);
         }
@@ -530,7 +518,7 @@ const Panel = () => {
         if (mc.includes(question.type)) {
           // check for no answer choices for multi_select / single_select question
           let hasAnswers = question.answerChoices.every(
-            (choice) => choice.length > 0
+            (answer) => answer.choice.length > 0
           );
           if (!hasAnswers || question.answerChoices.length === 0) {
             answerErrorsIndices.push(index + 1);
@@ -575,8 +563,6 @@ const Panel = () => {
       loadSurvey(user.uid);
     }
 
-    setLoaded(true);
-
     return () => clearTimeout(timerRef.current);
   }, [
     surveyTitle,
@@ -591,7 +577,7 @@ const Panel = () => {
   ]);
   return (
     <div className="panelContainer">
-      {loaded && (
+      {surveyStateLoaded && (
         <SurveyPreview
           questions={questions}
           surveyTitle={draft.title}
@@ -692,7 +678,7 @@ const Panel = () => {
                                   publishSurvey();
                                 }}
                               >
-                                yes, publish this survey
+                                yes, publish survey
                               </button>
                             </AlertDialog.Action>
                           </div>
