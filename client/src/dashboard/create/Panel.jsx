@@ -29,7 +29,7 @@ const Panel = () => {
     redirect_url: "",
     title: "",
   });
-  const [surveyName, setSurveyName] = useState("");
+  const [surveyTitle, setSurveyTitle] = useState("");
   const [questions, setQuestions] = useState([]); // load questions
   const [questionId, setQuestionId] = useState(0);
   const [errors, setErrors] = useState([]);
@@ -96,6 +96,7 @@ const Panel = () => {
             ? `${baseUrl}?redirect_url=${draft.redirect_url}`
             : baseUrl;
           setSurveyLink(link);
+          setSurveyTitle(data[0].title);
           setHasDraft(true);
 
           loadQuestions(data[0].id);
@@ -163,10 +164,6 @@ const Panel = () => {
     setQuestions((questions) => [...questions, data]);
   };
 
-  // const randomHash = () => {
-  //   return Math.random().toString(36).substr(2, 10);
-  // };
-
   // update index
   const removeQuestion = async (id) => {
     // remove answers first because they reference question id
@@ -221,7 +218,7 @@ const Panel = () => {
     setDraft({});
     setQuestions([]);
     setErrors([]);
-    setSurveyName("");
+    setSurveyTitle("");
     setSurveyLink("");
     setBaseSurveyLink("");
 
@@ -291,18 +288,44 @@ const Panel = () => {
     [getQuestionIndex, questions]
   );
 
-  const removeAnswer = useCallback(async (answer_id) => {
-    // try {
-    //   await axios.delete(`${endpoint}/delete_answer_choice/${answer_id}`);
-    //   // TODO: remove answer from question
-    //    let copy = [...questions];
-    //    let question = copy.filter((q) => q.id === questionId);
-    //    question[0].answerChoices.findIndex((ac) => ac.id === answer_id)
-    //    setQuestions(copy);
-    // } catch (err) {
-    //   console.error(err.message);
-    // }
-  }, []);
+  const removeAnswer = useCallback(
+    async (answer_id) => {
+      // find index of the answer
+      let copy = [...questions];
+      let question = copy.filter((q) => q.id === questionId);
+      let start = question[0].answerChoices.findIndex(
+        (ac) => ac.id === answer_id
+      );
+
+      //  question[0].answerChoices.splice(index, 1);
+
+      try {
+        await axios.delete(`${endpoint}/delete_answer_choice/${answer_id}`);
+      } catch (err) {
+        console.error(err.message);
+      }
+
+      /**
+       * update all indices of other answer choices
+       */
+      let answer_choices = question[0].answerChoices;
+      if (start !== answer_choices.length - 1) {
+        for (let i = start + 1; i < answer_choices.length; i++) {
+          let {id, index} = answer_choices[i];
+          try {
+            await axios.put(`${endpoint}/update_answer_index/${questionId}`, {
+              answer_index: index,
+              answer_id: id,
+            });
+          } catch (err) {
+            console.error(err.message);
+          }
+        }
+      }
+      loadSurvey();
+    },
+    [loadSurvey, questionId, questions]
+  );
 
   const updateQuestionTitle = useCallback(
     async (survey_id, question_id, title) => {
@@ -496,7 +519,7 @@ const Panel = () => {
           errs.push("redirect_url must be a valid url");
         }
       }
-      if (surveyName === "") {
+      if (surveyTitle === "") {
         errs.push("please enter a name for the survey");
       }
       questions.forEach((question, index) => {
@@ -544,8 +567,8 @@ const Panel = () => {
     // check answers
   };
   useEffect(() => {
-    if (surveyName && surveyName.length === 0) {
-      setSurveyName("");
+    if (surveyTitle && surveyTitle.length === 0) {
+      setSurveyTitle("");
     }
 
     if (!surveyStateLoaded) {
@@ -556,7 +579,7 @@ const Panel = () => {
 
     return () => clearTimeout(timerRef.current);
   }, [
-    surveyName,
+    surveyTitle,
     draft,
     questions,
     draft.redirect_url,
@@ -571,7 +594,7 @@ const Panel = () => {
       {loaded && (
         <SurveyPreview
           questions={questions}
-          surveyName={surveyName}
+          surveyTitle={draft.title}
           questionId={questionId}
         />
       )}
@@ -594,7 +617,7 @@ const Panel = () => {
             className="surveyName"
             type="text"
             name="surveyName"
-            value={draft.title === "" ? "" : draft.title}
+            value={draft.title}
             id="surveyName"
           />
           <div className="QuestionPanel">

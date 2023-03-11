@@ -32,7 +32,7 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
     if (idx > -1) {
       setQuestionIndex(idx);
     }
-  }, [questions, questionId]);
+  }, [questions, questionId, surveyTitle]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">

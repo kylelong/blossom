@@ -22,6 +22,15 @@ export const MultipleChoiceInputContainer = styled.div`
   flex-direction: row;
   align-items: center;
 `;
+export const RemoveIcon = styled.div`
+  margin-left: 7px;
+  width: 17px;
+  height: 17px;
+  margin-bottom: 12px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
 const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
   const [question, setQuestion] = useState([]);
   const removeItem = (id) => {
@@ -49,17 +58,13 @@ const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
                     );
                   }}
                 />
-                <MinusCircledIcon
-                  onClick={() => {
-                    removeItem(id);
-                  }}
-                  style={{
-                    marginLeft: "7px",
-                    width: "17px",
-                    height: "17px",
-                    marginBottom: "12px",
-                  }}
-                />
+                <RemoveIcon>
+                  <MinusCircledIcon
+                    onClick={() => {
+                      removeItem(id);
+                    }}
+                  />
+                </RemoveIcon>
               </MultipleChoiceInputContainer>
             );
           })
