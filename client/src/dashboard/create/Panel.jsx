@@ -422,7 +422,10 @@ const Panel = () => {
   const publishSurvey = async () => {
     if (hasDraft) {
       try {
-        await axios.put(`${endpoint}/publish_survey/${draft.id}`);
+        await axios.put(`${endpoint}/publish_survey/${draft.id}`, {
+          number_of_questions: questions.length,
+        });
+
         resetSurveyState();
       } catch (err) {
         console.error(err.message);

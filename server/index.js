@@ -120,9 +120,10 @@ app.put("/update_question_type/:survey_id", async (req, res) => {
 app.put("/publish_survey/:survey_id", async (req, res) => {
   try {
     const {survey_id} = req.params;
+    const {number_of_questions} = req.body;
     const update = await pool.query(
-      "UPDATE survey SET published = true WHERE id = $1",
-      [survey_id]
+      "UPDATE survey SET published = true, number_of_questions = $1 WHERE id = $2",
+      [number_of_questions, survey_id]
     );
     res.json("survey published!");
   } catch (err) {

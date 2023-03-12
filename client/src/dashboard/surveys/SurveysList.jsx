@@ -67,6 +67,28 @@ const SurveysList = () => {
       setShowCopied(false);
     }, 3000);
   };
+  const loadAnswers = async (questions) => {
+    let question_copy = [];
+    for (let i = 0; i < questions.length; i++) {
+      let question = questions[i];
+
+      let {id} = question;
+      let question_array = questions.filter((question) => question.id === id);
+
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/answer_choices/${id}`
+        );
+        const data = await response.data;
+        question_array[0].answerChoices = data;
+        question_copy.push(question_array);
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+
+    setQuestions(question_copy.flat());
+  };
 
   const getQuestions = async (survey_id) => {
     try {
@@ -75,6 +97,7 @@ const SurveysList = () => {
       );
       const data = await response.data;
       setQuestions(data);
+      loadAnswers(data);
     } catch (err) {
       console.error(err.message);
     }
@@ -86,6 +109,7 @@ const SurveysList = () => {
       try {
         const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change usersid to variable
         const data = await response.data;
+
         setSurveys(data);
       } catch (err) {
         console.error(err.message);
@@ -115,7 +139,7 @@ const SurveysList = () => {
             <SurveyPreview
               questions={questions}
               surveyTitle={surveys[currentSurveyIndex].title}
-              questionIndex={0}
+              questionId={surveys[currentSurveyIndex].id}
             />
           </div>
 
