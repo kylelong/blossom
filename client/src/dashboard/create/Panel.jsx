@@ -137,23 +137,21 @@ const Panel = () => {
         // TODO: Create survey with unique hash
         /**
          *  
-         *  try {
+         * 
         const response = await axios.post(`${endpoint}/create_survey`, {
           title: draft.title,
-          hash: '',
-          user_id:
+          hash: '', // how to autogenerate hash in post
+          user_id: 1
         });
-      } catch (err) {
-        console.error(err.message);
-      }
-         */
-        // call /create_survey with hash, title, user_id
+         // call /create_survey with hash, title, user_id
         // set draft to what is return (id,hash)
         // setLatestSurveyId(result.id);
         // const baseUrl = `https://www.blossomsurveys.io/${result.id}`;
         // setBaseSurveyLink(baseUrl);
         // setSurveyLink(baseUrl);
         // setHasDraft(true);
+   
+         */
       } catch (err) {
         console.error(err.message);
       }

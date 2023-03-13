@@ -21,6 +21,9 @@ CREATE TABLE users (
 INSERT INTO users(company, email, password) 
 VALUES ('google', 'kylelong9506@gmail.com', crypt('', gen_salt('bf'))) RETURNING *;
 
+--  SELECT (password = crypt('', password)) AS pswmatch FROM users;
+-- SELECT (password = crypt('', password)) AS pswmatch FROM users WHERE email = 'kylelong9506@gmail.com'
+
 -- survey
     -- default number_of_questions is 1 because clicking add question starts a survey
 CREATE TABLE survey (

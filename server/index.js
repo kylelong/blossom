@@ -6,15 +6,64 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
-/**
- try {
-
-  } catch (err){
+// USER AUTH
+// only inset into users if no user has the email
+app.get("/verify_user/:email/:password", async (req, res) => {
+  try {
+    const {email, password} = req.params;
+    const response = await pool.query(
+      "SELECT (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      [password, email]
+    );
+    res.json(response.rows[0].verified);
+  } catch (err) {
     console.error(err.message);
   }
- */
+});
+app.get("/email_exists/:email", async (req, res) => {
+  try {
+    const {email} = req.params;
+    const response = await pool.query(
+      "SELECT COUNT(*) FROM users WHERE email = $1",
+      [email]
+    );
+    res.json(response.rows[0]).count;
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+// TODO: insert hash from firebase
+app.post("/create_user", async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    console.log(email, password);
+    const response = await pool.query(
+      "INSERT INTO users (email, password) VALUES($1, crypt($2, gen_salt('bf'))) RETURNING id",
+      [email, password]
+    );
+    res.json(response.rows[0].id);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// update company
+app.put("/update_company", async (req, res) => {
+  try {
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+app.put("/update_hash", async (req, res) => {
+  try {
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 // DASHBOARD
+
+// check if this user email and password matches on login
 
 // # of surveys a user has created
 app.get("/survey_count/:user_id", async (req, res) => {
