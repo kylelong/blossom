@@ -43,6 +43,7 @@ const QuestionOverview = ({
   const [questionType, setQuestionType] = useState("");
   const [questionId, setQuestionId] = useState(qId);
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
+  const [titles, setTitles] = useState([]);
   const updateQuestionType = (type) => {
     setQuestionType(type);
     updateQuestion(questionId, "type", type, null);
@@ -75,12 +76,24 @@ const QuestionOverview = ({
   };
 
   useEffect(() => {
-    //console.log(questions);
-  }, [questions, questionType, numberOfAnswers]);
+    for (let i = 0; i < questions.length; i++) {
+      if (!titles.find((title) => title.id === questions[i].id)) {
+        setTitles((titles) => [
+          ...titles,
+          {id: questions[i].id, title: questions[i].title},
+        ]);
+      }
+    }
+  }, [questions, questionType, numberOfAnswers, titles]);
   return (
     <>
       {questions.map((question, index) => {
         let label = `question ${index + 1}`;
+        let title =
+          titles.length === questions.length
+            ? titles.filter((title) => title.id === question.id)[0].title
+            : "";
+
         return (
           <div
             key={index}
@@ -100,8 +113,16 @@ const QuestionOverview = ({
                   type="text"
                   className="questionTitle"
                   placeholder="question title"
-                  value={question.title}
+                  value={title}
                   onChange={(e) => {
+                    setTitles(() => {
+                      let copy = [...titles];
+                      let index = copy.findIndex(
+                        (title) => title.id === question.id
+                      );
+                      copy[index].title = e.target.value;
+                      return copy;
+                    });
                     updateQuestion(question.id, "title", e.target.value, null);
                   }}
                 ></input>
