@@ -98,10 +98,10 @@ app.post("/create_survey", async (req, res) => {
   try {
     const {title, hash, user_id} = req.body;
     const survey = await pool.query(
-      "INSERT INTO survey (title, hash, user_id) VALUES($1, $2, $3) RETURNING id, hash",
+      "INSERT INTO survey (title, hash, user_id) VALUES($1, $2, $3) RETURNING title, id, hash, published, redirect_url",
       [title, hash, user_id]
     );
-    res.json(survey.rows);
+    res.json(survey.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -214,10 +214,8 @@ app.put("/update_redirect_url/:survey_id", async (req, res) => {
 app.delete("/delete_survey/:survey_id", async (req, res) => {
   try {
     const {survey_id} = req.params;
-    const deletion = await pool.query("DELETE FROM survey WHERE id = $1", [
-      survey_id,
-    ]);
-    res.json(`survey deleted!`);
+    await pool.query("DELETE FROM survey WHERE id = $1", [survey_id]);
+    res.json("survey deleted!!");
   } catch (err) {
     console.error(err.message);
   }

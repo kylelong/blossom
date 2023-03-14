@@ -75,6 +75,7 @@
 .removeQuestionBtn {
   all: unset;
   margin-top: 15px;
+  margin-bottom: 12px;
   position: relative;
   top: 5px;
   display: inline-flex;

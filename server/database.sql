@@ -111,6 +111,9 @@ INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 /* 
     ALL QUERIES LABELED BY PAGE
 
+    get all answers per question per survey
+    -- SELECT q.title, q.type, ac.index AS answer_index, ac.choice FROM question q INNER JOIN survey s ON s.id = q.survey_id INNER JOIN answer_choice ac ON ac.question_id = q.id WHERE s.id = 6;
+
     DASHBOARD
      # of surveys
         SELECT COUNT(*) FROM survey WHERE user_id =  ${}
