@@ -33,16 +33,18 @@ export const RemoveIcon = styled.div`
 `;
 const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
   const [question, setQuestion] = useState([]);
+  const [answers, setAnswers] = useState([]);
   const removeItem = (id) => {
     updateQuestion(questionId, "removeAnswerChoice", null, id);
   };
   useEffect(() => {
     setQuestion(questions.filter((q) => q.id === questionId)[0]);
-  }, [questions, questionId]);
+    setAnswers(question.answerChoices);
+  }, [questions, questionId, question.answerChoices]);
   return (
     <>
-      {question && question.answerChoices
-        ? question.answerChoices.map((answer, index) => {
+      {question && answers
+        ? answers.map((answer, index) => {
             let {choice, id} = answer;
             return (
               <MultipleChoiceInputContainer key={id}>
@@ -50,6 +52,14 @@ const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
                   placeholder={`Choice #${index + 1}`}
                   value={choice}
                   onChange={(e) => {
+                    setAnswers(() => {
+                      let copy = [...answers];
+                      let index = answers.findIndex(
+                        (answer) => answer.id === id
+                      );
+                      copy[index].choice = e.target.value;
+                      return copy;
+                    });
                     updateQuestion(
                       questionId,
                       "addAnswerChoice",
