@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import "./preview.css";
 import * as Label from "@radix-ui/react-label";
 import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyTitle, questionId}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const questionsRef = useRef(questions);
   const showQuestions = questions.length > 0;
 
   const handleIndex = (buttonAction) => {
@@ -32,6 +33,11 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
     if (idx > -1) {
       setQuestionIndex(idx);
     }
+    // reset index to 0 on question change
+    if (questionsRef.current !== questions) {
+      setQuestionIndex(0);
+    }
+    questionsRef.current = questions;
   }, [questions, questionId, surveyTitle]);
   return (
     <div className="surveyContainerParent">

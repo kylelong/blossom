@@ -120,6 +120,7 @@ const SurveysList = () => {
     if (!loaded) {
       loadSurveys();
     }
+    console.log(questions);
   }, [loaded, uid]);
 
   // <SurveyPreview questions={survey} />
