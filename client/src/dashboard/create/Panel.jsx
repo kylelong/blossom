@@ -250,6 +250,9 @@ const Panel = () => {
     if (questions && questions.length > 0) {
       setQuestionId(questions[0].id);
     }
+    if (questions.length === 0) {
+      setQuestionId(0);
+    }
 
     loadSurvey(); // reload beacause questionOverView accordian keeps last question id open
   };
@@ -530,6 +533,7 @@ const Panel = () => {
       console.error(err.message);
     }
     resetSurveyState();
+    window.location.href = "/create";
   };
   const deleteSurvey = async () => {
     if (draft.id > 0) {

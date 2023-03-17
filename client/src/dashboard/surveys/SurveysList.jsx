@@ -49,7 +49,7 @@ const SurveysList = () => {
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
                   </RadioGroup.Item>
                   <label className="Label" htmlFor="r1">
-                    {survey.title}
+                    {survey.title === "" ? "survey name" : survey.title}
                   </label>
                 </div>
               );

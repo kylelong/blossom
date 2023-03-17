@@ -5,6 +5,7 @@ import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
 import classNames from "classnames";
 import QuestionTypeSelectMenu from "./QuestionTypeSelectMenu";
 import MultipleChoiceInput from "./MultipleChoiceInput";
+import QuestionTitle from "./QuestionTitle";
 import "./questionoverview.css";
 const AccordionTrigger = React.forwardRef(
   ({children, className, ...props}, forwardedRef) => (
@@ -43,7 +44,6 @@ const QuestionOverview = ({
   const [questionType, setQuestionType] = useState("");
   const [questionId, setQuestionId] = useState(qId);
   const [numberOfAnswers, setNumberOfAnswers] = useState(0); // for the question i am currently selecting
-  const [titles, setTitles] = useState([]);
   const updateQuestionType = (type) => {
     setQuestionType(type);
     updateQuestion(questionId, "type", type, null);
@@ -75,25 +75,11 @@ const QuestionOverview = ({
     }
   };
 
-  useEffect(() => {
-    for (let i = 0; i < questions.length; i++) {
-      if (!titles.find((title) => title.id === questions[i].id)) {
-        setTitles((titles) => [
-          ...titles,
-          {id: questions[i].id, title: questions[i].title},
-        ]);
-      }
-    }
-  }, [questions, questionType, numberOfAnswers, titles]);
+  useEffect(() => {}, [questions, questionType, numberOfAnswers]);
   return (
     <>
       {questions.map((question, index) => {
         let label = `question ${index + 1}`;
-        let title =
-          titles.length === questions.length
-            ? titles.filter((title) => title.id === question.id)[0].title
-            : "";
-
         return (
           <div
             key={index}
@@ -109,23 +95,11 @@ const QuestionOverview = ({
                 <Label.Root className="LabelRoot" htmlFor="surveyTitle">
                   title:
                 </Label.Root>
-                <input
-                  type="text"
-                  className="questionTitle"
-                  placeholder="question title"
-                  value={title}
-                  onChange={(e) => {
-                    setTitles(() => {
-                      let copy = [...titles];
-                      let index = copy.findIndex(
-                        (title) => title.id === question.id
-                      );
-                      copy[index].title = e.target.value;
-                      return copy;
-                    });
-                    updateQuestion(question.id, "title", e.target.value, null);
-                  }}
-                ></input>
+
+                <QuestionTitle
+                  question={question}
+                  updateQuestion={updateQuestion}
+                />
                 <div className="questionDetailsContainer">
                   <div className="questionTypeContainer">
                     <QuestionTypeSelectMenu
