@@ -5,7 +5,7 @@ import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyTitle, questionId}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
-  const questionsRef = useRef(questions);
+  const prevQuestions = useRef(questions);
   const showQuestions = questions.length > 0;
 
   const handleIndex = (buttonAction) => {
@@ -34,10 +34,10 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
       setQuestionIndex(idx);
     }
     // reset index to 0 on question change
-    if (questionsRef.current !== questions) {
+    if (JSON.stringify(prevQuestions.current) !== JSON.stringify(questions)) {
       setQuestionIndex(0);
     }
-    questionsRef.current = questions;
+    prevQuestions.current = questions;
   }, [questions, questionId, surveyTitle]);
   return (
     <div className="surveyContainerParent">

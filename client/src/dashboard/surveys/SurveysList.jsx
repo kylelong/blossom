@@ -17,6 +17,7 @@ const SurveysList = () => {
   const [questions, setQuestions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [currentSurveyIndex, setCurrentSurveyIndex] = useState(0);
+  const [questionId, setQuestionId] = useState(0);
   const [showCopied, setShowCopied] = useState(false);
   const [link, setLink] = useState("");
   const timerRef = useRef(0);
@@ -42,6 +43,7 @@ const SurveysList = () => {
                     id={survey.id}
                     onClick={() => {
                       setCurrentSurveyIndex(index);
+                      setQuestionId(survey.id);
                       getQuestions(survey.id);
                       setLink(`http://localhost:3000/survey/${survey.hash}`);
                     }}
@@ -120,8 +122,7 @@ const SurveysList = () => {
     if (!loaded) {
       loadSurveys();
     }
-    console.log(questions);
-  }, [loaded, uid]);
+  }, [loaded, uid, currentSurveyIndex, questionId]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
@@ -140,7 +141,7 @@ const SurveysList = () => {
             <SurveyPreview
               questions={questions}
               surveyTitle={surveys[currentSurveyIndex].title}
-              questionId={surveys[currentSurveyIndex].id}
+              questionId={questionId}
             />
           </div>
 
