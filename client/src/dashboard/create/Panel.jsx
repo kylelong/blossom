@@ -638,13 +638,12 @@ const Panel = () => {
   ]);
   return (
     <div className="panelContainer">
-      {surveyStateLoaded && (
-        <SurveyPreview
-          questions={questions}
-          surveyTitle={surveyTitle}
-          questionId={questionId}
-        />
-      )}
+      <SurveyPreview
+        questions={questions}
+        surveyTitle={surveyTitle}
+        questionId={questionId}
+      />
+
       <div className="formContainer">
         <form
           style={{

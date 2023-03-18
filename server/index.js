@@ -73,7 +73,20 @@ app.get("/survey_count/:user_id", async (req, res) => {
       "SELECT COUNT(*) FROM survey WHERE user_id = $1",
       [user_id]
     );
-    res.json(count.rows[0]);
+    res.json(count.rows[0].count);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/draft_survey_count/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM survey WHERE user_id = $1 AND published = false",
+      [user_id]
+    );
+    res.json(count.rows[0].count);
   } catch (err) {
     console.error(err.message);
   }
@@ -84,10 +97,44 @@ app.get("/question_count/:user_id", async (req, res) => {
   try {
     const {user_id} = req.params;
     const count = await pool.query(
-      "SELECT COUNT(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id WHERE s.user_id = $1",
+      "SELECT SUM(number_of_questions) FROM survey WHERE user_id = $1",
       [user_id]
     );
-    res.json(count.rows[0]);
+    res.json(count.rows[0].sum);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+/* question type breakdown
+exampe response 
+[
+    {
+        "type": "multi_select",
+        "count": "3"
+    },
+    {
+        "type": "single_select",
+        "count": "4"
+    },
+    {
+        "type": "open_ended",
+        "count": "3"
+    },
+    {
+        "type": "emoji_sentiment",
+        "count": "3"
+    }
+]
+*/
+app.get("/question_type_count/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const counts = await pool.query(
+      "SELECT q.type, COUNT(q.type) FROM question q INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = $1 GROUP BY type",
+      [user_id]
+    );
+    res.json(counts.rows);
   } catch (err) {
     console.error(err.message);
   }
