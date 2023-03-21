@@ -32,6 +32,7 @@ const MultiSelect = ({
   const indexRef = useRef(index);
   const selectedRef = useRef(selected);
   const selectedIndicesRef = useRef(selectedIndices);
+  // TODO: toggle by id
   const toggleSelectedChoices = (item, index) => {
     if (selected.includes(item)) {
       let idx = selected.indexOf(item);
@@ -77,13 +78,14 @@ const MultiSelect = ({
 
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((choice, index) => {
+      {answerChoices.map((answer, index) => {
+        let {choice, id} = answer;
         if (selected.includes(choice)) {
           return (
             <button
               className="answerChoiceButtonSelected"
               name={choice}
-              key={index}
+              key={id}
               onClick={(e) => toggleSelectedChoices(e.target.name, index)}
             >
               {choice}
@@ -94,7 +96,7 @@ const MultiSelect = ({
             <button
               className="answerChoiceButton"
               name={choice}
-              key={index}
+              key={id}
               onClick={(e) => toggleSelectedChoices(e.target.name, index)}
             >
               {choice}

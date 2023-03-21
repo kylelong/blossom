@@ -5,9 +5,9 @@ import OpenEnded from "./OpenEnded";
 import Emojis from "./Emojis";
 import flower from "../images/sunflower.svg";
 const QuestionViewer = ({
-  questionTitle,
+  title,
   index,
-  questionType,
+  type,
   answerChoices,
   hash,
   handleProceed,
@@ -16,11 +16,12 @@ const QuestionViewer = ({
   surveyId,
 }) => {
   const questionStarted =
-    questionTitle || questionType || (answerChoices && answerChoices.length);
+    title || type || (answerChoices && answerChoices.length);
+  console.log(answerChoices);
 
   const preview = () => {
     if (questionStarted) {
-      switch (questionType) {
+      switch (type) {
         case "multi_select":
           return (
             <>
@@ -78,9 +79,7 @@ const QuestionViewer = ({
   };
   return (
     <div className="questionViewerContainer">
-      {questionStarted && (
-        <div className="surveyQuestionTitle">{questionTitle}</div>
-      )}
+      {questionStarted && <div className="surveyQuestionTitle">{title}</div>}
       <div>
         {!questionStarted && (
           <div className="loadingQuestionContainer">

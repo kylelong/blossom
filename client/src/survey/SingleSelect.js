@@ -59,13 +59,14 @@ const SingleSelect = ({
   }, [selected, index, handleProceed, selectedIndex, surveyId]);
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((choice, index) => {
+      {answerChoices.map((answer, index) => {
+        let {choice, id} = answer;
         if (choice && selected === choice) {
           return (
             <button
               className="answerChoiceButtonSelected"
               name={choice}
-              key={index}
+              key={id}
               onClick={(e) => changeSelected(e.target.name, index)}
             >
               {choice}
@@ -76,7 +77,7 @@ const SingleSelect = ({
             <button
               className="answerChoiceButton"
               name={choice}
-              key={index}
+              key={id}
               onClick={(e) => changeSelected(e.target.name, index)}
             >
               {choice}

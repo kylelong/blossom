@@ -424,6 +424,26 @@ app.get("/answer_choices/:question_id", async (req, res) => {
   }
 });
 
+// TAKING SURVEY
+app.get("/survey/:hash", async (req, res) => {
+  try {
+    const {hash} = req.params;
+    const titles = await pool.query(
+      "SELECT title, id, hash, redirect_url FROM survey WHERE hash = $1 AND published = true",
+      [hash]
+    );
+    res.json(titles.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// insert into responses
+
+//update response (only open_ended questions)
+
+// delete
+
 app.listen(5000, () => {
   console.log("server listening on port 5000");
 });

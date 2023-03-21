@@ -50,12 +50,11 @@ const Panel = () => {
     try {
       const response = await axios.get(`${endpoint}/questions/${survey_id}`);
       const data = await response.data;
-      setQuestions(data);
-      if (data && data.length) {
-        loadQuestions(data[0].id);
-      }
 
-      loadAnswers(data);
+      if (data && data.length) {
+        setQuestions(data);
+        loadAnswers(data);
+      }
     } catch (err) {
       console.error(err.message);
     }
