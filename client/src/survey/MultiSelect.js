@@ -14,7 +14,7 @@ const MultiSelect = ({
       let bsmr = JSON.parse(localStorage.getItem("bsmr"));
       if (Object.keys(bsmr).includes(surveyId)) {
         let res = bsmr[surveyId];
-        return res[questionIndex].answerChoices;
+        return res[questionIndex].answers;
       }
     }
     return [];

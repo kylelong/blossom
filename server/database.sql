@@ -41,6 +41,7 @@ CREATE INDEX hash_index ON survey (hash);
 CREATE INDEX user_id_index ON survey (user_id);
 
 -- question 
+-- TODO: add hash
 CREATE TABLE question (
     id SERIAL PRIMARY KEY,
     survey_id INT NOT NULL REFERENCES survey,
@@ -53,6 +54,7 @@ CREATE TABLE question (
 CREATE INDEX survey_id_index ON question (survey_id);
 
 -- answer_choice
+-- TODO: add hash
 
 CREATE TABLE answer_choice (
     id SERIAL PRIMARY KEY,

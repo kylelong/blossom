@@ -9,10 +9,11 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
   const [response, setResponse] = useState(() => {
     if (localStorage.getItem("bsmr") !== null) {
       let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        if (res[index].answerChoices.length > 0) {
-          return res[index].answerChoices[0];
+      let id = surveyId.toString();
+      if (Object.keys(bsmr).includes(id)) {
+        let res = bsmr[id];
+        if (res[index].answers && res[index].answers.length > 0) {
+          return res[index].answers[0];
         }
       }
     }
@@ -29,7 +30,7 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
       setResponse("");
     }
     if (responseRef.current !== response) {
-      updateResponse(index, [response], [-1]);
+      updateResponse(index, "open_ended", [response]);
     }
     handleProceed(index === indexRef.current && response.length > 0);
     responseRef.current = response;

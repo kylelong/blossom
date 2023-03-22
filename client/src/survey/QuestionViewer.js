@@ -17,7 +17,6 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
-  console.log(answerChoices);
 
   const preview = () => {
     if (questionStarted) {

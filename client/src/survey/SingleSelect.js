@@ -8,66 +8,50 @@ const SingleSelect = ({
   surveyId,
 }) => {
   // prefill state from localStorage
-  const [selected, setSelected] = useState(() => {
+  const [answerId, setAnswerId] = useState(() => {
     if (localStorage.getItem("bsmr") !== null) {
       let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        if (res[index].answerChoices.length > 0) {
-          return res[index].answerChoices[0];
+      let id = surveyId.toString();
+      if (Object.keys(bsmr).includes(id)) {
+        let res = bsmr[id];
+        if (res[index].answers && res[index].answers.length > 0) {
+          return res[index].answers.answer_id;
         }
       }
     }
     return [];
   });
-  const [selectedIndex, setSelectedIndex] = useState(() => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        if (res[index].answerIndices.length > 0) {
-          return res[index].answerIndices[0];
-        }
-      }
-    }
-    return 0;
-  });
+
   const indexRef = useRef(index); // question index
-  const selectedRef = useRef(selected);
-  const selectedIndexRef = useRef(selectedIndex);
-  const changeSelected = (item, index) => {
-    setSelected(item);
-    setSelectedIndex(index);
+  const answerIdRef = useRef(answerId);
+  const changeSelected = (id) => {
+    setAnswerId(id);
   };
 
   useEffect(() => {
     if (index !== indexRef.current) {
-      setSelected([]);
-      setSelectedIndex([]);
+      setAnswerId(-1);
     }
-    if (
-      selected !== selectedRef.current ||
-      selectedIndex !== selectedIndexRef.current
-    ) {
-      updateResponse(index, [selected], [selectedIndex]);
+    if (answerId !== answerIdRef.current) {
+      updateResponse(index, "single_select", [
+        {answer_id: answerId, answer: ""},
+      ]);
     }
-    handleProceed(index === indexRef.current && selected.length > 0);
+    handleProceed(index === indexRef.current && answerId > -1);
     indexRef.current = index;
-    selectedRef.current = selected;
-    selectedIndexRef.current = selectedIndex;
-    // eslint-disable-next-line
-  }, [selected, index, handleProceed, selectedIndex, surveyId]);
+    answerIdRef.current = answerId;
+  }, [answerId, index, handleProceed, surveyId, updateResponse]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((answer, index) => {
         let {choice, id} = answer;
-        if (choice && selected === choice) {
+        if (answerId === id) {
           return (
             <button
               className="answerChoiceButtonSelected"
               name={choice}
-              key={id}
-              onClick={(e) => changeSelected(e.target.name, index)}
+              key={index}
+              onClick={() => changeSelected(id)}
             >
               {choice}
             </button>
@@ -77,8 +61,8 @@ const SingleSelect = ({
             <button
               className="answerChoiceButton"
               name={choice}
-              key={id}
-              onClick={(e) => changeSelected(e.target.name, index)}
+              key={index}
+              onClick={() => changeSelected(id)}
             >
               {choice}
             </button>

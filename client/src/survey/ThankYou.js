@@ -29,6 +29,13 @@ export const RedirectUrl = styled.div`
 `;
 
 const ThankYou = ({redirectUrl, surveyId}) => {
+  if (
+    !redirectUrl.startsWith("http://") &&
+    !redirectUrl.startsWith("https://")
+  ) {
+    redirectUrl.replace("/^/", "http://");
+    redirectUrl = "http://" + redirectUrl;
+  }
   useEffect(() => {
     if (localStorage.getItem("sids") === null) {
       localStorage.setItem("sids", JSON.stringify([surveyId]));
@@ -41,7 +48,7 @@ const ThankYou = ({redirectUrl, surveyId}) => {
     }
     if (redirectUrl.length > 0) {
       setTimeout(() => {
-        window.location.href = redirectUrl;
+        window.location.replace(redirectUrl);
       }, 3000);
     }
   }, [redirectUrl, surveyId]);
