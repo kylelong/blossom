@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 
 const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
   const emojis = {
@@ -8,22 +8,27 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
     happy: "0x1F60A",
     love: "0x1F60D",
   };
-  const [emoji, setEmoji] = useState(() => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        if (res[index].answers && res[index].answers.length > 0) {
-          let hex = res[index].answers[0].answer;
-          const filtered = Object.entries(emojis).filter(
-            ([key, value]) => value === hex
-          );
-          return filtered[0][0];
+  const getEmojiFromStorage = useCallback(
+    (index) => {
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        let id = surveyId.toString();
+        if (Object.keys(bsmr).includes(id)) {
+          let res = bsmr[id];
+          if (res[index].answers && res[index].answers.length > 0) {
+            let hex = res[index].answers[0].answer;
+            const filtered = Object.entries(emojis).filter(
+              ([key, value]) => value === hex
+            );
+            return filtered[0][0];
+          }
         }
       }
-    }
-    return "";
-  });
+      return "";
+    },
+    [surveyId, emojis]
+  );
+  const [emoji, setEmoji] = useState(getEmojiFromStorage(index));
   const indexRef = useRef(index);
   const emojiRef = useRef(emoji);
   const handleEmojis = (key) => {
@@ -33,19 +38,28 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
   };
   useEffect(() => {
     if (index !== indexRef.current) {
-      setEmoji("");
+      setEmoji(getEmojiFromStorage(index));
     }
     if (emojiRef.current !== emoji) {
-      updateResponse(index, "emoji_sentiment", {
-        answer_id: "",
-        answer: emojis[emoji],
-      });
+      updateResponse(index, "emoji_sentiment", [
+        {
+          answer_id: "",
+          answer: emojis[emoji],
+        },
+      ]);
     }
     handleProceed(indexRef.current === index && emoji.length > 0);
     indexRef.current = index;
     emojiRef.current = emoji;
-    // eslint-disable-next-line
-  }, [handleProceed, emoji.length, index, emoji, emojis]);
+  }, [
+    handleProceed,
+    emoji.length,
+    index,
+    emoji,
+    emojis,
+    getEmojiFromStorage,
+    updateResponse,
+  ]);
   return (
     <div className="emojiContainer">
       {Object.entries(emojis).map(([key, value]) => {

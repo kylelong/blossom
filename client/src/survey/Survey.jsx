@@ -94,7 +94,6 @@ const Survey = () => {
         if (Object.keys(bsmr).includes(id)) {
           let res = bsmr[id];
           setResponse(res);
-          console.log(res);
         }
       }
     };
@@ -112,27 +111,9 @@ const Survey = () => {
       // answers: [{answer_id: "", answer: ""}] // answer_id for ms/ss, answer only for emoji / open_ended
       // for ms/ss append , open_ended / emoji overwrite
       let copy = [...response];
-      if (
-        type === "open_ended" ||
-        type === "emoji_sentiment" ||
-        type === "single_select"
-      ) {
+      if (answer) {
         copy[index].answers = answer;
-      } else if (type === "multi_select") {
-        // if it does not contain id
-        let found =
-          copy[index].answers.filter((el) => el.answer_id === answer.answer_id)
-            .length > 0;
-        if (!found) {
-          copy[index].answers.push(answer);
-        } else if (found) {
-          let idx = copy[index].answers.findIndex(
-            (el) => el.answer_id === answer.answer_id
-          );
-          copy[index].answers.splice(idx, 1);
-        }
       }
-
       setResponse(copy);
       let id = survey.id.toString();
       if (localStorage.getItem("bsmr") === null) {
@@ -148,7 +129,10 @@ const Survey = () => {
     [response, survey.id]
   );
 
-  const submitSurvey = async () => {};
+  const submitSurvey = async () => {
+    // TODO: loop through response ans make db calls
+    console.log(response);
+  };
   if (invalidSurvey) {
     return <div>Survey is not available or have not been published yet.</div>;
   }
@@ -159,7 +143,6 @@ const Survey = () => {
         <Logo />
         <img src={flower} alt="flower" className="flowerLogoImg" />
       </div>
-      <div>{JSON.stringify(response, null, 2)}</div>
       <SurveyViewer
         questions={questions}
         surveyName={survey.title}

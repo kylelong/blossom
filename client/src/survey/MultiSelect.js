@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 
 const MultiSelect = ({
   answerChoices,
@@ -8,85 +8,76 @@ const MultiSelect = ({
   updateResponse,
   surveyId,
 }) => {
+  const getAnswersFromStorage = useCallback(
+    (index) => {
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        let id = surveyId.toString();
+        if (Object.keys(bsmr).includes(id)) {
+          let res = bsmr[id];
+          if (res[index].answers && res[index].answers.length > 0) {
+            return res[index].answers;
+          }
+        }
+      }
+      return [];
+    },
+    [surveyId]
+  );
   // prefill state from localStorage
-  const [selected, setSelected] = useState(() => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        return res[questionIndex].answers;
-      }
-    }
-    return [];
-  });
-  const [selectedIndices, setSelectedIndices] = useState(() => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      if (Object.keys(bsmr).includes(surveyId)) {
-        let res = bsmr[surveyId];
-        return res[questionIndex].answerIndices;
-      }
-    }
-    return [];
-  });
+  const [selected, setSelected] = useState(
+    getAnswersFromStorage(questionIndex)
+  );
+
   const indexRef = useRef(index);
   const selectedRef = useRef(selected);
-  const selectedIndicesRef = useRef(selectedIndices);
-  // TODO: toggle by id
-  const toggleSelectedChoices = (item, index) => {
-    if (selected.includes(item)) {
-      let idx = selected.indexOf(item);
+  const toggleSelectedChoices = (id) => {
+    let idx = selected.findIndex((el) => el.answer_id === id);
+    if (idx >= 0) {
       setSelected((prevState) => {
         let copy = [...prevState];
         copy.splice(idx, 1);
         return copy;
       });
     } else {
-      setSelected((current) => [...current, item]);
-    }
-
-    // handle indices
-    if (selectedIndices.includes(index)) {
-      let idx = selectedIndices.indexOf(index);
-      setSelectedIndices((prevState) => {
-        let copy = [...prevState];
-        copy.splice(idx, 1);
-        return copy;
-      });
-    } else {
-      setSelectedIndices((current) => [...current, index]);
+      if (idx === -1) {
+        // do not add duplicates
+        setSelected((current) => [...current, {answer_id: id, answer: ""}]);
+      }
     }
   };
 
   useEffect(() => {
     if (index !== indexRef.current) {
-      setSelected([]);
-      setSelectedIndices([]);
+      setSelected(getAnswersFromStorage(questionIndex));
     }
-    if (
-      selected !== selectedRef.current ||
-      selectedIndices !== selectedIndicesRef.current
-    ) {
-      updateResponse(questionIndex, selected, selectedIndices.sort());
+    if (selected !== selectedRef.current) {
+      updateResponse(questionIndex, "multi_select", selected);
     }
     handleProceed(index === indexRef.current && selected.length > 0);
     indexRef.current = index;
     selectedRef.current = selected;
-    selectedIndicesRef.current = selectedIndices;
-    // eslint-disable-next-line
-  }, [questionIndex, index, selected, handleProceed, selectedIndices]);
+  }, [
+    questionIndex,
+    index,
+    selected,
+    handleProceed,
+    getAnswersFromStorage,
+    updateResponse,
+  ]);
 
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((answer, index) => {
+      {answerChoices.map((answer) => {
         let {choice, id} = answer;
-        if (selected.includes(choice)) {
+        let found = selected.find((el) => el.answer_id === id);
+        if (found) {
           return (
             <button
               className="answerChoiceButtonSelected"
               name={choice}
               key={id}
-              onClick={(e) => toggleSelectedChoices(e.target.name, index)}
+              onClick={() => toggleSelectedChoices(id)}
             >
               {choice}
             </button>
@@ -97,7 +88,7 @@ const MultiSelect = ({
               className="answerChoiceButton"
               name={choice}
               key={id}
-              onClick={(e) => toggleSelectedChoices(e.target.name, index)}
+              onClick={() => toggleSelectedChoices(id)}
             >
               {choice}
             </button>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 
 const SingleSelect = ({
   answerChoices,
@@ -8,19 +8,22 @@ const SingleSelect = ({
   surveyId,
 }) => {
   // prefill state from localStorage
-  const getAnswerIdFromStorage = (index) => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      let id = surveyId.toString();
-      if (Object.keys(bsmr).includes(id)) {
-        let res = bsmr[id];
-        if (res[index].answers && res[index].answers.length > 0) {
-          return res[index].answers[0].answer_id;
+  const getAnswerIdFromStorage = useCallback(
+    (index) => {
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        let id = surveyId.toString();
+        if (Object.keys(bsmr).includes(id)) {
+          let res = bsmr[id];
+          if (res[index].answers && res[index].answers.length > 0) {
+            return res[index].answers[0].answer_id;
+          }
         }
       }
-    }
-    return 0;
-  };
+      return 0;
+    },
+    [surveyId]
+  );
   const [answerId, setAnswerId] = useState(getAnswerIdFromStorage(index));
 
   const indexRef = useRef(index); // question index
@@ -41,8 +44,14 @@ const SingleSelect = ({
     handleProceed(index === indexRef.current && answerId > 0);
     indexRef.current = index;
     answerIdRef.current = answerId;
-    console.log(answerId, index);
-  }, [answerId, index, handleProceed, surveyId, updateResponse]);
+  }, [
+    answerId,
+    index,
+    handleProceed,
+    surveyId,
+    updateResponse,
+    getAnswerIdFromStorage,
+  ]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((answer, index) => {

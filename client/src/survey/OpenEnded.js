@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect, useCallback} from "react";
 import styled from "styled-components";
 export const TextArea = styled.textarea`
   @media (max-width: 430px) {
@@ -6,19 +6,23 @@ export const TextArea = styled.textarea`
   }
 `;
 const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
-  const [response, setResponse] = useState(() => {
-    if (localStorage.getItem("bsmr") !== null) {
-      let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-      let id = surveyId.toString();
-      if (Object.keys(bsmr).includes(id)) {
-        let res = bsmr[id];
-        if (res[index].answers && res[index].answers.length > 0) {
-          return res[index].answers[0];
+  const getAnswerFromStorage = useCallback(
+    (index) => {
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        let id = surveyId.toString();
+        if (Object.keys(bsmr).includes(id)) {
+          let res = bsmr[id];
+          if (res[index].answers && res[index].answers.length > 0) {
+            return res[index].answers[0];
+          }
         }
       }
-    }
-    return "";
-  });
+      return "";
+    },
+    [surveyId]
+  );
+  const [response, setResponse] = useState(getAnswerFromStorage(index));
   const indexRef = useRef(index);
   const responseRef = useRef("");
   const handleChange = (input) => {
@@ -27,7 +31,7 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
   useEffect(() => {
     // resets when next button is click and re-renders component
     if (index !== indexRef.current) {
-      setResponse("");
+      setResponse(getAnswerFromStorage(index));
     }
     if (responseRef.current !== response) {
       updateResponse(index, "open_ended", [response]);
