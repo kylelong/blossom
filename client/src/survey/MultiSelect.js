@@ -68,33 +68,34 @@ const MultiSelect = ({
 
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((answer) => {
-        let {choice, id} = answer;
-        let found = selected.find((el) => el.answer_id === id);
-        if (found) {
-          return (
-            <button
-              className="answerChoiceButtonSelected"
-              name={choice}
-              key={id}
-              onClick={() => toggleSelectedChoices(id)}
-            >
-              {choice}
-            </button>
-          );
-        } else {
-          return (
-            <button
-              className="answerChoiceButton"
-              name={choice}
-              key={id}
-              onClick={() => toggleSelectedChoices(id)}
-            >
-              {choice}
-            </button>
-          );
-        }
-      })}
+      {answerChoices &&
+        answerChoices.map((answer) => {
+          let {choice, id} = answer;
+          let found = selected.find((el) => el.answer_id === id);
+          if (found) {
+            return (
+              <button
+                className="answerChoiceButtonSelected"
+                name={choice}
+                key={id}
+                onClick={() => toggleSelectedChoices(id)}
+              >
+                {choice}
+              </button>
+            );
+          } else {
+            return (
+              <button
+                className="answerChoiceButton"
+                name={choice}
+                key={id}
+                onClick={() => toggleSelectedChoices(id)}
+              >
+                {choice}
+              </button>
+            );
+          }
+        })}
     </div>
   );
 };

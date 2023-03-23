@@ -30,6 +30,7 @@ export const RedirectUrl = styled.div`
 
 const ThankYou = ({redirectUrl, surveyId}) => {
   if (
+    redirectUrl.length > 0 &&
     !redirectUrl.startsWith("http://") &&
     !redirectUrl.startsWith("https://")
   ) {
@@ -37,6 +38,8 @@ const ThankYou = ({redirectUrl, surveyId}) => {
     redirectUrl = "http://" + redirectUrl;
   }
   useEffect(() => {
+    //TODO: remove id from local storage bsmr
+    localStorage.removeItem("bsmr");
     if (localStorage.getItem("sids") === null) {
       localStorage.setItem("sids", JSON.stringify([surveyId]));
     } else {
@@ -48,7 +51,9 @@ const ThankYou = ({redirectUrl, surveyId}) => {
     }
     if (redirectUrl.length > 0) {
       setTimeout(() => {
-        window.location.replace(redirectUrl);
+        if (redirectUrl) {
+          window.location.replace(redirectUrl);
+        }
       }, 3000);
     }
   }, [redirectUrl, surveyId]);
