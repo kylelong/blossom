@@ -3,7 +3,6 @@ const OpenEnded = () => {
   const [response, setResponse] = useState("");
   const handleChange = (input) => {
     setResponse(input);
-    console.log(response);
   };
   return (
     <div>

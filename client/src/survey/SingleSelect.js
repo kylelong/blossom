@@ -8,19 +8,20 @@ const SingleSelect = ({
   surveyId,
 }) => {
   // prefill state from localStorage
-  const [answerId, setAnswerId] = useState(() => {
+  const getAnswerIdFromStorage = (index) => {
     if (localStorage.getItem("bsmr") !== null) {
       let bsmr = JSON.parse(localStorage.getItem("bsmr"));
       let id = surveyId.toString();
       if (Object.keys(bsmr).includes(id)) {
         let res = bsmr[id];
         if (res[index].answers && res[index].answers.length > 0) {
-          return res[index].answers.answer_id;
+          return res[index].answers[0].answer_id;
         }
       }
     }
-    return [];
-  });
+    return 0;
+  };
+  const [answerId, setAnswerId] = useState(getAnswerIdFromStorage(index));
 
   const indexRef = useRef(index); // question index
   const answerIdRef = useRef(answerId);
@@ -30,22 +31,23 @@ const SingleSelect = ({
 
   useEffect(() => {
     if (index !== indexRef.current) {
-      setAnswerId(-1);
+      setAnswerId(getAnswerIdFromStorage(index));
     }
-    if (answerId !== answerIdRef.current) {
+    if (answerId !== answerIdRef.current && answerId !== 0) {
       updateResponse(index, "single_select", [
         {answer_id: answerId, answer: ""},
       ]);
     }
-    handleProceed(index === indexRef.current && answerId > -1);
+    handleProceed(index === indexRef.current && answerId > 0);
     indexRef.current = index;
     answerIdRef.current = answerId;
+    console.log(answerId, index);
   }, [answerId, index, handleProceed, surveyId, updateResponse]);
   return (
     <div className="answerChoicesContainer">
       {answerChoices.map((answer, index) => {
         let {choice, id} = answer;
-        if (answerId === id) {
+        if (answerId && answerId === id) {
           return (
             <button
               className="answerChoiceButtonSelected"

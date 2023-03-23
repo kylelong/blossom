@@ -52,14 +52,16 @@ const Survey = () => {
       const data = await response.data;
       if (data && data.length) {
         setQuestions(data);
-        console.log(data);
         // loop through and set question id
-        let r = [];
-        for (let i = 0; i < data.length; i++) {
-          let question = data[i];
-          r.push({question_id: question.id, answers: []});
+        if (localStorage.getItem("bsmr") === null) {
+          let r = [];
+          for (let i = 0; i < data.length; i++) {
+            let question = data[i];
+            r.push({question_id: question.id, answers: []});
+          }
+          setResponse(r);
         }
-        setResponse(r);
+
         loadAnswers(data);
       }
     } catch (err) {
@@ -69,12 +71,14 @@ const Survey = () => {
 
   useEffect(() => {
     const loadSurvey = async () => {
+      let survey_id = 0;
       try {
         const response = await axios.get(`${endpoint}/survey/${params.id}`);
         const data = await response.data;
         if (data && data.length) {
           setSurvey(data[0]);
           loadQuestions(data[0].id);
+          survey_id = data[0].id;
           setLoaded(true);
         } else {
           setInvalidSurvey(true);
@@ -86,10 +90,11 @@ const Survey = () => {
       // prefill answer choices from local storage
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        if (Object.keys(bsmr).includes(survey.id)) {
-          let res = bsmr[survey.id];
+        let id = survey_id.toString();
+        if (Object.keys(bsmr).includes(id)) {
+          let res = bsmr[id];
           setResponse(res);
-          // console.log(res);
+          console.log(res);
         }
       }
     };

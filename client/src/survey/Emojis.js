@@ -13,8 +13,8 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
       let bsmr = JSON.parse(localStorage.getItem("bsmr"));
       if (Object.keys(bsmr).includes(surveyId)) {
         let res = bsmr[surveyId];
-        if (res[index].answerChoices.length > 0) {
-          let hex = res[index].answerChoices[0];
+        if (res[index].answers && res[index].answers.length > 0) {
+          let hex = res[index].answers[0].answer;
           const filtered = Object.entries(emojis).filter(
             ([key, value]) => value === hex
           );
@@ -36,7 +36,10 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
       setEmoji("");
     }
     if (emojiRef.current !== emoji) {
-      updateResponse(index, [emojis[emoji]], [-1]);
+      updateResponse(index, "emoji_sentiment", {
+        answer_id: "",
+        answer: emojis[emoji],
+      });
     }
     handleProceed(indexRef.current === index && emoji.length > 0);
     indexRef.current = index;
