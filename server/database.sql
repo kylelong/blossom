@@ -46,6 +46,7 @@ CREATE TABLE question (
     id SERIAL PRIMARY KEY,
     survey_id INT NOT NULL REFERENCES survey,
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    hash VARCHAR(255) UNIQUE NOT NULL,
     title VARCHAR(255) NOT NULL DEFAULT '',
     index INT NOT NULL,
     type VARCHAR(255) NOT NULL DEFAULT ''
@@ -60,6 +61,7 @@ CREATE TABLE answer_choice (
     id SERIAL PRIMARY KEY,
     choice VARCHAR(255) NOT NULL DEFAULT '',
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    hash VARCHAR(255) UNIQUE NOT NULL,
     index INT NOT NULL,
     question_id INT NOT NULL REFERENCES question
 );
@@ -109,6 +111,15 @@ INSERT INTO answer_choice (choice, index, question_id) VALUES ('stitcher', 4, 2)
 INSERT INTO response (answer_id, question_id) VALUES (1, 1);
 INSERT INTO response (answer_id, question_id) VALUES (2, 1);
 INSERT INTO response (answer_id, question_id) VALUES (4, 1);
+
+/*
+    TABLE CHANGES 
+
+    -- add column -- ALTER TABLE question ADD COLUMN hash VARCHAR(255) UNIQUE NULL;
+
+   -- alter column --  ALTER TABLE answer_choice ALTER COLUMN hash SET NOT NULL;
+
+*/
 
 /* 
     ALL QUERIES LABELED BY PAGE

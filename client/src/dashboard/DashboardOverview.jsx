@@ -33,7 +33,8 @@ const DashboardOverview = () => {
   useEffect(() => {
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
-      const count = response.data;
+      let count = parseInt(response.data);
+
       if (count > 0) {
         setHasSurvey(true);
       }
@@ -69,10 +70,8 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     setLoaded(true);
-  }, []);
-  if (loaded && !hasSurvey) {
-    return <Welcome />;
-  }
+  }, [loaded]);
+
   const randomNumber = () => {
     let min = 100,
       max = 10000;
@@ -81,6 +80,10 @@ const DashboardOverview = () => {
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
     : `create a new survey ${String.fromCodePoint("0x1F680")}`;
+
+  if (loaded && !hasSurvey) {
+    return <Welcome />;
+  }
 
   return (
     <div>

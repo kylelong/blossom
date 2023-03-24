@@ -164,11 +164,16 @@ const Panel = () => {
      * insert question in question table with survey_id & questions.legnth as index
      *  draft is updated with id: survey_id and
      * **/
+    let hash = randomstring.generate({
+      length: 16,
+      charset: "alphanumeric",
+    });
     let data = {
       title: "",
       index: questions.length,
       type: "",
       answerChoices: [],
+      hash: hash,
     };
     // TODO: Insert question
     // start a new survey if no draft
@@ -178,6 +183,7 @@ const Panel = () => {
         const response = await axios.post(`${endpoint}/add_question`, {
           survey_id: draft.id,
           index: questions.length,
+          hash: hash,
         });
         data.id = response.data.id;
         setQuestions((questions) => [...questions, data]);
@@ -279,11 +285,16 @@ const Panel = () => {
   const addAnswerChoice = useCallback(
     async (choice, index, question_id) => {
       try {
+        let hash = randomstring.generate({
+          length: 24,
+          charset: "alphanumeric",
+        });
         const response = await axios.post(
           `${endpoint}/add_answer_choice/${question_id}`,
           {
             choice: choice,
             index: index,
+            hash,
           }
         );
         let copy = [...questions];

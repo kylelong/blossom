@@ -171,10 +171,10 @@ app.get("/latest_survey/:user_id", async (req, res) => {
 // add question to survey
 app.post("/add_question", async (req, res) => {
   try {
-    const {survey_id, index} = req.body;
+    const {survey_id, index, hash} = req.body;
     const question = await pool.query(
-      "INSERT INTO question (survey_id, index) VALUES($1, $2) RETURNING id, index",
-      [survey_id, index]
+      "INSERT INTO question (survey_id, index, hash) VALUES($1, $2, $3) RETURNING id, index, hash",
+      [survey_id, index, hash]
     );
     res.json(question.rows[0]);
   } catch (err) {
@@ -320,10 +320,10 @@ app.delete("/delete_answers/:question_id", async (req, res) => {
 app.post("/add_answer_choice/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
-    const {index, choice} = req.body;
+    const {index, choice, hash} = req.body;
     const answer_choice = await pool.query(
-      "INSERT INTO answer_choice (choice, index, question_id) VALUES($1, $2, $3) RETURNING id, question_id, choice, index",
-      [choice, index, question_id]
+      "INSERT INTO answer_choice (choice, index, question_id, hash) VALUES($1, $2, $3, $4) RETURNING id, question_id, choice, index, hash",
+      [choice, index, question_id, hash]
     );
     res.json(answer_choice.rows[0]);
   } catch (err) {
