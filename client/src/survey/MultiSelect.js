@@ -6,15 +6,14 @@ const MultiSelect = ({
   handleProceed,
   questionIndex,
   updateResponse,
-  surveyId,
+  surveyHash,
 }) => {
   const getAnswersFromStorage = useCallback(
     (index) => {
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        let id = surveyId.toString();
-        if (Object.keys(bsmr).includes(id)) {
-          let res = bsmr[id];
+        if (Object.keys(bsmr).includes(surveyHash)) {
+          let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
             return res[index].answers;
           }
@@ -22,7 +21,7 @@ const MultiSelect = ({
       }
       return [];
     },
-    [surveyId]
+    [surveyHash]
   );
   // prefill state from localStorage
   const [selected, setSelected] = useState(
@@ -31,8 +30,8 @@ const MultiSelect = ({
 
   const indexRef = useRef(index);
   const selectedRef = useRef(selected);
-  const toggleSelectedChoices = (id) => {
-    let idx = selected.findIndex((el) => el.answer_id === id);
+  const toggleSelectedChoices = (hash) => {
+    let idx = selected.findIndex((el) => el.hash === hash);
     if (idx >= 0) {
       setSelected((prevState) => {
         let copy = [...prevState];
@@ -42,7 +41,7 @@ const MultiSelect = ({
     } else {
       if (idx === -1) {
         // do not add duplicates
-        setSelected((current) => [...current, {answer_id: id, answer: ""}]);
+        setSelected((current) => [...current, {answer_hash: hash, answer: ""}]);
       }
     }
   };
@@ -70,15 +69,15 @@ const MultiSelect = ({
     <div className="answerChoicesContainer">
       {answerChoices &&
         answerChoices.map((answer) => {
-          let {choice, id} = answer;
-          let found = selected.find((el) => el.answer_id === id);
+          let {choice, hash} = answer;
+          let found = selected.find((el) => el.hash === hash);
           if (found) {
             return (
               <button
                 className="answerChoiceButtonSelected"
                 name={choice}
-                key={id}
-                onClick={() => toggleSelectedChoices(id)}
+                key={hash}
+                onClick={() => toggleSelectedChoices(hash)}
               >
                 {choice}
               </button>
@@ -88,8 +87,8 @@ const MultiSelect = ({
               <button
                 className="answerChoiceButton"
                 name={choice}
-                key={id}
-                onClick={() => toggleSelectedChoices(id)}
+                key={hash}
+                onClick={() => toggleSelectedChoices(hash)}
               >
                 {choice}
               </button>

@@ -5,24 +5,23 @@ const SingleSelect = ({
   handleProceed,
   index,
   updateResponse,
-  surveyId,
+  surveyHash,
 }) => {
   // prefill state from localStorage
   const getAnswerIdFromStorage = useCallback(
     (index) => {
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        let id = surveyId.toString();
-        if (Object.keys(bsmr).includes(id)) {
-          let res = bsmr[id];
+        if (Object.keys(bsmr).includes(surveyHash)) {
+          let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
-            return res[index].answers[0].answer_id;
+            return res[index].answers[0].answer_hash;
           }
         }
       }
-      return 0;
+      return "";
     },
-    [surveyId]
+    [surveyHash]
   );
   const [answerId, setAnswerId] = useState(getAnswerIdFromStorage(index));
 
@@ -36,50 +35,51 @@ const SingleSelect = ({
     if (index !== indexRef.current) {
       setAnswerId(getAnswerIdFromStorage(index));
     }
-    if (answerId !== answerIdRef.current && answerId !== 0) {
+    if (answerId !== answerIdRef.current && answerId !== "") {
       updateResponse(index, "single_select", [
-        {answer_id: answerId, answer: ""},
+        {answer_hash: answerId, answer: ""},
       ]);
     }
-    handleProceed(index === indexRef.current && answerId > 0);
+    handleProceed(index === indexRef.current && answerId.length > 0);
     indexRef.current = index;
     answerIdRef.current = answerId;
   }, [
     answerId,
     index,
     handleProceed,
-    surveyId,
+    surveyHash,
     updateResponse,
     getAnswerIdFromStorage,
   ]);
   return (
     <div className="answerChoicesContainer">
-      {answerChoices.map((answer, index) => {
-        let {choice, id} = answer;
-        if (answerId && answerId === id) {
-          return (
-            <button
-              className="answerChoiceButtonSelected"
-              name={choice}
-              key={index}
-              onClick={() => changeSelected(id)}
-            >
-              {choice}
-            </button>
-          );
-        } else {
-          return (
-            <button
-              className="answerChoiceButton"
-              name={choice}
-              key={index}
-              onClick={() => changeSelected(id)}
-            >
-              {choice}
-            </button>
-          );
-        }
-      })}
+      {answerChoices &&
+        answerChoices.map((answer, index) => {
+          let {choice, hash} = answer;
+          if (answerId && answerId === hash) {
+            return (
+              <button
+                className="answerChoiceButtonSelected"
+                name={choice}
+                key={index}
+                onClick={() => changeSelected(hash)}
+              >
+                {choice}
+              </button>
+            );
+          } else {
+            return (
+              <button
+                className="answerChoiceButton"
+                name={choice}
+                key={index}
+                onClick={() => changeSelected(hash)}
+              >
+                {choice}
+              </button>
+            );
+          }
+        })}
     </div>
   );
 };

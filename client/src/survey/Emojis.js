@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback} from "react";
 
-const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
+const Emojis = ({index, handleProceed, updateResponse, surveyHash}) => {
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -12,9 +12,8 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
     (index) => {
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        let id = surveyId.toString();
-        if (Object.keys(bsmr).includes(id)) {
-          let res = bsmr[id];
+        if (Object.keys(bsmr).includes(surveyHash)) {
+          let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
             let hex = res[index].answers[0].answer;
             const filtered = Object.entries(emojis).filter(
@@ -26,7 +25,7 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
       }
       return "";
     },
-    [surveyId, emojis]
+    [surveyHash, emojis]
   );
   const [emoji, setEmoji] = useState(getEmojiFromStorage(index));
   const indexRef = useRef(index);
@@ -43,7 +42,7 @@ const Emojis = ({index, handleProceed, updateResponse, surveyId}) => {
     if (emojiRef.current !== emoji) {
       updateResponse(index, "emoji_sentiment", [
         {
-          answer_id: "",
+          answer_hash: "",
           answer: emojis[emoji],
         },
       ]);

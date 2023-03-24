@@ -415,7 +415,7 @@ app.get("/answer_choices/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
     const answers = await pool.query(
-      "SELECT choice, id, index FROM answer_choice WHERE question_id = $1 ORDER BY index ASC",
+      "SELECT choice, id, hash, index FROM answer_choice WHERE question_id = $1 ORDER BY index ASC",
       [question_id]
     );
     res.json(answers.rows);

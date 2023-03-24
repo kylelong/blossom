@@ -28,7 +28,7 @@ export const RedirectUrl = styled.div`
   margin-top: 24px;
 `;
 
-const ThankYou = ({redirectUrl, surveyId}) => {
+const ThankYou = ({redirectUrl, surveyHash}) => {
   if (
     redirectUrl.length > 0 &&
     !redirectUrl.startsWith("http://") &&
@@ -41,11 +41,11 @@ const ThankYou = ({redirectUrl, surveyId}) => {
     //TODO: remove id from local storage bsmr
     localStorage.removeItem("bsmr");
     if (localStorage.getItem("sids") === null) {
-      localStorage.setItem("sids", JSON.stringify([surveyId]));
+      localStorage.setItem("sids", JSON.stringify([surveyHash]));
     } else {
       let sids = JSON.parse(localStorage.getItem("sids"));
-      if (!sids.includes(surveyId)) {
-        sids.push(surveyId);
+      if (!sids.includes(surveyHash)) {
+        sids.push(surveyHash);
         localStorage.setItem("sids", JSON.stringify(sids));
       }
     }
@@ -56,13 +56,13 @@ const ThankYou = ({redirectUrl, surveyId}) => {
         }
       }, 3000);
     }
-  }, [redirectUrl, surveyId]);
+  }, [redirectUrl, surveyHash]);
   return (
     <Container>
       <Thanks>thank you</Thanks>
       <FlowerImage src={flower3} />
       <Completed>survey completed</Completed>
-      {localStorage.getItem("sid") !== surveyId && redirectUrl.length > 0 ? (
+      {localStorage.getItem("sid") !== surveyHash && redirectUrl.length > 0 ? (
         <RedirectUrl>redirecting you to {redirectUrl} ...</RedirectUrl>
       ) : null}
     </Container>

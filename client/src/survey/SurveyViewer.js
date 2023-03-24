@@ -10,7 +10,7 @@ const SurveyViewer = ({
   updateResponse,
   submitSurvey,
   redirectUrl,
-  surveyId,
+  surveyHash,
 }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [proceed, setProceed] = useState(false);
@@ -18,7 +18,7 @@ const SurveyViewer = ({
   const hasCompletedSurvey =
     localStorage.getItem("sids") === null
       ? false
-      : JSON.parse(localStorage.getItem("sids")).includes(surveyId);
+      : JSON.parse(localStorage.getItem("sids")).includes(surveyHash);
   const showQuestions = questions.length > 0 && !submitted;
   const prevQuestions = useRef(questions);
 
@@ -77,11 +77,11 @@ const SurveyViewer = ({
             handleProceed={handleProceed}
             questionIndex={questionIndex}
             updateResponse={updateResponse}
-            surveyId={surveyId}
+            surveyHash={surveyHash}
           />
         )}
         {submitted || hasCompletedSurvey ? (
-          <ThankYou redirectUrl={redirectUrl} surveyId={surveyId} />
+          <ThankYou redirectUrl={redirectUrl} surveyHash={surveyHash} />
         ) : null}
         {questions.length > 0 && !hasCompletedSurvey && (
           <div className="previewButtonsContainer">

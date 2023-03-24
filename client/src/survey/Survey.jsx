@@ -57,7 +57,7 @@ const Survey = () => {
           let r = [];
           for (let i = 0; i < data.length; i++) {
             let question = data[i];
-            r.push({question_id: question.id, answers: []});
+            r.push({question_hash: question.hash, answers: []});
           }
           setResponse(r);
         }
@@ -71,14 +71,14 @@ const Survey = () => {
 
   useEffect(() => {
     const loadSurvey = async () => {
-      let survey_id = 0;
+      let survey_hash = "";
       try {
         const response = await axios.get(`${endpoint}/survey/${params.id}`);
         const data = await response.data;
         if (data && data.length) {
           setSurvey(data[0]);
           loadQuestions(data[0].id);
-          survey_id = data[0].id;
+          survey_hash = data[0].hash;
           setLoaded(true);
         } else {
           setInvalidSurvey(true);
@@ -90,9 +90,8 @@ const Survey = () => {
       // prefill answer choices from local storage
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        let id = survey_id.toString();
-        if (Object.keys(bsmr).includes(id)) {
-          let res = bsmr[id];
+        if (Object.keys(bsmr).includes(survey_hash)) {
+          let res = bsmr[survey_hash];
           setResponse(res);
         }
       }
@@ -115,14 +114,14 @@ const Survey = () => {
         copy[index].answers = answer;
       }
       setResponse(copy);
-      let id = survey.id.toString();
+      let hash = survey.hash;
       if (localStorage.getItem("bsmr") === null) {
         let bsmr = {};
-        bsmr[id] = copy;
+        bsmr[hash] = copy;
         localStorage.setItem("bsmr", JSON.stringify(bsmr));
       } else {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        bsmr[id] = copy;
+        bsmr[hash] = copy;
         localStorage.setItem("bsmr", JSON.stringify(bsmr));
       }
     },
@@ -150,7 +149,7 @@ const Survey = () => {
         updateResponse={updateResponse}
         submitSurvey={submitSurvey}
         redirectUrl={survey.redirect_url}
-        surveyId={survey.id}
+        surveyHash={survey.hash}
       />
     </div>
   );

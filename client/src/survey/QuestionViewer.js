@@ -13,7 +13,7 @@ const QuestionViewer = ({
   handleProceed,
   questionIndex,
   updateResponse,
-  surveyId,
+  surveyHash,
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
@@ -31,7 +31,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 questionIndex={questionIndex}
                 updateResponse={updateResponse}
-                surveyId={surveyId}
+                surveyHash={surveyHash}
               />
             </>
           );
@@ -44,7 +44,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 index={index}
                 updateResponse={updateResponse}
-                surveyId={surveyId}
+                surveyHash={surveyHash}
               />
             </>
           );
@@ -56,7 +56,7 @@ const QuestionViewer = ({
                 handleProceed={handleProceed}
                 index={index}
                 updateResponse={updateResponse}
-                surveyId={surveyId}
+                surveyHash={surveyHash}
               />{" "}
             </>
           );
@@ -67,7 +67,7 @@ const QuestionViewer = ({
                 index={index}
                 handleProceed={handleProceed}
                 updateResponse={updateResponse}
-                surveyId={surveyId}
+                surveyHash={surveyHash}
               />
             </>
           );

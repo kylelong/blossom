@@ -5,14 +5,13 @@ export const TextArea = styled.textarea`
     width: 90%;
   }
 `;
-const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
+const OpenEnded = ({handleProceed, index, updateResponse, surveyHash}) => {
   const getAnswerFromStorage = useCallback(
     (index) => {
       if (localStorage.getItem("bsmr") !== null) {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        let id = surveyId.toString();
-        if (Object.keys(bsmr).includes(id)) {
-          let res = bsmr[id];
+        if (Object.keys(bsmr).includes(surveyHash)) {
+          let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
             return res[index].answers[0];
           }
@@ -20,7 +19,7 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyId}) => {
       }
       return "";
     },
-    [surveyId]
+    [surveyHash]
   );
   const [response, setResponse] = useState(getAnswerFromStorage(index));
   const indexRef = useRef(index);
