@@ -41,7 +41,7 @@ const MultiSelect = ({
     } else {
       if (idx === -1) {
         // do not add duplicates
-        setSelected((current) => [...current, {answer_hash: hash, answer: ""}]);
+        setSelected((current) => [...current, {hash: hash, answer: ""}]);
       }
     }
   };

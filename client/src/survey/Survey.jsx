@@ -125,7 +125,7 @@ const Survey = () => {
         localStorage.setItem("bsmr", JSON.stringify(bsmr));
       }
     },
-    [response, survey.id]
+    [response, survey.hash]
   );
 
   const submitSurvey = async () => {

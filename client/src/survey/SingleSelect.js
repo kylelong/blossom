@@ -15,7 +15,7 @@ const SingleSelect = ({
         if (Object.keys(bsmr).includes(surveyHash)) {
           let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
-            return res[index].answers[0].answer_hash;
+            return res[index].answers[0].hash;
           }
         }
       }
@@ -36,9 +36,7 @@ const SingleSelect = ({
       setAnswerId(getAnswerIdFromStorage(index));
     }
     if (answerId !== answerIdRef.current && answerId !== "") {
-      updateResponse(index, "single_select", [
-        {answer_hash: answerId, answer: ""},
-      ]);
+      updateResponse(index, "single_select", [{hash: answerId, answer: ""}]);
     }
     handleProceed(index === indexRef.current && answerId.length > 0);
     indexRef.current = index;
