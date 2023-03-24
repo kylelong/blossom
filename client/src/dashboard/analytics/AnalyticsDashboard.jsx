@@ -21,10 +21,13 @@ import axios from "axios";
 const AnalyticsDashboard = () => {
   const [loaded, setLoaded] = useState(false);
   // const [questions, setQuestions] = useState([]);
-  const [surveyIndex, setSurveyIndex] = useState(0);
+  //const [surveyIndex, setSurveyIndex] = useState(0);
   // const [questionIndex, setQuestionIndex] = useState(0);
-  const [surveys, setSurveys] = useState([]);
+  //const [surveys, setSurveys] = useState([]);
   const [hasSurvey, setHasSurvey] = useState(false);
+  /**
+   * colors: [#fa5f55, ]
+   */
   // eslint-disable-next-line
   const [userData, setUserData] = useState({
     labels: UserData.map((data) => data.year),
@@ -55,7 +58,7 @@ const AnalyticsDashboard = () => {
   //   love: "0x1F60D",
   // };
   useEffect(() => {
-    setSurveys([]);
+    // setSurveys([]);
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
       let count = parseInt(response.data);

@@ -1,13 +1,16 @@
-import React, {useState, useEffect, useRef, useCallback} from "react";
+import React, {useState, useEffect, useRef, useCallback, useMemo} from "react";
 
 const Emojis = ({index, handleProceed, updateResponse, surveyHash}) => {
-  const emojis = {
-    angry: "0x1F621",
-    sad: "0x1F614",
-    neutral: "0x1F611",
-    happy: "0x1F60A",
-    love: "0x1F60D",
-  };
+  const emojis = useMemo(
+    () => ({
+      angry: "0x1F621",
+      sad: "0x1F614",
+      neutral: "0x1F611",
+      happy: "0x1F60A",
+      love: "0x1F60D",
+    }),
+    []
+  );
   const getEmojiFromStorage = useCallback(
     (index) => {
       if (localStorage.getItem("bsmr") !== null) {

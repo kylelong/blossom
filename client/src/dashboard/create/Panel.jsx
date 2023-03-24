@@ -135,9 +135,14 @@ const Panel = () => {
 
       // /add_question
       try {
+        hash = randomstring.generate({
+          length: 16,
+          charset: "alphanumeric",
+        });
         const response = await axios.post(`${endpoint}/add_question`, {
           survey_id: survey_id,
           index: questions.length,
+          hash: hash,
         });
         data.id = response.data.id;
         setQuestions((questions) => [...questions, data]);
@@ -636,6 +641,7 @@ const Panel = () => {
 
     return () => clearTimeout(timerRef.current);
   }, [
+    hasDraft,
     surveyTitle,
     draft,
     questions,

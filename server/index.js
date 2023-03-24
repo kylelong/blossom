@@ -440,10 +440,6 @@ app.get("/survey/:hash", async (req, res) => {
 
 // insert into responses
 
-//update response (only open_ended questions)
-
-// delete
-
 app.listen(5000, () => {
   console.log("server listening on port 5000");
 });

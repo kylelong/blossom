@@ -1,5 +1,18 @@
 @import "@radix-ui/colors/mauve.css";
 @import "@radix-ui/colors/blackA.css";
+.noSurveyContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+.surveyMsg {
+  font-weight: bold;
+  margin-top: 12px;
+  margin-left: 5px;
+  font-size: 20px;
+}
 .logoContainer {
   display: flex;
   flex-direction: row;

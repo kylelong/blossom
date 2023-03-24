@@ -133,24 +133,36 @@ const Survey = () => {
     console.log(response);
   };
   if (invalidSurvey) {
-    return <div>Survey is not available or have not been published yet.</div>;
+    return (
+      <div className="noSurveyContainer">
+        <img src={flower} alt="flower" className="flowerLogoImg" />
+        <div className="surveyMsg">
+          this survey is not available or published yet{" "}
+          {String.fromCodePoint("0x1F614")}
+        </div>
+      </div>
+    );
   }
   // make sure id is valid or so error page
   return (
     <div className="surveyParentContainer">
-      <div className="logoContainer">
-        <Logo />
-        <img src={flower} alt="flower" className="flowerLogoImg" />
-      </div>
-      <SurveyViewer
-        questions={questions}
-        surveyName={survey.title}
-        questionHash={null}
-        updateResponse={updateResponse}
-        submitSurvey={submitSurvey}
-        redirectUrl={survey.redirect_url}
-        surveyHash={survey.hash}
-      />
+      {loaded && (
+        <>
+          <div className="logoContainer">
+            <Logo />
+            <img src={flower} alt="flower" className="flowerLogoImg" />
+          </div>
+          <SurveyViewer
+            questions={questions}
+            surveyName={survey.title}
+            questionHash={null}
+            updateResponse={updateResponse}
+            submitSurvey={submitSurvey}
+            redirectUrl={survey.redirect_url}
+            surveyHash={survey.hash}
+          />{" "}
+        </>
+      )}
     </div>
   );
 };
