@@ -121,6 +121,12 @@ INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 
 */
 
+/** to reset surveys :
+delete from answer_choice;
+delete from question;
+delete from survey
+**/
+
 /* 
     ALL QUERIES LABELED BY PAGE
 

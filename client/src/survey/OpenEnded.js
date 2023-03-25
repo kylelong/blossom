@@ -33,7 +33,12 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyHash}) => {
       setResponse(getAnswerFromStorage(index));
     }
     if (responseRef.current !== response) {
-      updateResponse(index, "open_ended", [response]);
+      updateResponse(index, "open_ended", [
+        {
+          hash: "",
+          answer: response,
+        },
+      ]);
     }
     handleProceed(index === indexRef.current && response.length > 0);
     responseRef.current = response;

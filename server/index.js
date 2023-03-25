@@ -36,7 +36,6 @@ app.get("/email_exists/:email", async (req, res) => {
 app.post("/create_user", async (req, res) => {
   try {
     const {email, password} = req.body;
-    console.log(email, password);
     const response = await pool.query(
       "INSERT INTO users (email, password) VALUES($1, crypt($2, gen_salt('bf'))) RETURNING id",
       [email, password]
@@ -400,7 +399,7 @@ app.get("/questions/:survey_id", async (req, res) => {
   try {
     const {survey_id} = req.params;
     const questions = await pool.query(
-      "SELECT id, title, type, index FROM question WHERE survey_id = $1 ORDER BY index ASC",
+      "SELECT id, title, type, index, hash FROM question WHERE survey_id = $1 ORDER BY index ASC",
       [survey_id]
     );
     res.json(questions.rows);
@@ -438,7 +437,89 @@ app.get("/survey/:hash", async (req, res) => {
   }
 });
 
-// insert into responses
+// ** RESPONSES **
+/**
+ * index 1 for question hash
+ * {
+    "question_hash": "IhBQJ0109JRDXUAj",
+    "answers": [
+        {
+            "hash": "QzV2NxfpfdBS1ryyvtnbPZ1z",
+            "answer": ""
+        },
+        {
+            "hash": "GOJapmeoSDhuBdqqp9dmXwqT",
+            "answer": ""
+        },
+        {
+            "hash": "7rLVJnpRJh7bQzlSdRPnCjkY",
+            "answer": ""
+        },
+        {
+            "hash": "I18NVx9jM49syAQbt6uTQc1c",
+            "answer": ""
+        }
+    ]
+}
+ */
+
+// get id from question hash
+app.get("/get_question_id/:hash", async (req, res) => {
+  try {
+    const {hash} = req.params;
+    const response = await pool.query(
+      "SELECT id FROM question WHERE hash = $1",
+      [hash]
+    );
+    res.json(response.rows[0].id);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// get id from answer_choice hash
+app.get("/get_answer_choice_id/:hash", async (req, res) => {
+  try {
+    const {hash} = req.params;
+    const response = await pool.query(
+      "SELECT id FROM answer_choice WHERE hash = $1",
+      [hash]
+    );
+    res.json(response.rows[0].id);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// ** insert into responses **
+
+// insert for emoji / open_ended question (no answer_id, answer is text) with created_at
+app.post("/add_response_with_answer", async (req, res) => {
+  try {
+    const {answer, question_id} = req.body;
+    await pool.query(
+      "INSERT INTO response (question_id, answer) VALUES($1, $2)",
+      [question_id, answer]
+    );
+    res.json("answer response inserted");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// insert for multi_select / single_select question (answer_id, answer is null) with created_at
+app.post("/add_response_with_answer_id", async (req, res) => {
+  try {
+    const {answer_id, question_id} = req.body;
+    await pool.query(
+      "INSERT INTO response (question_id, answer_id) VALUES($1, $2)",
+      [question_id, answer_id]
+    );
+    res.json("answer choice with id response inserted");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 app.listen(5000, () => {
   console.log("server listening on port 5000");
