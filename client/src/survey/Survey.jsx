@@ -22,6 +22,7 @@ const Survey = () => {
   const [questions, setQuestions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [invalidSurvey, setInvalidSurvey] = useState(false);
+  const [questionIds, setQuestionIds] = useState([]);
   // TODO: add response ref
   const loadAnswers = async (questions) => {
     let question_copy = [];
@@ -45,6 +46,15 @@ const Survey = () => {
 
     setQuestions(question_copy.flat());
   };
+  const getQuestionId = async (hash) => {
+    try {
+      let response = await axios.get(`${endpoint}/get_question_id/${hash}`);
+      let data = await response.data;
+      return data;
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
   const loadQuestions = useCallback(
     async (survey_id) => {
@@ -56,14 +66,19 @@ const Survey = () => {
           // loop through and set question id
           if (localStorage.getItem("bsmr") === null) {
             let r = [];
-            for (let i = 0; i < data.length; i++) {
-              let question = data[i];
-              r.push({question_hash: question.hash, answers: []});
+            async function prefillResponse() {
+              for (let i = 0; i < data.length; i++) {
+                let question = data[i];
+                r.push({question_hash: question.hash, answers: []});
+                let question_id = await getQuestionId(question.hash);
+                setQuestionIds((prevState) => [...prevState, question_id]);
+              }
+              let bsmr = {};
+              bsmr[params.id] = r;
+              localStorage.setItem("bsmr", JSON.stringify(bsmr));
+              setResponse(r);
             }
-            let bsmr = {};
-            bsmr[params.id] = r;
-            localStorage.setItem("bsmr", JSON.stringify(bsmr));
-            setResponse(r);
+            prefillResponse();
           }
 
           loadAnswers(data);
@@ -76,6 +91,14 @@ const Survey = () => {
   );
 
   useEffect(() => {
+    async function loadQuestionIds(res) {
+      for (let i = 0; i < res.length; i++) {
+        let question = res[i];
+        let question_id = await getQuestionId(question.question_hash);
+        setQuestionIds((prevState) => [...prevState, question_id]);
+      }
+    }
+
     const loadSurvey = async () => {
       let survey_hash = "";
       try {
@@ -98,6 +121,7 @@ const Survey = () => {
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
         if (Object.keys(bsmr).includes(survey_hash)) {
           let res = bsmr[survey_hash];
+          loadQuestionIds(res);
           setResponse(res);
         }
       }
@@ -105,8 +129,7 @@ const Survey = () => {
     if (!loaded) {
       loadSurvey();
     }
-    console.log(response);
-  }, [survey, params.id, loadQuestions, loaded]);
+  }, [survey, params.id, loadQuestions, loaded, questionIds]);
 
   /**
    * update response array with selected answer choices
@@ -130,22 +153,15 @@ const Survey = () => {
     [response, survey.hash]
   );
 
-  const getQuestionId = async (hash) => {
-    try {
-      let response = await axios.get(`${endpoint}/get_question_id/${hash}`);
-      return response.data;
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
   const getAnswerChoiceId = async (hash) => {
     try {
       let response = await axios.get(
         `${endpoint}/get_answer_choice_id/${hash}`
       );
-      return response.data;
+      let data = await response.data;
+      return data;
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message + " getting answer id");
     }
   };
 
@@ -157,7 +173,7 @@ const Survey = () => {
         question_id: question_id,
       });
     } catch (err) {
-      console.error(err.message);
+      console.error(`inserting answer with response: ${err.message}`);
     }
   };
 
@@ -169,39 +185,28 @@ const Survey = () => {
         question_id: question_id,
       });
     } catch (err) {
-      console.error(err.message);
+      console.error(`inserting answer with id: ${err.message}`);
     }
   };
 
   const submitSurvey = async () => {
-    console.log(response);
-    // TODO: loop through response ans make db calls
     for (let i = 0; i < response.length; i++) {
       let res = response[i];
-      let question_hash = res.question_hash;
-
-      let question_id = (async function () {
-        let response = await getQuestionId(question_hash);
-        console.log(response.data);
-        return response.data;
-      })();
+      let question_id = questionIds[i];
       // loop through res.answers
       let answers = res.answers;
       for (let j = 0; j < answers.length; j++) {
         const {answer, hash} = answers[j];
+        // single_select / multi_select answer with id
         if (hash.length > 0 && answer.length === 0) {
-          // add_response_with_answer_id
-          let answer_id = (async function () {
-            let response = await getAnswerChoiceId(hash);
-            console.log(response.data);
-            return response.data;
-          })();
-
           (async function () {
-            await insertAnswerIdResponse(answer_id, question_id);
+            let answer_id = await getAnswerChoiceId(hash);
+            (async function () {
+              await insertAnswerIdResponse(answer_id, question_id);
+            })();
           })();
         } else if (hash.length === 0 && answers.length > 0) {
-          // add_response_with_answer
+          // add_response_with_answer for emojis / open_ended
           (async function () {
             await insertAnswerResponse(answer, question_id);
           })();

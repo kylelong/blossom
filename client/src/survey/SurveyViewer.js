@@ -21,6 +21,9 @@ const SurveyViewer = ({
       : JSON.parse(localStorage.getItem("sids")).includes(surveyHash);
   const showQuestions = questions.length > 0 && !submitted;
   const prevQuestions = useRef(questions);
+  if (hasCompletedSurvey) {
+    localStorage.removeItem("bsmr");
+  }
 
   // can go to next question or submit
   const handleProceed = useCallback((proceed) => {
