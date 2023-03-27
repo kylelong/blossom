@@ -26,6 +26,7 @@ const DashboardOverview = () => {
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
+  const [numberOfResponses, setNumberOfResponses] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
@@ -64,19 +65,22 @@ const DashboardOverview = () => {
       const data = response.data;
       setQuestionTypeCounts(data);
     };
+    const countResponses = async () => {
+      const response = await axios.get(
+        `${endpoint}/number_of_responses/${user_id}`
+      );
+      const count = response.data;
+      setNumberOfResponses(count);
+    };
 
     countSurveys();
     countDrafts();
     countQuestions();
     countQuestionTypes();
+    countResponses();
     setLoaded(true);
   }, [loaded]);
 
-  const randomNumber = () => {
-    let min = 100,
-      max = 10000;
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
     : `create a new survey ${String.fromCodePoint("0x1F680")}`;
@@ -105,7 +109,7 @@ const DashboardOverview = () => {
               </DashboardStat>
             )}
             <DashboardStat>
-              <DashboardNumber>{randomNumber()}</DashboardNumber>
+              <DashboardNumber>{numberOfResponses}</DashboardNumber>
               <DashboardStatHeader>responses</DashboardStatHeader>
             </DashboardStat>
           </DashboardStatContainer>

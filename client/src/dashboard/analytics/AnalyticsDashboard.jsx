@@ -36,9 +36,9 @@ const AnalyticsDashboard = () => {
         label: "Users Gained",
         data: UserData.map((data) => data.userGain),
         backgroundColor: [
-          "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
+          "#525f7f",
+          "#fa5f55",
+          "#355e3b",
           "#f3ba2f",
           "#2a71d0",
         ],

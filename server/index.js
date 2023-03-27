@@ -139,6 +139,20 @@ app.get("/question_type_count/:user_id", async (req, res) => {
   }
 });
 
+// number of responses
+app.get("/number_of_responses/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM response r INNER JOIN question q ON r.question_id = q.id INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = $1",
+      [user_id]
+    );
+    res.json(count.rows[0].count);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // ** CREATE **
 app.post("/create_survey", async (req, res) => {
   try {

@@ -140,7 +140,7 @@ delete from survey
      # of questions 
          SELECT COUNT(q.id) from survey s INNER JOIN question q ON s.id = q.survey_id WHERE s.user_id = ${}
 
-     # of responses 
+     # of responses TODO:**
         SELECT COUNT(r.id) FROM resposnes r INNER JOIN question q ON r.question_id = q.id WHERE q.survey_id = ${}
 
     CREATE
@@ -149,22 +149,6 @@ delete from survey
     SURVEYS
 
     ** UPDATE NUMBER OF QUESTIONS AT END OF SURVEY **
-
-    -- get all surveys for this users : surveys page
-        SELECT title from survey WHERE user_id = ${} ORDER BY created_at DESC; -- left panel of titles 
-
-    -- get survey for preview
-        # questions 
-        SELECT title, type, index FROM question WHERE survey_id = ${} ORDER BY index ASC;
-        -- if type is open_ended || emoji then prefill
-
-        # answers
-        -- needed only if question type is multi_select || single select otherwise prefill
-        SELECT choice FROM answer_choice WHERE question_id = ${current_question_id} ORDER BY index ASC;
-
-
-
-
 
     ANALYTICS 
 
@@ -178,6 +162,13 @@ delete from survey
             r.question_id = ${} GROUP BY ac.choice;
 
     get all responses for a survey
+
+    -- select * from survey where question_id = 
+-- select * from question where survey_id = 6;
+-- select * answer_choice where id = ${question_id}
+-- SELECT q.title, q.type, ac.index AS answer_index, ac.choice FROM question q INNER JOIN survey s ON s.id = q.survey_id INNER JOIN answer_choice ac ON ac.question_id = q.id WHERE s.id = 8;
+-- SELECT COUNT(*) FROM survey WHERE user_id = 1;
+SELECT q.type, COUNT(q.type) FROM question q INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = 1 AND q.type <> '' GROUP BY type;
 
 
 
