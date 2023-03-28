@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState, useCallback, useRef} from "react";
 import Welcome from "../Welcome";
 import {
   AnalyticsContainer,
@@ -22,6 +22,7 @@ const AnalyticsDashboard = () => {
   const [survey, setSurvey] = useState([]);
   const [hasSurvey, setHasSurvey] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
+  const surveyIdRef = useRef(selectedSurveyId);
   /**
    * colors: [#fa5f55, ]
    */
@@ -99,10 +100,10 @@ const AnalyticsDashboard = () => {
 
         setSurveys(data);
         setSelectedSurveyId(data[0].id);
+        loadQuestions(data[0].id);
       } catch (err) {
         console.error(err.message);
       }
-      countSurveys();
 
       setLoaded(true);
     };
@@ -115,13 +116,15 @@ const AnalyticsDashboard = () => {
       }
     };
     if (!loaded) {
+      countSurveys();
       loadSurveys();
     }
 
-    if (selectedSurveyId > 0) {
-      loadQuestions(selectedSurveyId);
+    if (surveyIdRef.current !== selectedSurveyId) {
       setSurvey(surveys.filter((survey) => survey.id === selectedSurveyId)[0]);
+      loadQuestions(selectedSurveyId);
     }
+    surveyIdRef.current = selectedSurveyId;
   }, [loaded, selectedSurveyId, loadQuestions, surveys]);
 
   if (loaded && !hasSurvey) {
@@ -145,18 +148,26 @@ const AnalyticsDashboard = () => {
               <div>
                 {questions.map((question) => {
                   return (
-                    <>
-                      <div key={question.id}>
+                    <div key={question.id}>
+                      <div>
                         {question.title} - {question.type}
                       </div>
-                    </>
+                    </div>
                   );
                 })}
               </div>
             </QuestionContainer>
             <AnswerChoiceContainer>
               <ContainerHeader> answer choices </ContainerHeader>
-              <div></div>
+
+              <ul>
+                {questions &&
+                  questions.length &&
+                  questions[questionIndex].answerChoices &&
+                  questions[questionIndex].answerChoices.map((answer) => {
+                    return <li key={answer.id}>{answer.choice}</li>;
+                  })}
+              </ul>
             </AnswerChoiceContainer>
           </SurveyRow>
         </AnalyticsContainer>
