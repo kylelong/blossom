@@ -2,10 +2,51 @@ import styled from "styled-components";
 
 export const AnalyticsContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  width: 50vw;
+  position: relative;
+  top: 50px;
+  width: 100%;
 `;
+export const SurveyTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #525f7f;
+  margin-bottom: 50px;
+`;
+
+export const SurveyRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100vh;
+  width: 70vw;
+`;
+export const SurveyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+export const QuestionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+export const AnswerChoiceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+export const ContainerHeader = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #525f7f;
+`;
+
+// old
 export const AnalyticsSection = styled.div``;
 export const AnalyticsHeader = styled.div`
   font-size: 20px;
