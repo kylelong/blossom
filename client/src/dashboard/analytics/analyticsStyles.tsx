@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {gray} from "@radix-ui/colors";
 
 export const AnalyticsContainer = styled.div`
   display: flex;
@@ -44,6 +45,18 @@ export const ContainerHeader = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: #525f7f;
+  margin-bottom: 12px;
+`;
+export const Question = styled.div`
+  border-radius: 0.375rem;
+  border: 1px solid black;
+  padding: 12px;
+  margin-bottom: 12px;
+  &:hover {
+    background-color: #525f7f;
+    color: white;
+    cursor: pointer;
+  }
 `;
 
 // old

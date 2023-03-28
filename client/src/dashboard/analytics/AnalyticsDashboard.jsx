@@ -8,6 +8,7 @@ import {
   SurveyRow,
   ContainerHeader,
   SurveyContainer,
+  Question,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
@@ -146,12 +147,12 @@ const AnalyticsDashboard = () => {
             <QuestionContainer>
               <ContainerHeader> questions </ContainerHeader>
               <div>
-                {questions.map((question) => {
+                {questions.map((question, index) => {
                   return (
                     <div key={question.id}>
-                      <div>
+                      <Question onClick={() => setQuestionIndex(index)}>
                         {question.title} - {question.type}
-                      </div>
+                      </Question>
                     </div>
                   );
                 })}
