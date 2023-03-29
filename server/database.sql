@@ -112,6 +112,14 @@ INSERT INTO response (answer_id, question_id) VALUES (1, 1);
 INSERT INTO response (answer_id, question_id) VALUES (2, 1);
 INSERT INTO response (answer_id, question_id) VALUES (4, 1);
 
+-- analytics
+-- answer_id
+
+ SELECT ac.choice, COUNT(ac.choice) FROM answer_choice ac INNER JOIN response r ON r.answer_id = ac.id WHERE r.question_id = 233 GROUP BY ac.choice;
+ 
+ -- open_ended / emoji
+ SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = ?;
+
 /*
     TABLE CHANGES 
 

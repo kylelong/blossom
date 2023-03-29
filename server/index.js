@@ -560,6 +560,34 @@ app.post("/add_response_with_answer_id", async (req, res) => {
   }
 });
 
+// ANALYTICS
+app.get("/answer_choice_analytics/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const response = await pool.query(
+      "SELECT ac.choice, COUNT(ac.choice) AS count, SUM(COUNT(ac.choice)) OVER() as total,COUNT(ac.choice) / SUM(COUNT(ac.choice)) OVER() AS avg  FROM answer_choice ac INNER JOIN response r ON r.answer_id = ac.id WHERE r.question_id = $1 GROUP BY choice",
+      [question_id]
+    );
+    res.json(response.rows); // choice, count, total, avg
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// open_ended
+app.get("/answer_analytics/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const response = await pool.query(
+      "SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1",
+      [question_id]
+    );
+    res.json(response.rows); //.answer
+  } catch (err) {
+    res.json(response.rows);
+  }
+});
+
 app.listen(5000, () => {
   console.log("server listening on port 5000");
 });
