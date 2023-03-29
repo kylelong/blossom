@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import {gray} from "@radix-ui/colors";
 
 export const AnalyticsContainer = styled.div`
   display: flex;
@@ -48,15 +47,40 @@ export const ContainerHeader = styled.div`
   margin-bottom: 12px;
 `;
 export const Question = styled.div`
+  display: flex;
+  flex-direction: column;
   border-radius: 0.375rem;
   border: 1px solid black;
   padding: 12px;
   margin-bottom: 12px;
+  text-align: left;
   &:hover {
     background-color: #525f7f;
     color: white;
     cursor: pointer;
   }
+`;
+export const QuestionType = styled.div`
+  color: rgb(60, 66, 87);
+  background: rgb(247, 250, 252);
+  border: 1px solid #efefef;
+  padding: 2px;
+  font-size: 13px;
+  border-radius: 5px;
+  width: fit-content;
+  padding: 2px 5px;
+  margin-top: 12px;
+`;
+export const SelectedQuestion = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  background-color: #525f7f;
+  color: white;
+  border-radius: 0.375rem;
+  border: 1px solid black;
+  padding: 12px;
+  margin-bottom: 12px;
 `;
 
 // old
@@ -117,21 +141,31 @@ export const AnswerChoice = styled.div`
   text-align: center;
   margin-bottom: 5px;
 `;
-export const QuestionType = styled.div`
-  color: rgb(60, 66, 87);
-  background: rgb(247, 250, 252);
-  border: 1px solid #efefef;
-  padding: 2px;
-  font-size: 13px;
-  border-radius: 5px;
-  width: fit-content;
-  padding: 2px 5px;
+export const EmojiContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
 `;
 export const EmojiRow = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 `;
 export const Emoji = styled.div`
-  margin-right: 5px;
+  position: relative;
+  bottom: 20px;
+  border-radius: 0;
+  border: none;
+  border-image-width: 0;
+  box-sizing: border-box;
+  color: #000;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 1%;
+  font-size: 30px;
+  margin: 1%;
+  height: 50px;
 `;

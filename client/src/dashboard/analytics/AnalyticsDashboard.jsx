@@ -9,9 +9,15 @@ import {
   ContainerHeader,
   SurveyContainer,
   Question,
+  SelectedQuestion,
+  QuestionType,
+  EmojiRow,
+  Emoji,
+  EmojiContainer,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
+import ProgressBar from "./ProgressBar";
 import {UserData} from "./Data";
 import axios from "axios";
 
@@ -49,13 +55,13 @@ const AnalyticsDashboard = () => {
   const endpoint = "http://localhost:5000";
   const user_id = 1;
   const multiple_choice = ["multi_select", "single_select"];
-  // const emojis = {
-  //   angry: "0x1F621",
-  //   sad: "0x1F614",
-  //   neutral: "0x1F611",
-  //   happy: "0x1F60A",
-  //   love: "0x1F60D",
-  // };
+  const emojis = {
+    angry: "0x1F621",
+    sad: "0x1F614",
+    neutral: "0x1F611",
+    happy: "0x1F60A",
+    love: "0x1F60D",
+  };
   /* <PieChart chartData={userData} /> */
   const loadAnswers = async (questions) => {
     let question_copy = [];
@@ -96,7 +102,9 @@ const AnalyticsDashboard = () => {
   useEffect(() => {
     const loadSurveys = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change usersid to variable
+        const response = await axios.get(
+          "http://localhost:5000/published_surveys/1"
+        ); //TODO: change usersid to variable
         const data = await response.data;
 
         setSurveys(data);
@@ -109,7 +117,9 @@ const AnalyticsDashboard = () => {
       setLoaded(true);
     };
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
+      const response = await axios.get(
+        `${endpoint}/published_survey_count/${user_id}`
+      );
       let count = parseInt(response.data);
 
       if (count > 0) {
@@ -150,9 +160,19 @@ const AnalyticsDashboard = () => {
                 {questions.map((question, index) => {
                   return (
                     <div key={question.id}>
-                      <Question onClick={() => setQuestionIndex(index)}>
-                        {question.title} - {question.type}
-                      </Question>
+                      {index === questionIndex ? (
+                        <SelectedQuestion
+                          onClick={() => setQuestionIndex(index)}
+                        >
+                          {question.title}-{question.id}
+                          <QuestionType>{question.type}</QuestionType>
+                        </SelectedQuestion>
+                      ) : (
+                        <Question onClick={() => setQuestionIndex(index)}>
+                          {question.title}-{question.id}
+                          <QuestionType>{question.type}</QuestionType>
+                        </Question>
+                      )}
                     </div>
                   );
                 })}
@@ -160,10 +180,28 @@ const AnalyticsDashboard = () => {
             </QuestionContainer>
             <AnswerChoiceContainer>
               <ContainerHeader> answer choices </ContainerHeader>
+              {questions &&
+                questions.length &&
+                questions[questionIndex] &&
+                questions[questionIndex].type === "emoji_sentiment" && (
+                  <EmojiRow>
+                    {Object.entries(emojis)
+                      .reverse()
+                      .map(([key, value]) => {
+                        return (
+                          <EmojiContainer key={key}>
+                            <Emoji>{String.fromCodePoint(value)}</Emoji>
+                            <ProgressBar />
+                          </EmojiContainer>
+                        );
+                      })}
+                  </EmojiRow>
+                )}
 
               <ul>
                 {questions &&
                   questions.length &&
+                  questions[questionIndex] &&
                   questions[questionIndex].answerChoices &&
                   questions[questionIndex].answerChoices.map((answer) => {
                     return <li key={answer.id}>{answer.choice}</li>;

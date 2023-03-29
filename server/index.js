@@ -78,6 +78,19 @@ app.get("/survey_count/:user_id", async (req, res) => {
   }
 });
 
+app.get("/published_survey_count/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM survey WHERE user_id = $1 AND published = true",
+      [user_id]
+    );
+    res.json(count.rows[0].count);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.get("/draft_survey_count/:user_id", async (req, res) => {
   try {
     const {user_id} = req.params;
@@ -400,6 +413,18 @@ app.get("/surveys/:user_id", async (req, res) => {
     const {user_id} = req.params;
     const titles = await pool.query(
       "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 ORDER BY created_at DESC",
+      [user_id]
+    );
+    res.json(titles.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+app.get("/published_surveys/:user_id", async (req, res) => {
+  try {
+    const {user_id} = req.params;
+    const titles = await pool.query(
+      "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
       [user_id]
     );
     res.json(titles.rows);
