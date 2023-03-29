@@ -8,7 +8,8 @@ export const EmojiStatContainer = styled.div`
   margin-left: 6px;
 `;
 export const Stat = styled.div`
-  margin-right: 2px;
+  margin-right: 3px;
+  margin-left: 3px;
 `;
 export const Dot = styled.span`
   height: 5px;
@@ -16,6 +17,7 @@ export const Dot = styled.span`
   background-color: #525f7f;
   border-radius: 50%;
   display: inline-block;
+  margin-right: 3px;
 `;
 const EmojiStat = ({emoji, emojiAnalytics}) => {
   let index = emojiAnalytics.findIndex((em) => em.answer === emoji);

@@ -23,22 +23,39 @@ export const SurveyRow = styled.div`
   align-items: flex-start;
   height: 100vh;
   width: 70vw;
+  @media (max-width: 1100px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: unset;
+  }
 `;
 export const SurveyContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  @media (max-width: 1100px) {
+    flex: 0.5;
+    margin-bottom: 24px;
+  }
 `;
 
 export const QuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  @media (max-width: 1100px) {
+    flex: 0.5;
+    margin-bottom: 24px;
+  }
 `;
 export const AnswerChoiceContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  @media (max-width: 1100px) {
+    flex: unset;
+    margin-bottom: 24px;
+  }
 `;
 export const ContainerHeader = styled.div`
   font-size: 16px;

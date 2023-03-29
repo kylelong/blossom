@@ -97,7 +97,6 @@ const AnalyticsDashboard = () => {
         `${endpoint}/answer_choice_analytics/${question_id}`
       );
       const data = await response.data;
-      console.log(data);
       setAnswerChoiceAnalytics(data);
     } catch (err) {
       console.error(err.message);
@@ -109,6 +108,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/open_ended_analytics/${question_id}`
       );
       const data = await response.data;
+      console.log(data);
       setOpenEndedAnalytics(data);
     } catch (err) {
       console.error(err.message);
@@ -223,7 +223,7 @@ const AnalyticsDashboard = () => {
                             )
                           }
                         >
-                          {question.title}-{question.id}
+                          {question.title}
                           <QuestionType>{question.type}</QuestionType>
                         </SelectedQuestion>
                       ) : (
@@ -236,7 +236,7 @@ const AnalyticsDashboard = () => {
                             )
                           }
                         >
-                          {question.title}-{question.id}
+                          {question.title}
                           <QuestionType>{question.type}</QuestionType>
                         </Question>
                       )}
@@ -274,6 +274,7 @@ const AnalyticsDashboard = () => {
 
               <ul>
                 {validQuestions &&
+                  multiple_choice.includes(questions[questionIndex].type) &&
                   questions[questionIndex].answerChoices &&
                   questions[questionIndex].answerChoices.map((answer) => {
                     return (
