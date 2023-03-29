@@ -5,6 +5,7 @@ import QuestionViewer from "./QuestionViewer";
 import flower from "../../images/scandi-331.svg";
 const SurveyPreview = ({questions, surveyTitle, questionId}) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
   const prevQuestions = useRef(questions);
   const showQuestions = questions.length > 0;
 
@@ -38,7 +39,8 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
       setQuestionIndex(0);
     }
     prevQuestions.current = questions;
-  }, [questions, questionId, surveyTitle]);
+    setLoaded(true);
+  }, [questions, questionId, surveyTitle, loaded]);
   return (
     <div className="surveyContainerParent">
       <Label.Root className="surveySectionLabel" htmlFor="surveyTitle">
@@ -51,7 +53,7 @@ const SurveyPreview = ({questions, surveyTitle, questionId}) => {
         {showQuestions && (
           <div className="questionNumber">question {questionIndex + 1}</div>
         )}
-        {!showQuestions && (
+        {loaded && !showQuestions && (
           <div className="startSurveyContainer">
             <img src={flower} alt="sunflower" />
 
