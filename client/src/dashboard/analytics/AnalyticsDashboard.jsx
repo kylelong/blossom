@@ -18,6 +18,8 @@ import {
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
+import EmojiStat from "./EmojiStat";
+import AnswerChoice from "./AnswerChoice";
 import {UserData} from "./Data";
 import axios from "axios";
 
@@ -29,6 +31,9 @@ const AnalyticsDashboard = () => {
   const [survey, setSurvey] = useState([]);
   const [hasSurvey, setHasSurvey] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
+  const [emojiAnalytics, setEmojiAnalytics] = useState([]);
+  const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
+  const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
   /**
    * colors: [#fa5f55, ]
@@ -62,7 +67,53 @@ const AnalyticsDashboard = () => {
     happy: "0x1F60A",
     love: "0x1F60D",
   };
+  const validQuestions =
+    questions && questions.length && questions[questionIndex];
   /* <PieChart chartData={userData} /> */
+  const handleQuestionChange = (index, type, id) => {
+    setQuestionIndex(index);
+    if (multiple_choice.includes(type)) {
+      loadAnswerChoiceAnalytics(id);
+    } else if (type === "emoji_sentiment") {
+      loadEmojiAnalytics(id);
+    } else if (type === "open_ended") {
+      loadOpenEnededAnalytics(id);
+    }
+  };
+  const loadEmojiAnalytics = async (question_id) => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/emoji_analytics/${question_id}`
+      );
+      const data = await response.data;
+      setEmojiAnalytics(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const loadAnswerChoiceAnalytics = async (question_id) => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/answer_choice_analytics/${question_id}`
+      );
+      const data = await response.data;
+      console.log(data);
+      setAnswerChoiceAnalytics(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const loadOpenEnededAnalytics = async (question_id) => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/open_ended_analytics/${question_id}`
+      );
+      const data = await response.data;
+      setOpenEndedAnalytics(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   const loadAnswers = async (questions) => {
     let question_copy = [];
     for (let i = 0; i < questions.length; i++) {
@@ -93,6 +144,8 @@ const AnalyticsDashboard = () => {
 
       if (data && data.length) {
         setQuestions(data);
+        const {type, id} = data[0];
+        handleQuestionChange(0, type, id);
         loadAnswers(data);
       }
     } catch (err) {
@@ -162,13 +215,27 @@ const AnalyticsDashboard = () => {
                     <div key={question.id}>
                       {index === questionIndex ? (
                         <SelectedQuestion
-                          onClick={() => setQuestionIndex(index)}
+                          onClick={() =>
+                            handleQuestionChange(
+                              index,
+                              question.type,
+                              question.id
+                            )
+                          }
                         >
                           {question.title}-{question.id}
                           <QuestionType>{question.type}</QuestionType>
                         </SelectedQuestion>
                       ) : (
-                        <Question onClick={() => setQuestionIndex(index)}>
+                        <Question
+                          onClick={() =>
+                            handleQuestionChange(
+                              index,
+                              question.type,
+                              question.id
+                            )
+                          }
+                        >
                           {question.title}-{question.id}
                           <QuestionType>{question.type}</QuestionType>
                         </Question>
@@ -180,18 +247,25 @@ const AnalyticsDashboard = () => {
             </QuestionContainer>
             <AnswerChoiceContainer>
               <ContainerHeader> answer choices </ContainerHeader>
-              {questions &&
-                questions.length &&
-                questions[questionIndex] &&
+              {validQuestions &&
                 questions[questionIndex].type === "emoji_sentiment" && (
                   <EmojiRow>
                     {Object.entries(emojis)
                       .reverse()
                       .map(([key, value]) => {
+                        let index = emojiAnalytics.findIndex(
+                          (em) => em.answer === value
+                        );
+                        let progress =
+                          index > -1 ? emojiAnalytics[index].avg * 100 : 0;
                         return (
                           <EmojiContainer key={key}>
                             <Emoji>{String.fromCodePoint(value)}</Emoji>
-                            <ProgressBar />
+                            <ProgressBar number={progress} />
+                            <EmojiStat
+                              emoji={value}
+                              emojiAnalytics={emojiAnalytics}
+                            />
                           </EmojiContainer>
                         );
                       })}
@@ -199,12 +273,16 @@ const AnalyticsDashboard = () => {
                 )}
 
               <ul>
-                {questions &&
-                  questions.length &&
-                  questions[questionIndex] &&
+                {validQuestions &&
                   questions[questionIndex].answerChoices &&
                   questions[questionIndex].answerChoices.map((answer) => {
-                    return <li key={answer.id}>{answer.choice}</li>;
+                    return (
+                      <AnswerChoice
+                        key={answer.id}
+                        choice={answer.choice}
+                        answerChoiceAnalytics={answerChoiceAnalytics}
+                      />
+                    );
                   })}
               </ul>
             </AnswerChoiceContainer>

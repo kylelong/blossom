@@ -2,16 +2,13 @@ import React from "react";
 import * as Progress from "@radix-ui/react-progress";
 import "./progressbar.css";
 
-const ProgressBar = () => {
+const ProgressBar = ({number}) => {
   const [progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
-    const timer = setTimeout(
-      () => setProgress(() => Math.floor(Math.random() * 100) + 1),
-      500
-    );
+    const timer = setTimeout(() => setProgress(number), 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [number]);
 
   return (
     <Progress.Root className="ProgressRoot" value={progress}>

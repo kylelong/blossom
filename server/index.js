@@ -561,6 +561,7 @@ app.post("/add_response_with_answer_id", async (req, res) => {
 });
 
 // ANALYTICS
+// multi_select / single_select
 app.get("/answer_choice_analytics/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
@@ -575,7 +576,7 @@ app.get("/answer_choice_analytics/:question_id", async (req, res) => {
 });
 
 // open_ended
-app.get("/answer_analytics/:question_id", async (req, res) => {
+app.get("/open_ended_analytics/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
     const response = await pool.query(
@@ -585,6 +586,19 @@ app.get("/answer_analytics/:question_id", async (req, res) => {
     res.json(response.rows); //.answer
   } catch (err) {
     res.json(response.rows);
+  }
+});
+
+app.get("/emoji_analytics/:question_id", async (req, res) => {
+  try {
+    const {question_id} = req.params;
+    const response = await pool.query(
+      "SELECT answer, COUNT(answer) AS count, SUM(COUNT(answer)) OVER() as total,COUNT(answer) / SUM(COUNT(answer)) OVER() AS avg  FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1 GROUP BY answer",
+      [question_id]
+    );
+    res.json(response.rows); // choice, count, total, avg
+  } catch (err) {
+    console.error(err.message);
   }
 });
 

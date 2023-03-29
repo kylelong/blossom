@@ -145,7 +145,7 @@ export const EmojiContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: center;
+  margin-left: 24px;
 `;
 export const EmojiRow = styled.div`
   display: flex;
