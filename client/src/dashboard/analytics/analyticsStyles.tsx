@@ -6,7 +6,6 @@ export const AnalyticsContainer = styled.div`
   justify-content: space-between;
   position: relative;
   top: 50px;
-  width: 100%;
 `;
 export const SurveyTitle = styled.div`
   font-size: 20px;
@@ -34,7 +33,7 @@ export const SurveyContainer = styled.div`
   flex-direction: column;
   flex: 1;
   @media (max-width: 1100px) {
-    flex: 0.5;
+    flex: unset;
     margin-bottom: 24px;
   }
 `;
@@ -44,8 +43,16 @@ export const QuestionContainer = styled.div`
   flex-direction: column;
   flex: 1;
   @media (max-width: 1100px) {
-    flex: 0.5;
+    flex: unset;
     margin-bottom: 24px;
+    width: 287px;
+  }
+`;
+export const AnswerWrapper = styled.div`
+  margin-left: 48px;
+  @media (max-width: 1100px) {
+    margin: unset;
+    width: 287px;
   }
 `;
 export const AnswerChoiceContainer = styled.div`
@@ -55,6 +62,7 @@ export const AnswerChoiceContainer = styled.div`
   @media (max-width: 1100px) {
     flex: unset;
     margin-bottom: 24px;
+    max-width: 320px;
   }
 `;
 export const ContainerHeader = styled.div`
@@ -162,7 +170,9 @@ export const EmojiContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  margin-left: 24px;
+  @media (min-width: 1101px) {
+    margin-left: 24px;
+  }
 `;
 export const EmojiRow = styled.div`
   display: flex;

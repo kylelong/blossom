@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef} from "react";
+import React, {useEffect, useState, useCallback, useRef, useMemo} from "react";
 import Welcome from "../Welcome";
 import {
   AnalyticsContainer,
@@ -14,12 +14,14 @@ import {
   EmojiRow,
   Emoji,
   EmojiContainer,
+  AnswerWrapper,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
 import EmojiStat from "./EmojiStat";
 import AnswerChoice from "./AnswerChoice";
+import ScrollArea from "./ScrollArea";
 import {UserData} from "./Data";
 import axios from "axios";
 
@@ -59,7 +61,7 @@ const AnalyticsDashboard = () => {
   });
   const endpoint = "http://localhost:5000";
   const user_id = 1;
-  const multiple_choice = ["multi_select", "single_select"];
+  const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -70,16 +72,19 @@ const AnalyticsDashboard = () => {
   const validQuestions =
     questions && questions.length && questions[questionIndex];
   /* <PieChart chartData={userData} /> */
-  const handleQuestionChange = (index, type, id) => {
-    setQuestionIndex(index);
-    if (multiple_choice.includes(type)) {
-      loadAnswerChoiceAnalytics(id);
-    } else if (type === "emoji_sentiment") {
-      loadEmojiAnalytics(id);
-    } else if (type === "open_ended") {
-      loadOpenEnededAnalytics(id);
-    }
-  };
+  const handleQuestionChange = useCallback(
+    (index, type, id) => {
+      setQuestionIndex(index);
+      if (multiple_choice.includes(type)) {
+        loadAnswerChoiceAnalytics(id);
+      } else if (type === "emoji_sentiment") {
+        loadEmojiAnalytics(id);
+      } else if (type === "open_ended") {
+        loadOpenEnededAnalytics(id);
+      }
+    },
+    [multiple_choice]
+  );
   const loadEmojiAnalytics = async (question_id) => {
     try {
       const response = await axios.get(
@@ -108,7 +113,6 @@ const AnalyticsDashboard = () => {
         `${endpoint}/open_ended_analytics/${question_id}`
       );
       const data = await response.data;
-      console.log(data);
       setOpenEndedAnalytics(data);
     } catch (err) {
       console.error(err.message);
@@ -137,26 +141,29 @@ const AnalyticsDashboard = () => {
     setQuestions(question_copy.flat());
   };
 
-  const loadQuestions = useCallback(async (survey_id) => {
-    try {
-      const response = await axios.get(`${endpoint}/questions/${survey_id}`);
-      const data = await response.data;
+  const loadQuestions = useCallback(
+    async (survey_id) => {
+      try {
+        const response = await axios.get(`${endpoint}/questions/${survey_id}`);
+        const data = await response.data;
 
-      if (data && data.length) {
-        setQuestions(data);
-        const {type, id} = data[0];
-        handleQuestionChange(0, type, id);
-        loadAnswers(data);
+        if (data && data.length) {
+          setQuestions(data);
+          const {type, id} = data[0];
+          handleQuestionChange(0, type, id);
+          loadAnswers(data);
+        }
+      } catch (err) {
+        console.error(err.message);
       }
-    } catch (err) {
-      console.error(err.message);
-    }
-  }, []);
+    },
+    [handleQuestionChange]
+  );
   useEffect(() => {
     const loadSurveys = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/published_surveys/1"
+          "http://localhost:5000/published_surveys/1" // TODO: remove
         ); //TODO: change usersid to variable
         const data = await response.data;
 
@@ -272,7 +279,7 @@ const AnalyticsDashboard = () => {
                   </EmojiRow>
                 )}
 
-              <ul>
+              <AnswerWrapper>
                 {validQuestions &&
                   multiple_choice.includes(questions[questionIndex].type) &&
                   questions[questionIndex].answerChoices &&
@@ -285,7 +292,11 @@ const AnalyticsDashboard = () => {
                       />
                     );
                   })}
-              </ul>
+                {validQuestions &&
+                  questions[questionIndex].type === "open_ended" && (
+                    <ScrollArea data={openEndedAnalytics} />
+                  )}
+              </AnswerWrapper>
             </AnswerChoiceContainer>
           </SurveyRow>
         </AnalyticsContainer>

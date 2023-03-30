@@ -1,21 +1,24 @@
 import React from "react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import "./styles.css";
+import "./scrollarea.css";
 
-const TAGS = Array.from({length: 50}).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-);
+// const TAGS = Array.from({length: 50}).map(
+//   (_, i, a) => `v1.2.0-beta.${a.length - i}`
+// );
 
-const Scroller = () => (
+const Scroller = ({data}) => (
   <ScrollArea.Root className="ScrollAreaRoot">
     <ScrollArea.Viewport className="ScrollAreaViewport">
       <div style={{padding: "15px 20px"}}>
-        <div className="Text">Tags</div>
-        {TAGS.map((tag) => (
-          <div className="Tag" key={tag}>
-            {tag}
+        <div className="Text">Responses</div>
+        {data.map((d) => (
+          <div className="Tag" key={d.answer}>
+            {d.answer}
           </div>
         ))}
+        {data.length === 0 && (
+          <div className="noResponsesYet">no responses yet</div>
+        )}
       </div>
     </ScrollArea.Viewport>
     <ScrollArea.Scrollbar

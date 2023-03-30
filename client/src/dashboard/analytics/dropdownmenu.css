@@ -42,7 +42,7 @@ button {
 .DropdownMenuSubTrigger {
   font-size: 13px;
   line-height: 1;
-  color: var(--violet11);
+  color: #525f7f;
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -54,8 +54,8 @@ button {
   outline: none;
 }
 .DropdownMenuSubTrigger[data-state="open"] {
-  background-color: var(--violet4);
-  color: var(--violet11);
+  background-color: white;
+  color: #525f7f;
 }
 .DropdownMenuItem[data-disabled],
 .DropdownMenuCheckboxItem[data-disabled],
@@ -68,8 +68,8 @@ button {
 .DropdownMenuCheckboxItem[data-highlighted],
 .DropdownMenuRadioItem[data-highlighted],
 .DropdownMenuSubTrigger[data-highlighted] {
-  background-color: var(--violet9);
-  color: var(--violet1);
+  background-color: #525f7f;
+  color: white;
 }
 
 .DropdownMenuLabel {
@@ -81,7 +81,7 @@ button {
 
 .DropdownMenuSeparator {
   height: 1px;
-  background-color: var(--violet6);
+  background-color: white;
   margin: 5px;
 }
 
