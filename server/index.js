@@ -20,13 +20,14 @@ app.get("/verify_user/:email/:password", async (req, res) => {
     console.error(err.message);
   }
 });
-app.get("/user_id/:email", async (req, res) => {
+app.get("/user_info/:email", async (req, res) => {
   try {
     const {email} = req.params;
-    const response = await pool.query("SELECT id FROM users WHERE email = $1", [
-      email,
-    ]);
-    res.json(response.rows[0].id);
+    const response = await pool.query(
+      "SELECT id, company, email FROM users WHERE id = $1",
+      [email]
+    );
+    res.json(response.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -60,6 +61,12 @@ app.post("/create_user", async (req, res) => {
 // update company
 app.put("/update_company", async (req, res) => {
   try {
+    const {company, id} = req.body;
+    const response = await pool.query(
+      "UPDATE users SET company = $1 WHERE id = $2 RETURNING company",
+      [company, id]
+    );
+    res.json(response.rows[0].company);
   } catch (err) {
     console.error(err.message);
   }
@@ -70,6 +77,8 @@ app.put("/update_hash", async (req, res) => {
     console.error(err.message);
   }
 });
+
+// TODO: confirm user when they confirm email
 
 // DASHBOARD
 
@@ -120,7 +129,7 @@ app.get("/question_count/:user_id", async (req, res) => {
   try {
     const {user_id} = req.params;
     const count = await pool.query(
-      "SELECT SUM(number_of_questions) FROM survey WHERE user_id = $1",
+      "SELECT SUM(number_of_questions) FROM survey WHERE user_id = $1 AND published = true",
       [user_id]
     );
     res.json(count.rows[0].sum);

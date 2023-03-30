@@ -1,9 +1,7 @@
 import React, {useEffect, useState, useCallback} from "react";
 import DashboardMenu from "./DashboardMenu";
-import {auth, app} from "../firebase-config";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
-import {useForm} from "react-hook-form";
+import axios from "axios";
+import {useForm, SubmitHandler} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
 import {
   DashboardContainer,
@@ -13,7 +11,7 @@ import {
   MenuContainer,
 } from "./dashboardStyles";
 import "./account.css";
-// import User from "./types";
+import User from "./types";
 import Menu from "../landingPage/Menu";
 
 type accountData = {
@@ -21,53 +19,51 @@ type accountData = {
 };
 
 const Account = () => {
-  const [user] = useAuthState(auth);
-  const db = getFirestore(app);
-
-  // const [userData, setUserData] = useState<User | null>(null);
-  // from firebase
-  const [currentCompany, setCurrentCompany] = useState<string | undefined>("");
+  const [userData, setUserData] = useState<User | undefined>();
+  const [loaded, setLoaded] = useState<boolean>(false);
   const {register, handleSubmit} = useForm<accountData>({
     defaultValues: {
       company: "",
     },
   });
+  const onSubmit: SubmitHandler<accountData> = (data) =>
+    updateCompany(data.company);
+  const endpoint = "http://localhost:5000";
+  const user_id = 1;
 
   const updateCompany = async (company: string) => {
-    if (user && company) {
-      const userDoc = doc(db, "users", user.uid);
-      try {
-        await updateDoc(userDoc, {
-          company: company,
-        });
-        setCurrentCompany(company);
-      } catch (err) {
-        console.log(err);
+    try {
+      const response = await axios.put(`${endpoint}/update_company`, {
+        company: company,
+        id: user_id,
+      });
+      const data = await response.data;
+      if (userData !== undefined) {
+        let currentUserData: User = userData;
+        currentUserData.company = data;
+        setUserData(currentUserData);
       }
+    } catch (err: any) {
+      console.error(err.message);
     }
   };
 
   const userInfo = useCallback(async () => {
-    if (user?.uid) {
-      const userDoc = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDoc);
-
-      if (userDocSnap.exists()) {
-        // setUserData(userDocSnap.data() as User);
-        setCurrentCompany(userDocSnap.data().company);
-      } else {
-        console.log("no document");
-      }
+    try {
+      const response = await axios.get(`${endpoint}/user_info/${user_id}`);
+      const data = await response.data;
+      setUserData(data);
+    } catch (err: any) {
+      console.error(err.message);
     }
-  }, [db, user?.uid]);
+  }, []);
 
   useEffect(() => {
-    userInfo();
-  }, [userInfo]);
-
-  const onSubmit = handleSubmit(({company}) => {
-    updateCompany(company);
-  });
+    if (!loaded) {
+      userInfo();
+      setLoaded(true);
+    }
+  }, [userInfo, loaded]);
 
   return (
     <DashboardContainer>
@@ -77,7 +73,7 @@ const Account = () => {
           <DashboardHeaderTextDesktop>account</DashboardHeaderTextDesktop>
           <div className="accountContainer">
             <div className="accountLabel">
-              Email: <span className="accountField">{user?.email}</span>
+              Email: <span className="accountField">{userData?.email}</span>
             </div>
             <form
               style={{
@@ -87,10 +83,10 @@ const Account = () => {
                 alignItems: "start",
                 flexDirection: "column",
               }}
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <Label.Root className="LabelRoot" htmlFor="firstName">
-                Company: <span>{currentCompany}</span>
+                Company: <span>{userData?.company}</span>
               </Label.Root>
               <input
                 {...register("company")}
@@ -100,7 +96,11 @@ const Account = () => {
                 id="contact"
               />
 
-              <button className="updateBtn" type="submit">
+              <button
+                className="updateBtn"
+                type="submit"
+                onClick={() => userInfo()}
+              >
                 Update
               </button>
             </form>
