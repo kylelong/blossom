@@ -16,13 +16,13 @@ import {
   QuestionTypeLabel,
   QuestionTypeNumber,
 } from "./dashboardStyles";
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const DashboardOverview = () => {
   // const [user] = useAuthState(auth);
 
   // const uid = user.uid; TODO: switch to postfres
   const user_id = 1;
-  const endpoint = "http://localhost:5000";
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);

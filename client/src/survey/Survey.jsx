@@ -6,10 +6,10 @@ import flower from "../images/scandi-373.svg";
 import axios from "axios";
 
 import SurveyViewer from "./SurveyViewer";
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Survey = () => {
   const params = useParams();
-  const endpoint = "http://localhost:5000";
 
   const [survey, setSurvey] = useState({
     hash: "",
@@ -33,9 +33,7 @@ const Survey = () => {
       let question_array = questions.filter((question) => question.id === id);
 
       try {
-        const response = await axios.get(
-          `http://localhost:5000/answer_choices/${id}`
-        );
+        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
         const data = await response.data;
         question_array[0].answerChoices = data;
         question_copy.push(question_array);
@@ -46,6 +44,7 @@ const Survey = () => {
 
     setQuestions(question_copy.flat());
   };
+
   const getQuestionId = async (hash) => {
     try {
       let response = await axios.get(`${endpoint}/get_question_id/${hash}`);
@@ -101,6 +100,18 @@ const Survey = () => {
 
     const loadSurvey = async () => {
       let survey_hash = "";
+      // prefill answer choices from local storage
+      if (localStorage.getItem("bsmr") !== null) {
+        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
+        if (Object.keys(bsmr).includes(survey_hash)) {
+          let res = bsmr[survey_hash];
+          loadQuestionIds(res);
+          setResponse(res);
+        } else {
+          // so you can take a new survey
+          localStorage.removeItem("bsmr");
+        }
+      }
       try {
         const response = await axios.get(`${endpoint}/survey/${params.id}`);
         const data = await response.data;
@@ -114,16 +125,6 @@ const Survey = () => {
         }
       } catch (err) {
         console.error(err.message);
-      }
-
-      // prefill answer choices from local storage
-      if (localStorage.getItem("bsmr") !== null) {
-        let bsmr = JSON.parse(localStorage.getItem("bsmr"));
-        if (Object.keys(bsmr).includes(survey_hash)) {
-          let res = bsmr[survey_hash];
-          loadQuestionIds(res);
-          setResponse(res);
-        }
       }
     };
     if (!loaded) {

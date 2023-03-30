@@ -18,7 +18,7 @@ import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 import "./panel.css";
 
-const endpoint = "http://localhost:5000";
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Panel = () => {
   const {register} = useForm();
@@ -69,9 +69,7 @@ const Panel = () => {
       let question_array = questions.filter((question) => question.id === id);
 
       try {
-        const response = await axios.get(
-          `http://localhost:5000/answer_choices/${id}`
-        );
+        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
         const data = await response.data;
         question_array[0].answerChoices = data;
         question_copy.push(question_array);

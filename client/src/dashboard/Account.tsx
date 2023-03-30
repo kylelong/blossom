@@ -28,7 +28,7 @@ const Account = () => {
   });
   const onSubmit: SubmitHandler<accountData> = (data) =>
     updateCompany(data.company);
-  const endpoint = "http://localhost:5000";
+  const endpoint = process.env.REACT_APP_LOCALHOST_URL;
   const user_id = 1;
 
   const updateCompany = async (company: string) => {
@@ -56,7 +56,7 @@ const Account = () => {
     } catch (err: any) {
       console.error(err.message);
     }
-  }, []);
+  }, [endpoint]);
 
   useEffect(() => {
     if (!loaded) {

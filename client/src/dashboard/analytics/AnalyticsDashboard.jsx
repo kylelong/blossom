@@ -24,6 +24,7 @@ import AnswerChoice from "./AnswerChoice";
 import ScrollArea from "./ScrollArea";
 import {UserData} from "./Data";
 import axios from "axios";
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const AnalyticsDashboard = () => {
   const [loaded, setLoaded] = useState(false);
@@ -59,7 +60,7 @@ const AnalyticsDashboard = () => {
       },
     ],
   });
-  const endpoint = "http://localhost:5000";
+
   const user_id = 1;
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const emojis = {
@@ -163,7 +164,7 @@ const AnalyticsDashboard = () => {
     const loadSurveys = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/published_surveys/1" // TODO: remove
+          `${endpoint}/published_surveys/1` // TODO: remove
         ); //TODO: change usersid to variable
         const data = await response.data;
 

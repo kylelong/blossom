@@ -80,8 +80,7 @@ export const Question = styled.div`
   margin-bottom: 12px;
   text-align: left;
   &:hover {
-    background-color: #525f7f;
-    color: white;
+    background-color: hsl(300, 7.7%, 97.5%);
     cursor: pointer;
   }
 `;

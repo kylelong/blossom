@@ -9,6 +9,7 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import "./surveys.css";
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const SurveysList = () => {
   const [user] = useAuthState(auth);
@@ -78,9 +79,7 @@ const SurveysList = () => {
       let question_array = questions.filter((question) => question.id === id);
 
       try {
-        const response = await axios.get(
-          `http://localhost:5000/answer_choices/${id}`
-        );
+        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
         const data = await response.data;
         question_array[0].answerChoices = data;
         question_copy.push(question_array);
@@ -94,9 +93,7 @@ const SurveysList = () => {
 
   const getQuestions = async (survey_id) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/questions/${survey_id}`
-      );
+      const response = await axios.get(`${endpoint}/questions/${survey_id}`);
       const data = await response.data;
       setQuestions(data);
       loadAnswers(data);
@@ -109,7 +106,7 @@ const SurveysList = () => {
     // loads surveys for this users
     const loadSurveys = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/surveys/1"); //TODO: change usersid to variable
+        const response = await axios.get(`${endpoint}/surveys/1`); //TODO: change usersid to variable
         const data = await response.data;
 
         setSurveys(data);
