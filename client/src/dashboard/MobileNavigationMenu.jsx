@@ -1,8 +1,8 @@
 import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { auth } from "../firebase-config";
+import {auth} from "../firebase-config";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import {
   HamburgerMenuIcon,
   DashboardIcon,
@@ -25,7 +25,7 @@ const linkStyle = {
   color: "black",
 };
 
-const MobileNavigationMenu: React.FC = () => {
+const MobileNavigationMenu = () => {
   return (
     <MobileMenu>
       <DropdownMenu.Root>

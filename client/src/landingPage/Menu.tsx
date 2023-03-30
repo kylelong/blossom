@@ -8,7 +8,8 @@ export const MenuContainer = styled.div`
   margin-bottom: 24px;
   width: 155px;
   position: fixed;
-  right: 0px;
+  right: 14px;
+  justify-content: space-between;
   @media (max-width: 745px) {
     position: unset;
     right: unset;
@@ -17,9 +18,9 @@ export const MenuContainer = styled.div`
 
 export const MenuItem = styled.div`
   display: flex;
-  margin-right: 15px;
   font-weight: bold;
   color: #355e3b;
+  font-size: 18px;
   &:hover {
     color: #fa5f55;
     cursor: pointer;

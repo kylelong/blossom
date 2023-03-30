@@ -122,8 +122,8 @@ button {
 .SurveyButton:focus {
   box-shadow: 0 0 0 1px #525f7f;
 }
-
-.RightSlot {
+/* was causing anlytics and mobile menu dropdown to break */
+/* .RightSlot {
   margin-left: auto;
   padding-left: 20px;
   color: var(--mauve11);
@@ -133,7 +133,7 @@ button {
 }
 [data-disabled] .RightSlot {
   color: var(--mauve8);
-}
+} */
 
 @keyframes slideUpAndFade {
   from {

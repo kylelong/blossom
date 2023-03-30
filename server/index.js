@@ -20,6 +20,17 @@ app.get("/verify_user/:email/:password", async (req, res) => {
     console.error(err.message);
   }
 });
+app.get("/user_id/:email", async (req, res) => {
+  try {
+    const {email} = req.params;
+    const response = await pool.query("SELECT id FROM users WHERE email = $1", [
+      email,
+    ]);
+    res.json(response.rows[0].id);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 app.get("/email_exists/:email", async (req, res) => {
   try {
     const {email} = req.params;
@@ -35,10 +46,10 @@ app.get("/email_exists/:email", async (req, res) => {
 // TODO: insert hash from firebase
 app.post("/create_user", async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const {email, password, hash} = req.body;
     const response = await pool.query(
-      "INSERT INTO users (email, password) VALUES($1, crypt($2, gen_salt('bf'))) RETURNING id",
-      [email, password]
+      "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $2) RETURNING id",
+      [email, password, hash]
     );
     res.json(response.rows[0].id);
   } catch (err) {

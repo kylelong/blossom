@@ -37,6 +37,16 @@ const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
   const removeItem = (id) => {
     updateQuestion(questionId, "removeAnswerChoice", null, id);
   };
+  const handleChange = (e, id) => {
+    setAnswers(() => {
+      let copy = [...answers];
+      let index = answers.findIndex((answer) => answer.id === id);
+      copy[index].choice = e.target.value;
+      return copy;
+    });
+    updateQuestion(questionId, "addAnswerChoice", e.target.value, id);
+  };
+
   useEffect(() => {
     setQuestion(questions.filter((q) => q.id === questionId)[0]);
     setAnswers(question.answerChoices);
@@ -51,22 +61,7 @@ const MultipleChoiceInput = ({updateQuestion, questionId, questions}) => {
                 <Input
                   placeholder={`Choice #${index + 1}`}
                   value={choice}
-                  onChange={(e) => {
-                    setAnswers(() => {
-                      let copy = [...answers];
-                      let index = answers.findIndex(
-                        (answer) => answer.id === id
-                      );
-                      copy[index].choice = e.target.value;
-                      return copy;
-                    });
-                    updateQuestion(
-                      questionId,
-                      "addAnswerChoice",
-                      e.target.value,
-                      id
-                    );
-                  }}
+                  onChange={(e) => handleChange(e, id)}
                 />
                 <RemoveIcon>
                   <MinusCircledIcon
