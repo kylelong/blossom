@@ -42,7 +42,7 @@ const Emojis = ({index, handleProceed, updateResponse, surveyHash}) => {
     if (index !== indexRef.current) {
       setEmoji(getEmojiFromStorage(index));
     }
-    if (emojiRef.current !== emoji) {
+    if (emojiRef.current !== emoji && emoji.length > 0) {
       updateResponse(index, "emoji_sentiment", [
         {
           hash: "",

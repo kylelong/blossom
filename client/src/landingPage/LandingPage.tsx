@@ -48,7 +48,8 @@ const LandingPage: React.FC = () => {
   // "AB test different user groups"
   const pricingBenefits = [
     "Unlimited Surveys",
-    "Release surveys to users in minutes",
+    "Unlimited Responses",
+    "Release surveys to users in seconds",
     "No coding required",
     "Advanced analytics",
     "Fast support",
@@ -170,7 +171,7 @@ const LandingPage: React.FC = () => {
             </QuestionLabel>
             <AnswerLabel>
               <DotIcon />
-              Release a survey in minutes compared to after weeks or months of
+              Release a survey in seconds compared to after weeks or months of
               engineering time
             </AnswerLabel>
             <AnswerLabel>

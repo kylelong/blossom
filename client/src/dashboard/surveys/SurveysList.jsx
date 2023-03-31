@@ -46,7 +46,7 @@ const SurveysList = () => {
                       setCurrentSurveyIndex(index);
                       setQuestionId(survey.id);
                       getQuestions(survey.id);
-                      setLink(`http://localhost:3000/survey/${survey.hash}`);
+                      setLink(`http://localhost:3000/survey/${survey.hash}`); // TODO: remove
                     }}
                   >
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
