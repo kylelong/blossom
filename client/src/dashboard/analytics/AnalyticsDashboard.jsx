@@ -24,8 +24,6 @@ import AnswerChoice from "./AnswerChoice";
 import ScrollArea from "./ScrollArea";
 import {UserData} from "./Data";
 import axios from "axios";
-import {selectUser} from "../../features/userSlice";
-import {useSelector} from "react-redux";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const AnalyticsDashboard = () => {
@@ -40,7 +38,6 @@ const AnalyticsDashboard = () => {
   const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
   const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
-  const user = useSelector(selectUser);
   /**
    * colors: [#fa5f55, ]
    */
@@ -64,7 +61,7 @@ const AnalyticsDashboard = () => {
     ],
   });
 
-  const user_id = user?.id;
+  const user_id = 1;
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const emojis = {
     angry: "0x1F621",

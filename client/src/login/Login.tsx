@@ -1,6 +1,4 @@
 import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {login} from "../features/userSlice";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
@@ -8,7 +6,6 @@ import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../firebase-config";
-import axios, {AxiosResponse} from "axios";
 
 import {
   LoginContainer,
@@ -31,12 +28,6 @@ interface LoginInfo {
   email: string;
   password: string;
 }
-interface User {
-  id: number;
-  company: string;
-  email: string;
-}
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
@@ -46,33 +37,11 @@ const Login: React.FC = () => {
 
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
-  const dispatch = useDispatch();
-  const getUser = async (email: string | null) => {
-    const response: AxiosResponse = await axios.get(
-      `${endpoint}/user_info/${email}`
-    );
-    const data: User = response.data;
-    return data;
-  };
+
   const loginUser = () => {
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        const {uid, email} = user;
-        getUser(email).then((response) => {
-          const {company, id} = response;
-          dispatch(
-            login({
-              email: email,
-              hash: uid,
-              loggedIn: true,
-              id: id,
-              company: company,
-            })
-          );
-        });
-
         // ...
       })
       .catch((error) => {

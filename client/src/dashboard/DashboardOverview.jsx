@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+
 import Welcome from "./Welcome";
 import {
   DashboardStatHeader,
@@ -14,13 +15,11 @@ import {
   QuestionTypeLabel,
   QuestionTypeNumber,
 } from "./dashboardStyles";
-import {selectUser} from "../features/userSlice";
-import {useSelector} from "react-redux";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const DashboardOverview = () => {
-  const user = useSelector(selectUser);
-  const user_id = user?.id;
+  const user_id = 1;
+
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);

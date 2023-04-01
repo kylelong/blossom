@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import axios from "axios";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
@@ -30,6 +31,7 @@ import {
 } from "./styles";
 
 const db = getFirestore(app);
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 interface SignUpInfo {
   email: string;
@@ -62,11 +64,12 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const addUser = async (userCredential: UserCredential) => {
+  const addUser = async (userCredential: UserCredential, id: number) => {
     const email = signUpData.email;
     // make doc id the user id
     const uid = userCredential.user.uid;
     await setDoc(doc(db, "users", uid), {
+      id: id,
       company: "",
       email: email,
       uid: uid,
@@ -85,8 +88,21 @@ const SignUp: React.FC = () => {
     )
       .then((userCredential) => {
         // Signed in
-        addUser(userCredential);
-        sendConfirmationEmail(userCredential.user);
+        const hash = userCredential.user.uid;
+        axios
+          .post(`${endpoint}/create_user`, {
+            email: signUpData.email,
+            password: signUpData.password,
+            hash: hash,
+          })
+          .then((response) => {
+            const id = response.data;
+            addUser(userCredential, id);
+            sendConfirmationEmail(userCredential.user);
+          })
+          .catch((error) => {
+            console.error(error.message);
+          });
       })
       .catch((error) => {
         const ERRORS = [

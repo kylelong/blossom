@@ -20,12 +20,12 @@ app.get("/verify_user/:email/:password", async (req, res) => {
     console.error(err.message);
   }
 });
-app.get("/user_info/:email", async (req, res) => {
+app.get("/user_info/:user_id", async (req, res) => {
   try {
-    const {email} = req.params;
+    const {user_id} = req.params;
     const response = await pool.query(
-      "SELECT id, company, email FROM users WHERE email = $1",
-      [email]
+      "SELECT id, company, email FROM users WHERE id = $1",
+      [user_id]
     );
     res.json(response.rows[0]);
   } catch (err) {
@@ -49,7 +49,7 @@ app.post("/create_user", async (req, res) => {
   try {
     const {email, password, hash} = req.body;
     const response = await pool.query(
-      "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $2) RETURNING id",
+      "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $3) RETURNING id",
       [email, password, hash]
     );
     res.json(response.rows[0].id);

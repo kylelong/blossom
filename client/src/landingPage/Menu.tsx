@@ -2,8 +2,6 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {auth} from "../firebase-config";
-import {useDispatch} from "react-redux";
-import {logout} from "../features/userSlice";
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -36,7 +34,6 @@ export const linkStyle = {
 const Menu: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const dispatch = useDispatch();
 
   auth.onAuthStateChanged((user) => {
     if (user) {
@@ -56,7 +53,6 @@ const Menu: React.FC = () => {
           <MenuContainer>
             <MenuItem
               onClick={() => {
-                dispatch(logout());
                 auth.signOut();
               }}
             >
