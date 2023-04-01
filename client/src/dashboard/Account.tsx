@@ -1,4 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
+import {selectUser} from "../features/userSlice";
+import {useSelector} from "react-redux";
 import DashboardMenu from "./DashboardMenu";
 import axios from "axios";
 import {useForm, SubmitHandler} from "react-hook-form";
@@ -21,6 +23,7 @@ type accountData = {
 const Account = () => {
   const [userData, setUserData] = useState<User | undefined>();
   const [loaded, setLoaded] = useState<boolean>(false);
+  const user = useSelector(selectUser);
   const {register, handleSubmit} = useForm<accountData>({
     defaultValues: {
       company: "",
@@ -29,7 +32,7 @@ const Account = () => {
   const onSubmit: SubmitHandler<accountData> = (data) =>
     updateCompany(data.company);
   const endpoint = process.env.REACT_APP_LOCALHOST_URL;
-  const user_id = 1;
+  const user_id = user?.id;
 
   const updateCompany = async (company: string) => {
     try {
@@ -50,13 +53,13 @@ const Account = () => {
 
   const userInfo = useCallback(async () => {
     try {
-      const response = await axios.get(`${endpoint}/user_info/${user_id}`);
+      const response = await axios.get(`${endpoint}/user_info/${user?.email}`);
       const data = await response.data;
       setUserData(data);
     } catch (err: any) {
       console.error(err.message);
     }
-  }, [endpoint]);
+  }, [endpoint, user?.email]);
 
   useEffect(() => {
     if (!loaded) {

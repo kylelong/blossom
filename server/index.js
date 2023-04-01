@@ -24,7 +24,7 @@ app.get("/user_info/:email", async (req, res) => {
   try {
     const {email} = req.params;
     const response = await pool.query(
-      "SELECT id, company, email FROM users WHERE id = $1",
+      "SELECT id, company, email FROM users WHERE email = $1",
       [email]
     );
     res.json(response.rows[0]);
@@ -73,6 +73,8 @@ app.put("/update_company", async (req, res) => {
 });
 app.put("/update_hash", async (req, res) => {
   try {
+    const {hash} = req.body;
+    await pool.query("UPDATE users SET hash = $1 WHERE id = $2", [hash, id]);
   } catch (err) {
     console.error(err.message);
   }

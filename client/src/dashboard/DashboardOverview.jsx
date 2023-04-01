@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-// import {auth} from "../firebase-config";
-// import {useAuthState} from "react-firebase-hooks/auth";
 import axios from "axios";
 import Welcome from "./Welcome";
 import {
@@ -16,13 +14,13 @@ import {
   QuestionTypeLabel,
   QuestionTypeNumber,
 } from "./dashboardStyles";
+import {selectUser} from "../features/userSlice";
+import {useSelector} from "react-redux";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const DashboardOverview = () => {
-  // const [user] = useAuthState(auth);
-
-  // const uid = user.uid; TODO: switch to postfres
-  const user_id = 1;
+  const user = useSelector(selectUser);
+  const user_id = user?.id;
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
@@ -40,6 +38,7 @@ const DashboardOverview = () => {
         setHasSurvey(true);
       }
       setSurveyCount(count);
+      setLoaded(true);
     };
 
     const countDrafts = async () => {
@@ -78,8 +77,7 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     countResponses();
-    setLoaded(true);
-  }, [loaded]);
+  }, [loaded, user_id]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`

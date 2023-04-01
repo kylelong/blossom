@@ -3,6 +3,8 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {auth} from "../firebase-config";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {logout} from "../features/userSlice";
 import {
   HamburgerMenuIcon,
   DashboardIcon,
@@ -26,6 +28,12 @@ const linkStyle = {
 };
 
 const MobileNavigationMenu = () => {
+  const dispatch = useDispatch();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logout());
+    auth.signOut();
+  };
   return (
     <MobileMenu>
       <DropdownMenu.Root>
@@ -83,9 +91,7 @@ const MobileNavigationMenu = () => {
             </Link>
             <DropdownMenu.Item
               className="DropdownMenuItem"
-              onClick={() => {
-                auth.signOut();
-              }}
+              onClick={(e) => handleLogout(e)}
             >
               <div className="RightSlot">
                 <ExitIcon />

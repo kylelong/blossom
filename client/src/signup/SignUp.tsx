@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
-import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+import {Link} from "react-router-dom";
+import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   User,
   UserCredential,
 } from "firebase/auth";
-import { auth, app } from "../firebase-config";
-import { getFirestore, serverTimestamp, setDoc, doc } from "firebase/firestore";
+import {auth, app} from "../firebase-config";
+import {getFirestore, serverTimestamp, setDoc, doc} from "firebase/firestore";
 
 import {
   SignUpContainer,
@@ -72,7 +72,7 @@ const SignUp: React.FC = () => {
       uid: uid,
       confirmed: false,
       premium: false, // update to true on stripe confirmation page
-      contact: { firstName: "", lastName: "" },
+      contact: {firstName: "", lastName: ""},
       createdAt: serverTimestamp(),
     });
   };
@@ -115,6 +115,7 @@ const SignUp: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // TODO: insert
     signUpSchema
       .isValid({
         email: signUpData.email,
@@ -128,7 +129,7 @@ const SignUp: React.FC = () => {
                 email: signUpData.email,
                 password: signUpData.password,
               },
-              { abortEarly: false }
+              {abortEarly: false}
             )
             .catch((err) => {
               setSignUpErrors(err.errors);
@@ -141,8 +142,8 @@ const SignUp: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSignUpData({ ...signUpData, [name]: value });
+    const {name, value} = e.target;
+    setSignUpData({...signUpData, [name]: value});
   };
 
   return (

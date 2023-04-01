@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import {login} from "../features/userSlice";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
-import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config";
+import {Link} from "react-router-dom";
+import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../firebase-config";
+import axios, {AxiosResponse} from "axios";
 
 import {
   LoginContainer,
@@ -28,22 +31,48 @@ interface LoginInfo {
   email: string;
   password: string;
 }
+interface User {
+  id: number;
+  company: string;
+  email: string;
+}
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
     email: "",
     password: "",
   });
+
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
-
+  const dispatch = useDispatch();
+  const getUser = async (email: string | null) => {
+    const response: AxiosResponse = await axios.get(
+      `${endpoint}/user_info/${email}`
+    );
+    const data: User = response.data;
+    return data;
+  };
   const loginUser = () => {
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in
-        //TODO: use user across app in global state
-        // const user = userCredential.user;
-        // console.log(user);
+        const user = userCredential.user;
+        const {uid, email} = user;
+        getUser(email).then((response) => {
+          const {company, id} = response;
+          dispatch(
+            login({
+              email: email,
+              hash: uid,
+              loggedIn: true,
+              id: id,
+              company: company,
+            })
+          );
+        });
+
         // ...
       })
       .catch((error) => {
@@ -81,8 +110,9 @@ const Login: React.FC = () => {
     password: yup.string().min(8).required("password is required"),
   });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     loginSchema
       .isValid({
         email: loginData.email,
@@ -96,7 +126,7 @@ const Login: React.FC = () => {
                 email: loginData.email,
                 password: loginData.password,
               },
-              { abortEarly: false }
+              {abortEarly: false}
             )
             .catch((err) => {
               setLoginErrors(err.errors);
@@ -109,8 +139,8 @@ const Login: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setLoginData({ ...loginData, [name]: value });
+    const {name, value} = e.target;
+    setLoginData({...loginData, [name]: value});
   };
 
   return (
@@ -121,7 +151,7 @@ const Login: React.FC = () => {
       </LogoContainer>
 
       <Slogan>welcome back &#x1F60A;</Slogan>
-      <LoginForm>
+      <LoginForm onSubmit={(e) => handleSubmit(e)}>
         <InputBox
           type="text"
           placeholder="Email"
@@ -147,7 +177,7 @@ const Login: React.FC = () => {
             />
           )}
         </PasswordContainer>
-        <SubmitButton onClick={onSubmit}>Login</SubmitButton>
+        <SubmitButton type="submit">Login</SubmitButton>
       </LoginForm>
       <SignUpLink>
         Need an account?{" "}
