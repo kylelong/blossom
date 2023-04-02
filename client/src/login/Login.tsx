@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../firebase-config";
+import axios from "axios";
 
 import {
   LoginContainer,
@@ -28,6 +29,7 @@ interface LoginInfo {
   email: string;
   password: string;
 }
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
@@ -43,6 +45,14 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         // ...
+        axios
+          .post(`${endpoint}/login`, {
+            email: loginData.email,
+            password: loginData.password,
+          })
+          .then((response) => {
+            console.log(response.data);
+          });
       })
       .catch((error) => {
         /**

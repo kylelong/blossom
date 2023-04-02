@@ -30,7 +30,7 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/survey_count`);
       let count = parseInt(response.data);
 
       if (count > 0) {

@@ -2,12 +2,42 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const secret = "B2yLmPn7T4GhYb3s2j6fK8dN1"; // TODO: move to secret file
 
+const oneDay = 1000 * 60 * 60 * 24;
+// app.use(cookieParser());
+app.use(
+  session({
+    path: "/",
+    secret: secret,
+    saveUninitialized: false,
+    cookie: {maxAge: oneDay},
+  })
+);
 app.use(cors());
 app.use(express.json());
 
 // USER AUTH
 // only inset into users if no user has the email
+app.post("/login", async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    const response = await pool.query(
+      "SELECT id, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      [password, email]
+    );
+    let {verified, id} = response.rows[0];
+    if (verified) {
+      req.session.user_id = id;
+      req.session.email = email;
+      res.json(req.session);
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 app.get("/verify_user/:email/:password", async (req, res) => {
   try {
     const {email, password} = req.params;
@@ -87,9 +117,10 @@ app.put("/update_hash", async (req, res) => {
 // check if this user email and password matches on login
 
 // # of surveys a user has created
-app.get("/survey_count/:user_id", async (req, res) => {
+app.get("/survey_count", async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.session.user_id;
+
     const count = await pool.query(
       "SELECT COUNT(*) FROM survey WHERE user_id = $1",
       [user_id]
