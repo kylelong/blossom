@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {auth} from "../firebase-config";
+import axios from "axios";
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -30,6 +31,7 @@ export const MenuItem = styled.div`
 export const linkStyle = {
   textDecoration: "none",
 };
+const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const Menu: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -44,6 +46,11 @@ const Menu: React.FC = () => {
       setLoading(false);
     }
   });
+  const logout = () => {
+    axios.post(`${endpoint}/logout`).then((response) => {
+      console.log(response.data);
+    });
+  };
   const menuToShow = () => {
     if (loading) {
       return <div></div>;
@@ -54,6 +61,7 @@ const Menu: React.FC = () => {
             <MenuItem
               onClick={() => {
                 auth.signOut();
+                logout();
               }}
             >
               sign out

@@ -2,22 +2,16 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
+const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const secret = "B2yLmPn7T4GhYb3s2j6fK8dN1"; // TODO: move to secret file
 
 const oneDay = 1000 * 60 * 60 * 24;
-// app.use(cookieParser());
-app.use(
-  session({
-    path: "/",
-    secret: secret,
-    saveUninitialized: false,
-    cookie: {maxAge: oneDay},
-  })
-);
+
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 // USER AUTH
 // only inset into users if no user has the email
@@ -30,10 +24,21 @@ app.post("/login", async (req, res) => {
     );
     let {verified, id} = response.rows[0];
     if (verified) {
-      req.session.user_id = id;
-      req.session.email = email;
-      res.json(req.session);
+      jwt.sign({id: id}, secret, (err, token) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          res.json({token, token});
+        }
+      });
     }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+app.post("/logout", async (req, res) => {
+  try {
+    // TODO: do something with jwt
   } catch (err) {
     console.error(err.message);
   }
@@ -119,8 +124,8 @@ app.put("/update_hash", async (req, res) => {
 // # of surveys a user has created
 app.get("/survey_count", async (req, res) => {
   try {
-    const user_id = req.session.user_id;
-
+    const user_id = 1;
+    // console.log(req.session, req.sessionID);
     const count = await pool.query(
       "SELECT COUNT(*) FROM survey WHERE user_id = $1",
       [user_id]

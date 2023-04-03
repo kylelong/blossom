@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 import Welcome from "./Welcome";
 import {
@@ -16,9 +17,14 @@ import {
   QuestionTypeNumber,
 } from "./dashboardStyles";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const secret = "B2yLmPn7T4GhYb3s2j6fK8dN1";
 
 const DashboardOverview = () => {
-  const user_id = 1;
+  const [userId, setUserId] = useState(() => {
+    let token = localStorage.getItem("token");
+    let decoded = jwt_decode(token);
+    return decoded.id;
+  });
 
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
@@ -42,7 +48,7 @@ const DashboardOverview = () => {
 
     const countDrafts = async () => {
       const response = await axios.get(
-        `${endpoint}/draft_survey_count/${user_id}`
+        `${endpoint}/draft_survey_count/${userId}`
       );
       const count = response.data;
       if (count > 0) {
@@ -51,21 +57,21 @@ const DashboardOverview = () => {
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(`${endpoint}/question_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/question_count/${userId}`);
       const count = response.data;
       setNumberOfQuestions(count);
     };
 
     const countQuestionTypes = async () => {
       const response = await axios.get(
-        `${endpoint}/question_type_count/${user_id}`
+        `${endpoint}/question_type_count/${userId}`
       );
       const data = response.data;
       setQuestionTypeCounts(data);
     };
     const countResponses = async () => {
       const response = await axios.get(
-        `${endpoint}/number_of_responses/${user_id}`
+        `${endpoint}/number_of_responses/${userId}`
       );
       const count = response.data;
       setNumberOfResponses(count);
@@ -76,7 +82,7 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     countResponses();
-  }, [loaded, user_id]);
+  }, [loaded, userId]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`

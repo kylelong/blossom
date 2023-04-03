@@ -51,7 +51,7 @@ const Login: React.FC = () => {
             password: loginData.password,
           })
           .then((response) => {
-            console.log(response.data);
+            localStorage.setItem("token", response.data.token);
           });
       })
       .catch((error) => {
