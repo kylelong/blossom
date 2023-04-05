@@ -11,7 +11,6 @@ import {
 import * as Accordion from "@radix-ui/react-accordion";
 import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
-// import Loader from "../../loader";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import randomstring from "randomstring";
 import {auth} from "../../firebase-config";
