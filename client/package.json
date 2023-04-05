@@ -54,7 +54,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "npm run start",
+    "start": "npm start",
     "build": "npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
