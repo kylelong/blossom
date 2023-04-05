@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import Logo from "../Logo";
-import flower from "../images/scandi-373.svg";
 import {auth} from "../firebase-config";
 import {Link} from "react-router-dom";
 import {sendPasswordResetEmail} from "firebase/auth";
 import * as yup from "yup";
+
+import Logo from "../Logo";
+import flower from "../images/scandi-373.svg";
 
 import {
   FlowerImage,
