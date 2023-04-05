@@ -17,13 +17,15 @@ import {
   QuestionTypeNumber,
 } from "./dashboardStyles";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
-const secret = "B2yLmPn7T4GhYb3s2j6fK8dN1";
 
 const DashboardOverview = () => {
   const [userId, setUserId] = useState(() => {
     let token = localStorage.getItem("token");
-    let decoded = jwt_decode(token);
-    return decoded.id;
+    if (token) {
+      let decoded = jwt_decode(token);
+      return decoded.id;
+    }
+    return 0;
   });
 
   const [hasSurvey, setHasSurvey] = useState(false);
@@ -35,6 +37,12 @@ const DashboardOverview = () => {
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
 
   useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (userId === 0 && token) {
+      let decoded = jwt_decode(token);
+      setUserId(decoded.id);
+    }
+
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`);
       let count = parseInt(response.data);

@@ -1,15 +1,15 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const secret = "B2yLmPn7T4GhYb3s2j6fK8dN1"; // TODO: move to secret file
-
-const oneDay = 1000 * 60 * 60 * 24;
-
-app.use(cors());
+const corsOptions = {
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -24,11 +24,15 @@ app.post("/login", async (req, res) => {
     );
     let {verified, id} = response.rows[0];
     if (verified) {
-      jwt.sign({id: id}, secret, (err, token) => {
+      jwt.sign({id: id}, process.env.SECRET_ACCESS_TOKEN, (err, token) => {
         if (err) {
           res.sendStatus(403);
         } else {
-          res.json({token, token});
+          res.json({token: token});
+          res.cookie("token", token, {
+            secure: false,
+            httpOnly: true,
+          });
         }
       });
     }
@@ -39,6 +43,7 @@ app.post("/login", async (req, res) => {
 app.post("/logout", async (req, res) => {
   try {
     // TODO: do something with jwt
+    res.send({data: "logout"});
   } catch (err) {
     console.error(err.message);
   }
