@@ -52,26 +52,12 @@ export default function CheckoutForm() {
         setMessage(confirmPayment.error.message);
         console.log(confirmPayment.error.message);
       } else {
-        console.log("payment succeeded");
+        setMessage("Payment succeeded. Thank you :)");
       }
     } catch (err) {
       console.error(err.message);
-      setMessage("An unexpected error occured." + err.message);
+      setMessage("An unexpected error occured. " + err.message);
     }
-
-    // const {error} = await stripe.confirmPayment({
-    //   elements,
-    //   confirmParams: {
-    //     // Make sure to change this to your payment completion page
-    //     return_url: `${window.location.origin}/completion`,
-    //   },
-    // });
-
-    // if (error.type === "card_error" || error.type === "validation_error") {
-    //   setMessage(error.message);
-    // } else {
-    //   setMessage("An unexpected error occured.");
-    // }
 
     setIsProcessing(false);
   };
@@ -79,12 +65,17 @@ export default function CheckoutForm() {
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <CardElement id="card-element" />
-      <button disabled={isProcessing || !stripe || !elements} id="submit">
+      <button
+        className="payment-button"
+        disabled={isProcessing || !stripe || !elements}
+        id="submit"
+      >
         <div className="spinner hidden" id="spinner"></div>
         <span id="button-text">
           {isProcessing ? "Processing ... " : "Subscribe"}
         </span>
       </button>
+      <p id="card-error" role="alert"></p>
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>

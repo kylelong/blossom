@@ -17,14 +17,14 @@ function Payment() {
   }, []);
 
   return (
-    <>
+    <div className="stripe-container">
       <h1>React Stripe and the Payment Element</h1>
       {stripePromise && (
         <Elements stripe={stripePromise}>
           <CheckoutForm />
         </Elements>
       )}
-    </>
+    </div>
   );
 }
 

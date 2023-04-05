@@ -1,9 +1,9 @@
 /* Variables */
-* {
+/* * {
   box-sizing: border-box;
-}
+} */
 
-body {
+.stripe-container {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -14,7 +14,7 @@ body {
   width: 100vw;
 }
 
-form {
+#payment-form {
   width: 30vw;
   min-width: 500px;
   align-self: center;
@@ -62,8 +62,7 @@ input {
   border-radius: 4px 4px 0 0;
   padding: 12px;
   border: 1px solid rgba(50, 50, 93, 0.1);
-  height: 44px;
-  width: 100%;
+
   background: white;
 }
 
@@ -72,7 +71,7 @@ input {
 }
 
 /* Buttons and links */
-button {
+.payment-button {
   color: rgb(255, 255, 255);
   background: #5469d4;
   font-family: Arial, sans-serif;
@@ -86,10 +85,11 @@ button {
   justify-content: center;
   align-items: center;
 }
-button:hover {
+.payment-button :hover {
   filter: contrast(115%);
+  cursor: pointer;
 }
-button:disabled {
+.payment-button :disabled {
   opacity: 0.5;
   cursor: default;
 }
