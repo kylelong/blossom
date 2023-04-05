@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { auth } from "../firebase-config";
-import { Link } from "react-router-dom";
-import { sendPasswordResetEmail } from "firebase/auth";
-import * as yup from "yup";
-
+import React, {useState} from "react";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
+import {auth} from "../firebase-config";
+import {Link} from "react-router-dom";
+import {sendPasswordResetEmail} from "firebase/auth";
+import * as yup from "yup";
 
 import {
   FlowerImage,
@@ -29,7 +28,7 @@ interface ResetPasswordInfo {
 // form to request to signal forgot password
 const ForgotPassword: React.FC = () => {
   const [resetPasswordData, setResetPasswordData] = useState<ResetPasswordInfo>(
-    { email: "" }
+    {email: ""}
   );
   const [resetPasswordErrors, setResetPasswordErrors] = useState<string[]>([]);
   const [emailSent, setEmailSent] = useState<boolean>(false);
@@ -86,7 +85,7 @@ const ForgotPassword: React.FC = () => {
               {
                 email: resetPasswordData.email,
               },
-              { abortEarly: false }
+              {abortEarly: false}
             )
             .catch((err) => {
               setResetPasswordErrors(err.errors);
@@ -103,8 +102,8 @@ const ForgotPassword: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setResetPasswordData({ ...resetPasswordData, [name]: value });
+    const {name, value} = e.target;
+    setResetPasswordData({...resetPasswordData, [name]: value});
     console.log(resetPasswordData.email);
   };
   return (
