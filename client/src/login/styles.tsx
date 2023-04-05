@@ -48,7 +48,7 @@ export const InputBox = styled.input`
 `;
 export const SubmitButton = styled.button`
   height: 38px;
-  width: 257px;
+  width: 259px;
   border: 0;
   border-radius: 3px;
   background: transparent;

@@ -49,7 +49,7 @@ export const InputBox = styled.input`
 export const SubmitButton = styled.button`
   height: 38px;
   border: 0;
-  width: 257px;
+  width: 259px;
   border-radius: 3px;
   background: transparent;
   color: white;

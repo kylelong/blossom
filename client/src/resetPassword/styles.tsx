@@ -12,7 +12,7 @@ export const linkStyle = {
 
 export const LoginButton = styled.button`
   height: 38px;
-  width: 257px;
+  width: 259px;
   border: 0;
   border-radius: 3px;
   background: transparent;
@@ -65,7 +65,7 @@ export const ResetForm = styled.form`
 
 export const ResetButton = styled.button`
   height: 38px;
-  width: 257px;
+  width: 259px;
   border: 0;
   border-radius: 3px;
   background: transparent;

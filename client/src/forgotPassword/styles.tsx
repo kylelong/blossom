@@ -34,7 +34,7 @@ export const FlowerImage = styled.img`
 
 export const SubmitButton = styled.button`
   height: 38px;
-  width: 257px;
+  width: 259px;
   border: 0;
   border-radius: 3px;
   background: transparent;

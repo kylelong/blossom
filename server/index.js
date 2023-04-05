@@ -1,4 +1,5 @@
 require("dotenv").config();
+const port = process.env.PORT || 5000;
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -732,6 +733,6 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("server listening on port 5000");
+app.listen(port, () => {
+  console.log(`server listening on port ${port}`);
 });
