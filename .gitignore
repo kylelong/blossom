@@ -5,7 +5,6 @@ server/.env
 .env
 
 # firebase
-firebase-config.js 
 .firebaserc
 .github/
 database.rules.json
