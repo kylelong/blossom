@@ -19,14 +19,15 @@ import {
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
 
 const DashboardOverview = () => {
-  const [userId, setUserId] = useState(() => {
-    let token = localStorage.getItem("token");
-    if (token) {
-      let decoded = jwt_decode(token);
-      return decoded.id;
-    }
-    return 0;
-  });
+  // const [userId, setUserId] = useState(() => {
+  //   let token = localStorage.getItem("token");
+  //   if (token) {
+  //     let decoded = jwt_decode(token);
+  //     return decoded.id;
+  //   }
+  //   return 0;
+  // });
+  const userId = 1;
 
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
@@ -37,11 +38,11 @@ const DashboardOverview = () => {
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (userId === 0 && token) {
-      let decoded = jwt_decode(token);
-      setUserId(decoded.id);
-    }
+    // let token = localStorage.getItem("token");
+    // if (userId === 0 && token) {
+    //   let decoded = jwt_decode(token);
+    //   setUserId(decoded.id);
+    // }
 
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`);
