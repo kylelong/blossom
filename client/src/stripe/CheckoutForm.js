@@ -9,7 +9,11 @@ export default function CheckoutForm() {
 
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const priceId = "price_1M6QudHadwp6AsWci1if6CyF";
+  const priceId =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? "price_1Mu6vSHadwp6AsWcMjUvVGFG"
+      : "price_1M6QudHadwp6AsWci1if6CyF";
+  console.log(process.env.REACT_APP_NODE_ENV, priceId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

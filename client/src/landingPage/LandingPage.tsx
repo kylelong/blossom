@@ -76,7 +76,7 @@ const LandingPage: React.FC = () => {
         <SectionHeader>Benefits</SectionHeader>
         <BenefitsContainer>
           <BenefitsItem>
-            <Image src={team} />
+            <Image src={team} style={{position: "relative", top: "25px"}} />
             <BenefitLabel>Team efficiency</BenefitLabel>
             <ul>
               <BenefitsListItem>
@@ -104,7 +104,7 @@ const LandingPage: React.FC = () => {
             </ul>
           </BenefitsItem>
           <BenefitsItem>
-            <Image src={money} />
+            <Image src={money} style={{position: "relative", top: "25px"}} />
             <BenefitLabel>Increase revenue</BenefitLabel>
             <ul>
               <BenefitsListItem>
