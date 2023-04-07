@@ -24,7 +24,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-s;
 
 app.get("/config", (req, res) => {
   res.send({
