@@ -10,6 +10,10 @@ import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import "./surveys.css";
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const siteUrl =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_URL
+    : process.env.REACT_APP_LOCAL_URL;
 
 const SurveysList = () => {
   const [user] = useAuthState(auth);
@@ -46,7 +50,7 @@ const SurveysList = () => {
                       setCurrentSurveyIndex(index);
                       setQuestionId(survey.id);
                       getQuestions(survey.id);
-                      setLink(`http://localhost:3000/survey/${survey.hash}`); // TODO: remove
+                      setLink(`${siteUrl}/survey/${survey.hash}`); // TODO: remove
                     }}
                   >
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
@@ -103,12 +107,13 @@ const SurveysList = () => {
   };
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_NODE_ENV);
     if (questionId === 0 && surveys.length > 0) {
       let survey = surveys[0];
       setCurrentSurveyIndex(0);
       setQuestionId(survey.id);
       getQuestions(survey.id);
-      setLink(`http://localhost:3000/survey/${survey.hash}`);
+      setLink(`${siteUrl}/survey/${survey.hash}`);
     }
     // loads surveys for this users
     const loadSurveys = async () => {

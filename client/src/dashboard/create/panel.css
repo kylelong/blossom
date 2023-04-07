@@ -420,7 +420,7 @@ button {
   padding-top: 24px;
 }
 .copyIcon {
-  margin-top: 3px;
+  margin-top: 6px;
   margin-left: 5px;
 }
 .copyIcon:hover {
@@ -430,6 +430,7 @@ button {
   color: #355e3b;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 3px;
 }
 .copiedContainer {
   margin-left: 10px;
@@ -445,9 +446,10 @@ button {
   font-size: 20px;
 }
 .surveyLinkDetails {
-  font-size: 13px;
+  font-size: 14px;
   color: #525f7f;
   font-weight: bold;
+  margin-bottom: 3px;
 }
 
 .redirectUrlText {

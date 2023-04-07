@@ -221,8 +221,7 @@ const Survey = () => {
       <div className="noSurveyContainer">
         <img src={flower} alt="flower" className="flowerLogoImg" />
         <div className="surveyMsg">
-          this survey is not available or published yet{" "}
-          {String.fromCodePoint("0x1F614")}
+          this survey is not published yet {String.fromCodePoint("0x1F614")}
         </div>
       </div>
     );

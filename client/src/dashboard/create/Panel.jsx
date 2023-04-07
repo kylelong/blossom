@@ -18,6 +18,10 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import "./panel.css";
 
 const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const siteUrl =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_URL
+    : process.env.REACT_APP_LOCAL_URL;
 
 const Panel = () => {
   const {register} = useForm();
@@ -89,7 +93,7 @@ const Panel = () => {
       const data = await response.data;
       if (data && data.length) {
         setDraft(data[0]);
-        const baseUrl = `https://www.blossomsurveys.io/${data[0].hash}`;
+        const baseUrl = `${siteUrl}/survey/${data[0].hash}`;
         setBaseSurveyLink(baseUrl);
         let link =
           draft.redirect_url.length > 0
@@ -125,7 +129,7 @@ const Panel = () => {
 
       // call /create_survey with hash, title, user_id
       // set draft to what is return (id,hash)
-      const baseUrl = `https://www.blossomsurveys.io/${response.data.hash}`;
+      const baseUrl = `${siteUrl}/survey/${response.data.hash}`;
       setBaseSurveyLink(baseUrl);
       setSurveyLink(baseUrl);
       setHasDraft(true);
