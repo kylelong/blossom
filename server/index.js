@@ -1,6 +1,12 @@
-require("dotenv").config();
-const port = process.env.PORT || 5000;
+require("dotenv").config({
+  path:
+    process.env.NODE_ENV === "production"
+      ? "production.env"
+      : "development.env",
+});
+
 const express = require("express");
+const config = require("./config");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
@@ -17,6 +23,8 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+
+console.log(`NODE_ENV=${config.NODE_ENV}`);
 
 app.get("/", (req, res) => {
   const path = resolve(process.env.STATIC_DIR + "/index.html");
@@ -733,6 +741,6 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`server listening on port ${port}`);
+app.listen(config.PORT, () => {
+  console.log(`server listening on port http://${config.HOST}:${config.PORT}`);
 });

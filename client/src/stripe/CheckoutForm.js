@@ -13,7 +13,7 @@ export default function CheckoutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = "videogameman12@yahoo.com";
+    const email = "kylel95@vt.edu";
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
