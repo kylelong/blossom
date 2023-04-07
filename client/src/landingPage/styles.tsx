@@ -258,4 +258,7 @@ export const Trial = styled.div`
 export const Footer = styled.div`
   text-align: center;
   padding-bottom: 10px;
+  @media (max-width: 768px) {
+    max-width: 320px;
+  }
 `;

@@ -56,6 +56,7 @@ const MenuItem = styled.div`
   text-align: left;
   font-weight: bold;
   color: #525f7f;
+  height: 50%;
   &:hover {
     background-color: #fa5f55;
     border: 1px white solid;
@@ -72,6 +73,7 @@ const SelectedMenuItem = styled.div`
   font-size: 20px;
   margin-bottom: 12px;
   padding: 10px;
+  height: 50%;
   border-radius: 5px;
   border: 1px transparent solid;
   text-align: left;

@@ -4,6 +4,7 @@ require("dotenv").config({
       ? "production.env"
       : "development.env",
 });
+console.log(process.env.NODE_ENV);
 
 const express = require("express");
 const config = require("./config");
