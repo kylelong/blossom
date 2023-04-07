@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.get("/", (req, res) => {
-  res.send("BLOSSOM");
+  res.send("BLOSSOM is on: " + process.env.NODE_ENV);
 });
 
 app.get("/config", (req, res) => {
