@@ -187,6 +187,7 @@ export const PriceContainer = styled.div`
   max-width: 350px;
   padding: 25px 50px;
   margin-bottom: 24px;
+  background-color: #f3f3f3f3;
 `;
 
 export const PricingLabelContainer = styled.div`
@@ -201,6 +202,7 @@ export const PricingLabel = styled.div`
   line-height: 25px;
   margin-bottom: 7px;
   font-size: 17px;
+  font-weight: bold;
 `;
 
 export const PricingHeader = styled.div`
