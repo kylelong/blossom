@@ -25,6 +25,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+app.get("/", (req, res) => {
+  res.send("BLOSSOM");
+});
+
 app.get("/config", (req, res) => {
   res.send({
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
