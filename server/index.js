@@ -26,7 +26,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.get("/", (req, res) => {
-  res.send("BLOSSOM is on: " + process.env.NODE_ENV);
+  res.send(
+    "BLOSSOM is on: " +
+      process.env.NODE_ENV +
+      `with stripe key ${process.env.STRIPE_PUBLISHABLE_KEY}`
+  );
 });
 
 app.get("/config", (req, res) => {

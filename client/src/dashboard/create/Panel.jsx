@@ -88,7 +88,7 @@ const Panel = () => {
   const loadSurvey = useCallback(async () => {
     // get draft (if it exists)
     try {
-      const id = 1; //TODO: user_id from db
+      const id = 1; //TODO: user_id from postgres db
       const response = await axios.get(`${endpoint}/latest_survey/${id}`);
       const data = await response.data;
       if (data && data.length) {
