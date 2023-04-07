@@ -13,7 +13,7 @@ const OpenEnded = ({handleProceed, index, updateResponse, surveyHash}) => {
         if (Object.keys(bsmr).includes(surveyHash)) {
           let res = bsmr[surveyHash];
           if (res[index].answers && res[index].answers.length > 0) {
-            return res[index].answers[0];
+            return res[index].answers[0].answer;
           }
         }
       }

@@ -23,6 +23,7 @@ export const Slogan = styled.div`
   color: #c4c4c4;
   margin-bottom: 24px;
   margin-right: 12px;
+  font-size: 20px;
 `;
 export const SignUpForm = styled.form`
   display: flex;

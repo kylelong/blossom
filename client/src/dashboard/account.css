@@ -9,6 +9,7 @@
   line-height: 35px;
   color: var(--blackA9);
   user-select: none;
+  font-size: 17px;
 }
 
 .accountField {

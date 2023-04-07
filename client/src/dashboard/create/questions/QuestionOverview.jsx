@@ -150,7 +150,7 @@ const QuestionOverview = ({
                   )}
 
                   <button
-                    className="removeQuestionBtn panelBtn"
+                    className="removeQuestionBtn"
                     onClick={(e) => {
                       e.preventDefault();
                       const {id} = question;

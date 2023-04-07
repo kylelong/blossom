@@ -40,7 +40,7 @@ const SurveysList = () => {
                 >
                   <RadioGroup.Item
                     className="RadioGroupItem"
-                    value={survey.id}
+                    value={index}
                     id={survey.id}
                     onClick={() => {
                       setCurrentSurveyIndex(index);
@@ -103,6 +103,13 @@ const SurveysList = () => {
   };
 
   useEffect(() => {
+    if (questionId === 0 && surveys.length > 0) {
+      let survey = surveys[0];
+      setCurrentSurveyIndex(0);
+      setQuestionId(survey.id);
+      getQuestions(survey.id);
+      setLink(`http://localhost:3000/survey/${survey.hash}`);
+    }
     // loads surveys for this users
     const loadSurveys = async () => {
       try {

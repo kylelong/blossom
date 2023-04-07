@@ -110,19 +110,25 @@ const DashboardOverview = () => {
             {hasSurvey && (
               <DashboardStat>
                 <DashboardNumber>{surveyCount}</DashboardNumber>
-                <DashboardStatHeader>surveys</DashboardStatHeader>
+                <DashboardStatHeader>
+                  surveys {String.fromCodePoint("0x1F4DD")}`
+                </DashboardStatHeader>
               </DashboardStat>
             )}
 
             {numberOfQuestions > 0 && (
               <DashboardStat>
                 <DashboardNumber>{numberOfQuestions}</DashboardNumber>
-                <DashboardStatHeader>questions </DashboardStatHeader>
+                <DashboardStatHeader>
+                  questions {String.fromCodePoint("0x2753")}`
+                </DashboardStatHeader>
               </DashboardStat>
             )}
             <DashboardStat>
               <DashboardNumber>{numberOfResponses}</DashboardNumber>
-              <DashboardStatHeader>responses</DashboardStatHeader>
+              <DashboardStatHeader>
+                responses {String.fromCodePoint("0x1F5E3")}
+              </DashboardStatHeader>
             </DashboardStat>
           </DashboardStatContainer>
           <QuestionTypeBreakdown>

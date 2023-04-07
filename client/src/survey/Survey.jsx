@@ -102,14 +102,12 @@ const Survey = () => {
       let survey_hash = "";
       // prefill answer choices from local storage
       if (localStorage.getItem("bsmr") !== null) {
+        survey_hash = params.id;
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
         if (Object.keys(bsmr).includes(survey_hash)) {
           let res = bsmr[survey_hash];
           loadQuestionIds(res);
           setResponse(res);
-        } else {
-          // so you can take a new survey
-          localStorage.removeItem("bsmr");
         }
       }
       try {

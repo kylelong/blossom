@@ -8,7 +8,7 @@ export const AnalyticsContainer = styled.div`
   top: 50px;
 `;
 export const SurveyTitle = styled.div`
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   color: #525f7f;
   margin-bottom: 50px;
@@ -66,7 +66,7 @@ export const AnswerChoiceContainer = styled.div`
   }
 `;
 export const ContainerHeader = styled.div`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #525f7f;
   margin-bottom: 12px;

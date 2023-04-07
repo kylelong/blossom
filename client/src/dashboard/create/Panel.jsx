@@ -769,7 +769,11 @@ const Panel = () => {
                 <div className="errorsHeader">errors:</div>
                 <div>
                   {errors.map((err, index) => {
-                    return <p key={index}>- {err}</p>;
+                    return (
+                      <p style={{fontSize: "17px"}} key={index}>
+                        - {err}
+                      </p>
+                    );
                   })}
                 </div>
               </>
@@ -818,7 +822,11 @@ const Panel = () => {
             <>
               <AlertDialog.Root>
                 <AlertDialog.Trigger asChild>
-                  <button className="Button red" id="deleteSurvey">
+                  <button
+                    className="Button red"
+                    style={{width: "125px"}}
+                    id="deleteSurvey"
+                  >
                     delete
                   </button>
                 </AlertDialog.Trigger>

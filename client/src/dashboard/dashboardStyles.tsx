@@ -103,7 +103,7 @@ export const DashboardHeaderTextDesktop = styled.div`
 `;
 export const DashboardHeaderDetail = styled.div`
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
   @media (max-width: 768px) {
     margin-top: 12px;
   }
@@ -117,7 +117,7 @@ export const DashboardOverviewContainer = styled.div`
   justify-content: center;
   height: 30vh;
   margin-left: 50px;
-  margin-top: 48px;
+  margin-top: 90px;
 `;
 export const DashboardStatContainer = styled.div`
   display: flex;
@@ -137,12 +137,13 @@ export const DashboardStatHeader = styled.div`
   color: #b8b8b8;
   font-weight: bold;
   margin-right: 12px;
+  font-size: 18px;
 `;
 
 export const DashboardStat = styled.div`
   display: flex;
   flex-direction: column;
-  text-align: left;
+  text-align: center;
   margin-right: 32px;
 `;
 
@@ -162,10 +163,11 @@ export const SurveyButton = styled.button`
   font-size: 15px;
   padding: 0 18px;
   line-height: 38px;
-  height: 38px;
+  height: 50px;
+  font-size: 17px;
   width: auto;
-  background-color: white;
-  color: #355e3b;
+  background-color: #355e3b;
+  color: white;
   box-shadow: 0 2px 10px var(--blackA7);
 `;
 
@@ -179,6 +181,8 @@ export const QuestionTypeItem = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 17px;
 `;
 export const QuestionTypeLabel = styled.div`
   color: #b8b8b8;
