@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import {
@@ -66,6 +66,19 @@ const MenuItem = styled.div`
     font-weight: bold;
   }
 `;
+const SelectedMenuItem = styled.div`
+  disiplay: flex;
+  flex-direction: row;
+  font-size: 20px;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px transparent solid;
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  background-color: #fa5f55;
+`;
 
 const linkStyle = {
   textDecoration: "none",
@@ -73,6 +86,14 @@ const linkStyle = {
 };
 
 const NavigationMenu: React.FC = () => {
+  const [item, setItem] = useState<string | null>(
+    window.location.pathname.replace("/", "")
+  );
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setItem((e.target as HTMLElement).textContent);
+  };
+
   return (
     <NavigationContainer>
       <MenuContainer>
@@ -81,36 +102,72 @@ const NavigationMenu: React.FC = () => {
           <FlowerImage src={flower} />
         </LogoContainer>
         <Link to="/dashboard" style={linkStyle}>
-          <MenuItem>
-            <MenuIcon>
-              <DashboardIcon />
-            </MenuIcon>
-            dashboard
-          </MenuItem>
+          {item === "dashboard" ? (
+            <SelectedMenuItem onClick={handleClick}>
+              <MenuIcon>
+                <DashboardIcon />
+              </MenuIcon>
+              dashboard
+            </SelectedMenuItem>
+          ) : (
+            <MenuItem onClick={handleClick}>
+              <MenuIcon>
+                <DashboardIcon />
+              </MenuIcon>
+              dashboard
+            </MenuItem>
+          )}
         </Link>
         <Link to="/create" style={linkStyle}>
-          <MenuItem>
-            <MenuIcon>
-              <ImageIcon />
-            </MenuIcon>
-            create
-          </MenuItem>
+          {item === "create" ? (
+            <SelectedMenuItem onClick={handleClick}>
+              <MenuIcon>
+                <ImageIcon />
+              </MenuIcon>
+              create
+            </SelectedMenuItem>
+          ) : (
+            <MenuItem onClick={handleClick}>
+              <MenuIcon>
+                <ImageIcon />
+              </MenuIcon>
+              create
+            </MenuItem>
+          )}
         </Link>
         <Link to="/surveys" style={linkStyle}>
-          <MenuItem>
-            <MenuIcon>
-              <Pencil2Icon />
-            </MenuIcon>
-            surveys
-          </MenuItem>
+          {item === "surveys" ? (
+            <SelectedMenuItem onClick={handleClick}>
+              <MenuIcon>
+                <Pencil2Icon />
+              </MenuIcon>
+              surveys
+            </SelectedMenuItem>
+          ) : (
+            <MenuItem onClick={handleClick}>
+              <MenuIcon>
+                <Pencil2Icon />
+              </MenuIcon>
+              surveys
+            </MenuItem>
+          )}
         </Link>
         <Link to="/analytics" style={linkStyle}>
-          <MenuItem>
-            <MenuIcon>
-              <CubeIcon />
-            </MenuIcon>
-            analytics
-          </MenuItem>
+          {item === "analytics" ? (
+            <SelectedMenuItem onClick={handleClick}>
+              <MenuIcon>
+                <CubeIcon />
+              </MenuIcon>
+              analytics
+            </SelectedMenuItem>
+          ) : (
+            <MenuItem onClick={handleClick}>
+              <MenuIcon>
+                <CubeIcon />
+              </MenuIcon>
+              analytics
+            </MenuItem>
+          )}
         </Link>
       </MenuContainer>
     </NavigationContainer>

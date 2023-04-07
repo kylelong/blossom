@@ -140,7 +140,6 @@ const Survey = () => {
     (index, type, answer) => {
       // answers: [{answer_id: "", answer: ""}] // answer_id for ms/ss, answer only for emoji / open_ended
       // for ms/ss append , open_ended / emoji overwrite
-      console.log(response);
       let copy = [...response];
       if (answer) {
         copy[index].answers = answer;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState, useRef, useCallback} from "react";
 import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 import axios from "axios";
@@ -95,7 +95,7 @@ const SurveysList = () => {
     setQuestions(question_copy.flat());
   };
 
-  const getQuestions = async (survey_id) => {
+  const getQuestions = useCallback(async (survey_id) => {
     try {
       const response = await axios.get(`${endpoint}/questions/${survey_id}`);
       const data = await response.data;
@@ -104,10 +104,9 @@ const SurveysList = () => {
     } catch (err) {
       console.error(err.message);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_NODE_ENV);
     if (questionId === 0 && surveys.length > 0) {
       let survey = surveys[0];
       setCurrentSurveyIndex(0);
@@ -131,7 +130,7 @@ const SurveysList = () => {
     if (!loaded) {
       loadSurveys();
     }
-  }, [loaded, uid, currentSurveyIndex, questionId]);
+  }, [loaded, uid, currentSurveyIndex, questionId, surveys, getQuestions]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {
