@@ -145,12 +145,17 @@ export const FAQContainer = styled.div`
     margin-left: 15px;
     padding: 10px;
   }
+  box-shadow: 5px 5px 10px #c4c4c4;
+  border-radius: 5px;
+
+  padding: 25px 50px;
+  background-color: #faf9f6;
 `;
 
 export const QuestionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 24px;
   align-items: flex-start;
 `;
 export const QuestionLabel = styled.div`
@@ -158,7 +163,7 @@ export const QuestionLabel = styled.div`
   font-weight: bold;
   font-size: 20px;
   font-family: Helvetica Neue, Arial, sans-serif;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
   text-align: left;
 `;
 
@@ -187,7 +192,7 @@ export const PriceContainer = styled.div`
   max-width: 350px;
   padding: 25px 50px;
   margin-bottom: 24px;
-  background-color: #f3f3f3f3;
+  background-color: #faf9f6;
 `;
 
 export const PricingLabelContainer = styled.div`
@@ -195,6 +200,8 @@ export const PricingLabelContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  margin-top: 16px;
+  margin-left: 38px;
 `;
 
 export const PricingLabel = styled.div`
