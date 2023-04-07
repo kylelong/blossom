@@ -58,6 +58,7 @@
   flex-direction: row;
   align-self: center;
   margin-top: auto;
+  margin-bottom: 8px;
 }
 .previewButton {
   all: unset;
@@ -232,18 +233,20 @@
     font-size: 18px;
   }
   .surveyContainer {
-    height: 100%;
+    /* height: 100%; */
     width: 85vw;
     padding-bottom: 24px;
   }
   .previewButtonsContainer {
-    margin-top: 10px;
+    position: absolute;
+    bottom: 28px;
   }
   .panelContainer {
     flex-direction: column;
   }
 
   .surveyContainerParent {
+    margin-top: 12px;
     margin-bottom: 24px;
   }
 }

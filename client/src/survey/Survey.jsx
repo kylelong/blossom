@@ -90,6 +90,7 @@ const Survey = () => {
   );
 
   useEffect(() => {
+    // TODO: if localStorage.getItem("bsmr") != mull and key != params.id -> removeItem
     async function loadQuestionIds(res) {
       for (let i = 0; i < res.length; i++) {
         let question = res[i];
@@ -99,15 +100,16 @@ const Survey = () => {
     }
 
     const loadSurvey = async () => {
-      let survey_hash = "";
+      let survey_hash = params.id;
       // prefill answer choices from local storage
       if (localStorage.getItem("bsmr") !== null) {
-        survey_hash = params.id;
         let bsmr = JSON.parse(localStorage.getItem("bsmr"));
         if (Object.keys(bsmr).includes(survey_hash)) {
           let res = bsmr[survey_hash];
           loadQuestionIds(res);
           setResponse(res);
+        } else {
+          localStorage.removeItem("bsmr");
         }
       }
       try {
@@ -138,6 +140,7 @@ const Survey = () => {
     (index, type, answer) => {
       // answers: [{answer_id: "", answer: ""}] // answer_id for ms/ss, answer only for emoji / open_ended
       // for ms/ss append , open_ended / emoji overwrite
+      console.log(response);
       let copy = [...response];
       if (answer) {
         copy[index].answers = answer;
