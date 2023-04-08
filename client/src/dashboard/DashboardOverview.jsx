@@ -48,7 +48,8 @@ const DashboardOverview = () => {
 
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
-      let count = parseInt(response.data);
+      const data = await response.data;
+      let count = parseInt(data);
 
       if (count > 0) {
         setHasSurvey(true);
@@ -61,7 +62,8 @@ const DashboardOverview = () => {
       const response = await axios.get(
         `${endpoint}/draft_survey_count/${user_id}`
       );
-      const count = response.data;
+      const data = await response.data;
+      const count = data;
       if (count > 0) {
         setHasDraft(true);
       }

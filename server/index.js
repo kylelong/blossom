@@ -211,7 +211,7 @@ app.put("/confirm_user", async (req, res) => {
 // check if this user email and password matches on login
 
 // # of surveys a user has created
-app.get("/survey_count:/user_id", async (req, res) => {
+app.get("/survey_count/:user_id", async (req, res) => {
   try {
     const {user_id} = req.params;
     // console.log(req.session, req.sessionID);
