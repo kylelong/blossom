@@ -54,7 +54,7 @@ const ThankYou = ({redirectUrl, surveyHash}) => {
         if (redirectUrl) {
           window.location.replace(redirectUrl);
         }
-      }, 3000);
+      }, 2000);
     }
   }, [redirectUrl, surveyHash]);
   return (

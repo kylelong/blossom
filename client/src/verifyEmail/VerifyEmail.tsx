@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { auth, app } from "../firebase-config";
-import { applyActionCode } from "firebase/auth";
+import React, {useEffect, useState} from "react";
+import {auth, app} from "../firebase-config";
+import {applyActionCode} from "firebase/auth";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import {
@@ -20,7 +20,7 @@ import {
   updateDoc,
   collection,
 } from "firebase/firestore";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const db = getFirestore(app);
 
@@ -28,9 +28,10 @@ interface Props {
   oobCode: string;
 }
 
-const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
+const VerifyEmail: React.FC<Props> = ({oobCode}) => {
   const [verified, setVerified] = useState<boolean>(false);
 
+  // TODO: set postgres user.confirmed = true
   const updateConfirmed = async (uid: string) => {
     const q = query(collection(db, "users"), where("uid", "==", uid));
     const querySnapShot = await getDocs(q);
@@ -45,7 +46,6 @@ const VerifyEmail: React.FC<Props> = ({ oobCode }) => {
   const verifyEmail = async () => {
     await applyActionCode(auth, oobCode)
       .then((response) => {
-        console.log("success");
         if (auth.currentUser) {
           updateConfirmed(auth.currentUser.uid);
           auth.currentUser.reload().then((response) => {

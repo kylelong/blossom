@@ -4,7 +4,6 @@ require("dotenv").config({
       ? "production.env"
       : "development.env",
 });
-// console.log(process.env.NODE_ENV);
 
 const express = require("express");
 const config = require("./config");
@@ -26,11 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.get("/", (req, res) => {
-  res.send(
-    "BLOSSOM is on: " +
-      process.env.NODE_ENV +
-      `with stripe key ${process.env.STRIPE_PUBLISHABLE_KEY}`
-  );
+  res.send("BLOSSOM is on: " + process.env.NODE_ENV);
 });
 
 app.get("/config", (req, res) => {
@@ -193,6 +188,17 @@ app.put("/update_hash", async (req, res) => {
   try {
     const {hash} = req.body;
     await pool.query("UPDATE users SET hash = $1 WHERE id = $2", [hash, id]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.put("/confirm_user", async (req, res) => {
+  try {
+    const {user_id} = req.body;
+    await pool.query("UPDATE users SET confirmed = true WHERE id = $1", [
+      user_id,
+    ]);
   } catch (err) {
     console.error(err.message);
   }

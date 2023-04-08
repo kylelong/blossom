@@ -88,7 +88,9 @@ CREATE INDEX question_id_index_response ON response (question_id);
 
 /* 
     TESTING:
-    create survey, question, answer_choice, response
+    create users, survey, question, answer_choice, response
+
+    drop tables: drop table ___ cascade;
 */
 
 INSERT INTO survey (title, hash, user_id) VALUES ('podcast', 'd5f8c6e5a3b49c6b5e07', 1) RETURNING*;

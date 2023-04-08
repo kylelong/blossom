@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 import ResetPassword from "../resetPassword/ResetPassword";
 import VerifyEmail from "../verifyEmail/VerifyEmail";
-import { auth } from "../firebase-config";
-import { checkActionCode } from "firebase/auth";
+import {auth} from "../firebase-config";
+import {checkActionCode} from "firebase/auth";
 
 // reset password & verify email
 const AccountManagement: React.FC = () => {
-  const { search } = useLocation();
+  const {search} = useLocation();
   const mode = new URLSearchParams(search).get("mode");
   const oobCode = new URLSearchParams(search).get("oobCode");
   // const apiKey= new URLSearchParams(search).get('apiKey');
@@ -29,7 +29,7 @@ const AccountManagement: React.FC = () => {
   if (oobCode) {
     if (mode === "resetPassword") {
       return <ResetPassword oobCode={oobCode} />;
-    } else if ("verifyEmail") {
+    } else if (mode === "verifyEmail") {
       return <VerifyEmail oobCode={oobCode} />;
     }
   }

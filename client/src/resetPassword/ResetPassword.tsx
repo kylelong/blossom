@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
 import Logo from "../Logo";
-import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
-import { auth } from "../firebase-config";
-import { confirmPasswordReset } from "firebase/auth";
-import { Link } from "react-router-dom";
+import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
+import {auth} from "../firebase-config";
+import {confirmPasswordReset} from "firebase/auth";
+import {Link} from "react-router-dom";
 
 import {
   ResetPasswordContainer,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 // form to reset password
-const ResetPassword: React.FC<Props> = ({ oobCode }) => {
+const ResetPassword: React.FC<Props> = ({oobCode}) => {
   const [password, setPassword] = useState<string>("");
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
@@ -42,6 +42,7 @@ const ResetPassword: React.FC<Props> = ({ oobCode }) => {
     password: yup.string().min(8).required("password is required"),
   });
 
+  //TODO: update postgres password
   const changePassword = () => {
     if (oobCode) {
       confirmPasswordReset(auth, oobCode, password)
@@ -94,7 +95,7 @@ const ResetPassword: React.FC<Props> = ({ oobCode }) => {
               {
                 password: password,
               },
-              { abortEarly: false }
+              {abortEarly: false}
             )
             .catch((err) => {
               setPasswordErrors(err.errors);
