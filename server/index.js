@@ -103,7 +103,8 @@ app.post("/login", async (req, res) => {
         } else {
           res.json({token: token});
           res.cookie("token", token, {
-            secure: false,
+            maxAge: 3600000 * 24,
+            secure: true,
             httpOnly: true,
           });
         }
