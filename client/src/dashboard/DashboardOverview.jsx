@@ -20,7 +20,7 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-
+const user_id = 1;
 const DashboardOverview = () => {
   // const [userId, setUserId] = useState(() => {
   //   let token = localStorage.getItem("token");
@@ -30,7 +30,6 @@ const DashboardOverview = () => {
   //   }
   //   return 0;
   // });
-  const userId = 1;
 
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
@@ -48,7 +47,7 @@ const DashboardOverview = () => {
     // }
 
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count`);
+      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
       let count = parseInt(response.data);
 
       if (count > 0) {
@@ -60,7 +59,7 @@ const DashboardOverview = () => {
 
     const countDrafts = async () => {
       const response = await axios.get(
-        `${endpoint}/draft_survey_count/${userId}`
+        `${endpoint}/draft_survey_count/${user_id}`
       );
       const count = response.data;
       if (count > 0) {
@@ -69,21 +68,21 @@ const DashboardOverview = () => {
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(`${endpoint}/question_count/${userId}`);
+      const response = await axios.get(`${endpoint}/question_count/${user_id}`);
       const count = response.data;
       setNumberOfQuestions(count);
     };
 
     const countQuestionTypes = async () => {
       const response = await axios.get(
-        `${endpoint}/question_type_count/${userId}`
+        `${endpoint}/question_type_count/${user_id}`
       );
       const data = response.data;
       setQuestionTypeCounts(data);
     };
     const countResponses = async () => {
       const response = await axios.get(
-        `${endpoint}/number_of_responses/${userId}`
+        `${endpoint}/number_of_responses/${user_id}`
       );
       const count = response.data;
       setNumberOfResponses(count);
@@ -94,7 +93,7 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     countResponses();
-  }, [loaded, userId]);
+  }, [loaded]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`

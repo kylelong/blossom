@@ -86,6 +86,8 @@ CREATE TABLE response (
 CREATE INDEX answer_id_index ON response (answer_id);
 CREATE INDEX question_id_index_response ON response (question_id);
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto; -- for insertion
+
 /* 
     TESTING:
     create users, survey, question, answer_choice, response
