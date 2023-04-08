@@ -24,7 +24,10 @@ import AnswerChoice from "./AnswerChoice";
 import ScrollArea from "./ScrollArea";
 import {UserData} from "./Data";
 import axios from "axios";
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const AnalyticsDashboard = () => {
   const [loaded, setLoaded] = useState(false);

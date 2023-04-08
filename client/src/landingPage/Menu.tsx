@@ -31,7 +31,10 @@ export const MenuItem = styled.div`
 export const linkStyle = {
   textDecoration: "none",
 };
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const Menu: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);

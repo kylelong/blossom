@@ -17,12 +17,14 @@ import {auth} from "../../firebase-config";
 import {useAuthState} from "react-firebase-hooks/auth";
 import "./panel.css";
 
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 const siteUrl =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_URL
     : process.env.REACT_APP_LOCAL_URL;
-
 const Panel = () => {
   const {register} = useForm();
   // survey

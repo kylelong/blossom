@@ -9,7 +9,11 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import "./surveys.css";
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
+
 const siteUrl =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_URL

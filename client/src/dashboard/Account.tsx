@@ -28,7 +28,10 @@ const Account = () => {
   });
   const onSubmit: SubmitHandler<accountData> = (data) =>
     updateCompany(data.company);
-  const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+  const endpoint =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_LIVE_SERVER_URL
+      : process.env.REACT_APP_LOCALHOST_URL;
   const user_id = 1;
 
   const updateCompany = async (company: string) => {

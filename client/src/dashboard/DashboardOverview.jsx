@@ -16,7 +16,10 @@ import {
   QuestionTypeLabel,
   QuestionTypeNumber,
 } from "./dashboardStyles";
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const DashboardOverview = () => {
   // const [userId, setUserId] = useState(() => {

@@ -6,7 +6,10 @@ import flower from "../images/scandi-373.svg";
 import axios from "axios";
 
 import SurveyViewer from "./SurveyViewer";
-const endpoint = process.env.REACT_APP_LOCALHOST_URL;
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const Survey = () => {
   const params = useParams();
