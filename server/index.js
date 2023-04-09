@@ -7,6 +7,7 @@ require("dotenv").config({
 
 const express = require("express");
 const config = require("./config");
+const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
@@ -15,24 +16,16 @@ const cookieParser = require("cookie-parser");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
-console.log(process.env.NODE_ENV);
 const corsOptions = {
   credentials: true,
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://blossomsurveys.io"
+      : "http://localhost:3000",
 };
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-// app.use(
-//   session({
-//     cookie: {
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === "production",
-//       sameSite: "lax",
-//       maxAge: 1000 * 60 * 60 * 24 * 365 * 7,
-//     },
-//   })
-// );
 
 app.get("/", (req, res) => {
   res.send("BLOSSOM is on: " + process.env.NODE_ENV);
@@ -105,6 +98,10 @@ app.post("/login", async (req, res) => {
       "SELECT id, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
       [password, email]
     );
+    if (response.error) {
+      console.log(response.error);
+    }
+
     let {verified, id} = response.rows[0];
     if (verified) {
       const options = {
@@ -120,6 +117,9 @@ app.post("/login", async (req, res) => {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
       });
+      res.json(response.rows[0]);
+    } else {
+      return res.status(401).json({message: "Invalid credentials"});
     }
   } catch (err) {
     console.error(err.message);

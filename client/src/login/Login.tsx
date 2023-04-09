@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../firebase-config";
-// import axios from "axios";
+import axios from "axios";
 
 import {
   LoginContainer,
@@ -48,28 +48,15 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         // ...
-        var headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append("Accept", "application/json");
-        fetch(`${endpoint}/login`, {
-          method: "POST",
-          credentials: "include",
-          headers: headers,
-          body: JSON.stringify({
+
+        axios
+          .post(`${endpoint}/login`, {
             email: loginData.email,
             password: loginData.password,
-          }),
-        });
-        // axios.defaults.withCredentials = true;
-        // axios
-        //   .post(`${endpoint}/login`, {
-        //     email: loginData.email,
-        //     password: loginData.password,
-        //   })
-        //   .then((response) => {
-        //     console.log(response.status);
-        //     localStorage.setItem("token", response.data.token);
-        //   });
+          })
+          .then((response) => {
+            console.log(response.status);
+          });
       })
       .catch((error) => {
         /**
