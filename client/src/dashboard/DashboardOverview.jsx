@@ -21,17 +21,11 @@ const endpoint =
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
 const user_id = 1;
+console.log(
+  `env: ${process.env.REACT_APP_NODE_ENV}; url: ${process.env.REACT_APP_LIVE_SERVER_URL}`
+);
 
 const DashboardOverview = () => {
-  // const [userId, setUserId] = useState(() => {
-  //   let token = localStorage.getItem("token");
-  //   if (token) {
-  //     let decoded = jwt_decode(token);
-  //     return decoded.id;
-  //   }
-  //   return 0;
-  // });
-
   const [hasSurvey, setHasSurvey] = useState(false);
   const [surveyCount, setSurveyCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
@@ -41,14 +35,10 @@ const DashboardOverview = () => {
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
 
   useEffect(() => {
-    // let token = localStorage.getItem("token");
-    // if (userId === 0 && token) {
-    //   let decoded = jwt_decode(token);
-    //   setUserId(decoded.id);
-    // }
-
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/survey_count/${user_id}`, {
+        withCredentials: true,
+      });
       const data = await response.data;
       let count = parseInt(data);
 
@@ -61,7 +51,10 @@ const DashboardOverview = () => {
 
     const countDrafts = async () => {
       const response = await axios.get(
-        `${endpoint}/draft_survey_count/${user_id}`
+        `${endpoint}/draft_survey_count/${user_id}`,
+        {
+          withCredentials: true,
+        }
       );
       const data = await response.data;
       const count = data;
@@ -71,21 +64,32 @@ const DashboardOverview = () => {
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(`${endpoint}/question_count/${user_id}`);
+      const response = await axios.get(
+        `${endpoint}/question_count/${user_id}`,
+        {
+          withCredentials: true,
+        }
+      );
       const count = response.data;
       setNumberOfQuestions(count);
     };
 
     const countQuestionTypes = async () => {
       const response = await axios.get(
-        `${endpoint}/question_type_count/${user_id}`
+        `${endpoint}/question_type_count/${user_id}`,
+        {
+          withCredentials: true,
+        }
       );
       const data = response.data;
       setQuestionTypeCounts(data);
     };
     const countResponses = async () => {
       const response = await axios.get(
-        `${endpoint}/number_of_responses/${user_id}`
+        `${endpoint}/number_of_responses/${user_id}`,
+        {
+          withCredentials: true,
+        }
       );
       const count = response.data;
       setNumberOfResponses(count);

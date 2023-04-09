@@ -48,8 +48,6 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         // ...
-
-        axios.defaults.withCredentials = true;
         axios
           .post(
             `${endpoint}/login`,
