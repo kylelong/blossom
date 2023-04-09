@@ -21,9 +21,6 @@ const endpoint =
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
 const user_id = 1;
-console.log(
-  `env: ${process.env.REACT_APP_NODE_ENV}; url: ${process.env.REACT_APP_LIVE_SERVER_URL}`
-);
 
 const DashboardOverview = () => {
   const [hasSurvey, setHasSurvey] = useState(false);
