@@ -18,10 +18,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 console.log(process.env.NODE_ENV);
 const corsOptions = {
   credentials: true,
-  origin:
-    process.env.NODE_ENV === "production"
-      ? "https://blossomsurveys.io"
-      : "http://localhost:3000",
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -122,7 +118,7 @@ app.post("/login", async (req, res) => {
       res.cookie("token", token, {
         maxAge: 3600000 * 24,
         secure: process.env.NODE_ENV === "production",
-        httpOnly: false,
+        httpOnly: true,
       });
     }
   } catch (err) {
