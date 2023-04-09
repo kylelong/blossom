@@ -15,14 +15,28 @@ const cookieParser = require("cookie-parser");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
-
+console.log(process.env.NODE_ENV);
 const corsOptions = {
   credentials: true,
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://blossomsurveys.io/"
+      : "http://localhost:3000",
 };
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+// app.use(
+//   session({
+//     cookie: {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       sameSite: "lax",
+//       maxAge: 1000 * 60 * 60 * 24 * 365 * 7,
+//     },
+//   })
+// );
 
 app.get("/", (req, res) => {
   res.send("BLOSSOM is on: " + process.env.NODE_ENV);
@@ -97,17 +111,18 @@ app.post("/login", async (req, res) => {
     );
     let {verified, id} = response.rows[0];
     if (verified) {
-      jwt.sign({id: id}, process.env.SECRET_ACCESS_TOKEN, (err, token) => {
-        if (err) {
-          res.sendStatus(403);
-        } else {
-          res.json({token: token});
-          res.cookie("token", token, {
-            maxAge: 3600000 * 24,
-            secure: true,
-            httpOnly: true,
-          });
-        }
+      const options = {
+        expiresIn: "1h",
+      };
+      const token = jwt.sign(
+        {user_id: id},
+        process.env.SECRET_ACCESS_TOKEN,
+        options
+      );
+      res.cookie("token", token, {
+        maxAge: 3600000 * 24,
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: false,
       });
     }
   } catch (err) {

@@ -50,9 +50,7 @@ const Menu: React.FC = () => {
     }
   });
   const logout = () => {
-    axios.post(`${endpoint}/logout`).then((response) => {
-      console.log(response.data);
-    });
+    axios.post(`${endpoint}/logout`).then((response) => {});
   };
   const menuToShow = () => {
     if (loading) {

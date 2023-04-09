@@ -45,9 +45,9 @@ const AnswerChoice = ({choice, answerChoiceAnalytics}) => {
         <StatContainer>
           <Stat>{`${analytics.count}/${analytics.total}`}</Stat>
           <Dot />
-          <Stat style={{marginLeft: "2px"}}>{`${(analytics.avg * 100).toFixed(
-            2
-          )}%`}</Stat>
+          <Stat style={{marginLeft: "2px"}}>
+            {`${(analytics.avg * 100).toFixed(2)}%`}
+          </Stat>
         </StatContainer>
       )}
     </Answer>

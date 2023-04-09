@@ -169,6 +169,10 @@ export const SurveyButton = styled.button`
   background-color: #355e3b;
   color: white;
   box-shadow: 0 2px 10px var(--blackA7);
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(0, 100, 0);
+  }
 `;
 
 export const QuestionTypeBreakdown = styled.div`

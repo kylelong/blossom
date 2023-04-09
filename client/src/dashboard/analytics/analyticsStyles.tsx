@@ -48,6 +48,28 @@ export const QuestionContainer = styled.div`
     width: 287px;
   }
 `;
+export const SurveyButton = styled.button`
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 0 18px;
+  line-height: 38px;
+  height: 50px;
+  font-size: 17px;
+  width: auto;
+  background-color: #355e3b;
+  color: white;
+  box-shadow: 0 2px 10px var(--blackA7);
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(0, 100, 0);
+  }
+`;
+
 export const AnswerWrapper = styled.div`
   margin-left: 48px;
   @media (max-width: 1100px) {

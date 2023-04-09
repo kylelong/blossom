@@ -3,6 +3,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {auth} from "../firebase-config";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import axios from "axios";
 import {
   HamburgerMenuIcon,
   DashboardIcon,
@@ -24,10 +25,15 @@ const linkStyle = {
   textDecoration: "none",
   color: "black",
 };
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const MobileNavigationMenu = () => {
   const handleLogout = (e) => {
     e.preventDefault();
+    axios.post(`${endpoint}/logout`).then((response) => {});
     auth.signOut();
   };
   return (

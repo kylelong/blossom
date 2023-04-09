@@ -15,6 +15,7 @@ import {
   Emoji,
   EmojiContainer,
   AnswerWrapper,
+  SurveyButton,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
@@ -36,6 +37,7 @@ const AnalyticsDashboard = () => {
   const [surveys, setSurveys] = useState([]);
   const [survey, setSurvey] = useState([]);
   const [hasSurvey, setHasSurvey] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [emojiAnalytics, setEmojiAnalytics] = useState([]);
   const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
@@ -74,7 +76,7 @@ const AnalyticsDashboard = () => {
     love: "0x1F60D",
   };
   const validQuestions =
-    questions && questions.length && questions[questionIndex];
+    questions && questions.length > 0 && questions[questionIndex];
   /* <PieChart chartData={userData} /> */
   const handleQuestionChange = useCallback(
     (index, type, id) => {
@@ -131,9 +133,7 @@ const AnalyticsDashboard = () => {
       let question_array = questions.filter((question) => question.id === id);
 
       try {
-        const response = await axios.get(
-          `http://localhost:5000/answer_choices/${id}`
-        );
+        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
         const data = await response.data;
         question_array[0].answerChoices = data;
         question_copy.push(question_array);
@@ -181,17 +181,26 @@ const AnalyticsDashboard = () => {
       setLoaded(true);
     };
     const countSurveys = async () => {
-      const response = await axios.get(
-        `${endpoint}/published_survey_count/${user_id}`
-      );
+      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
       let count = parseInt(response.data);
 
       if (count > 0) {
         setHasSurvey(true);
       }
     };
+    const countDrafts = async () => {
+      const response = await axios.get(
+        `${endpoint}/draft_survey_count/${user_id}`
+      );
+      const data = await response.data;
+      const count = data;
+      if (count > 0) {
+        setHasDraft(true);
+      }
+    };
     if (!loaded) {
       countSurveys();
+      countDrafts();
       loadSurveys();
     }
 
@@ -202,8 +211,23 @@ const AnalyticsDashboard = () => {
     surveyIdRef.current = selectedSurveyId;
   }, [loaded, selectedSurveyId, loadQuestions, surveys, user_id]);
 
+  const buttonText = hasDraft
+    ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
+    : `create a new survey ${String.fromCodePoint("0x1F680")}`;
+
   if (loaded && !hasSurvey) {
     return <Welcome />;
+  }
+  if (hasDraft) {
+    return (
+      <>
+        <a href="/create">
+          <AnalyticsContainer>
+            <SurveyButton>{buttonText}</SurveyButton>
+          </AnalyticsContainer>
+        </a>
+      </>
+    );
   }
   return (
     <>
