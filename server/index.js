@@ -20,7 +20,7 @@ const corsOptions = {
   credentials: true,
   origin:
     process.env.NODE_ENV === "production"
-      ? "https://blossomsurveys.io/"
+      ? "https://blossomsurveys.io"
       : "http://localhost:3000",
 };
 app.use(cors(corsOptions));
