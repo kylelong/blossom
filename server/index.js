@@ -25,6 +25,7 @@ const corsOptions = {
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization",
 };
+app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
