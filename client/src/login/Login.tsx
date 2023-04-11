@@ -42,6 +42,10 @@ const Login: React.FC = () => {
 
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
+  const config = {
+    withCredentials: true,
+    credentials: "same-origin",
+  };
 
   const loginUser = () => {
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
@@ -55,9 +59,7 @@ const Login: React.FC = () => {
               email: loginData.email,
               password: loginData.password,
             },
-            {
-              withCredentials: true,
-            }
+            config
           )
           .then((response) => {
             console.log(response.status);
