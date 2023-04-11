@@ -17,11 +17,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
 const corsOptions = {
-  credentials: true,
   origin:
     process.env.NODE_ENV === "production"
       ? "https://blossomsurveys.io"
       : "http://localhost:3000",
+  credentials: true,
 };
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://blossomsurveys.io");
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true);
   next();
 });
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());

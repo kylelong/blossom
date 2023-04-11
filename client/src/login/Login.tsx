@@ -49,16 +49,10 @@ const Login: React.FC = () => {
         // Signed in
         // ...
         axios
-          .post(
-            `${endpoint}/login`,
-            {
-              email: loginData.email,
-              password: loginData.password,
-            },
-            {
-              withCredentials: true,
-            }
-          )
+          .post(`${endpoint}/login`, {
+            email: loginData.email,
+            password: loginData.password,
+          })
           .then((response) => {
             console.log(response.status);
           });
