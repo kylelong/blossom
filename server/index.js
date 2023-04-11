@@ -7,7 +7,7 @@ require("dotenv").config({
 
 const express = require("express");
 const config = require("./config");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
   next();
 });
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
