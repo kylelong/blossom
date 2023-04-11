@@ -18,7 +18,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 const corsOptions = {
   credentials: true,
-  origin: process.env.NODE_ENV === "production" ? "" : "http://localhost:3000",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://blossomsurveys.io"
+      : "http://localhost:3000",
 };
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
