@@ -23,6 +23,15 @@ const corsOptions = {
       ? "https://blossomsurveys.io"
       : "http://localhost:3000",
 };
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
