@@ -17,15 +17,14 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
 const corsOptions = {
-  origin: true,
+  origin: [
+    "https://blossomsurveys.io",
+    "https://www.blossomsurveys.io",
+    "http://localhost:3000",
+  ],
   credentials: true,
 };
 app.use(function (req, res, next) {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://www.blossomsurveys.io",
-    "http://localhost:3000"
-  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
