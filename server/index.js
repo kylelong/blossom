@@ -7,7 +7,7 @@ require("dotenv").config({
 
 const express = require("express");
 const config = require("./config");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
@@ -18,12 +18,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 const corsOptions = {
   credentials: true,
-  // origin:
-  //   process.env.NODE_ENV === "production"
-  //     ? "https://blossomsurveys.io"
-  //     : "http://localhost:3000",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://blossomsurveys.io"
+      : "http://localhost:3000",
 };
-app.use(express.json());
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header(
@@ -34,7 +33,7 @@ app.use(express.json());
 //   next();
 // });
 app.use(cors(corsOptions));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
