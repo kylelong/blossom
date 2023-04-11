@@ -121,8 +121,8 @@ app.post("/login", async (req, res) => {
         options
       );
       res.cookie("token", token, {
-        maxAge: 3600000 * 24,
-        secure: process.env.NODE_ENV === "production",
+        maxAge: 86400000,
+        secure: false,
         httpOnly: true,
       });
       res.json(response.rows[0]);
