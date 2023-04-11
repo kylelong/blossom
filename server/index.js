@@ -20,7 +20,7 @@ const corsOptions = {
   credentials: true,
   origin:
     process.env.NODE_ENV === "production"
-      ? "https://blossomsurveys.io/"
+      ? "https://blossom-react.onrender.com"
       : "http://localhost:3000",
 };
 // app.use(function (req, res, next) {
@@ -32,6 +32,7 @@ const corsOptions = {
 //   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 //   next();
 // });
+app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
