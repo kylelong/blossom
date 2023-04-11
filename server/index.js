@@ -18,10 +18,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 const corsOptions = {
   credentials: true,
-  origin:
-    process.env.NODE_ENV === "production"
-      ? "https://blossom-react.onrender.com"
-      : "http://localhost:3000",
 };
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -32,7 +28,6 @@ const corsOptions = {
 //   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 //   next();
 // });
-app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
