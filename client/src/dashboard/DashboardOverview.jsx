@@ -33,9 +33,7 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
       const data = await response.data;
       let count = parseInt(data);
 
@@ -48,10 +46,7 @@ const DashboardOverview = () => {
 
     const countDrafts = async () => {
       const response = await axios.get(
-        `${endpoint}/draft_survey_count/${user_id}`,
-        {
-          withCredentials: true,
-        }
+        `${endpoint}/draft_survey_count/${user_id}`
       );
       const data = await response.data;
       const count = data;
@@ -61,32 +56,21 @@ const DashboardOverview = () => {
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(
-        `${endpoint}/question_count/${user_id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${endpoint}/question_count/${user_id}`);
       const count = response.data;
       setNumberOfQuestions(count);
     };
 
     const countQuestionTypes = async () => {
       const response = await axios.get(
-        `${endpoint}/question_type_count/${user_id}`,
-        {
-          withCredentials: true,
-        }
+        `${endpoint}/question_type_count/${user_id}`
       );
       const data = response.data;
       setQuestionTypeCounts(data);
     };
     const countResponses = async () => {
       const response = await axios.get(
-        `${endpoint}/number_of_responses/${user_id}`,
-        {
-          withCredentials: true,
-        }
+        `${endpoint}/number_of_responses/${user_id}`
       );
       const count = response.data;
       setNumberOfResponses(count);
