@@ -122,7 +122,7 @@ app.post("/login", async (req, res) => {
       );
       res.cookie("token", token, {
         maxAge: 86400000,
-        secure: false,
+        secure: true,
         httpOnly: true,
       });
       res.json(response.rows[0]);
