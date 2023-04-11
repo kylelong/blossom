@@ -21,6 +21,7 @@ import {
   collection,
 } from "firebase/firestore";
 import {Link} from "react-router-dom";
+//import axios from "axios";
 
 const db = getFirestore(app);
 
@@ -31,7 +32,10 @@ interface Props {
 const VerifyEmail: React.FC<Props> = ({oobCode}) => {
   const [verified, setVerified] = useState<boolean>(false);
 
-  // TODO: set postgres user.confirmed = true
+  // TODO: set postgres user.confirmed = true, set confirm for postgres
+  /**
+   * axios.put(`${endpoint}/confirm_user`)
+   */
   const updateConfirmed = async (uid: string) => {
     const q = query(collection(db, "users"), where("uid", "==", uid));
     const querySnapShot = await getDocs(q);
@@ -43,26 +47,26 @@ const VerifyEmail: React.FC<Props> = ({oobCode}) => {
     });
   };
 
-  const verifyEmail = async () => {
-    await applyActionCode(auth, oobCode)
-      .then((response) => {
-        if (auth.currentUser) {
-          updateConfirmed(auth.currentUser.uid);
-          auth.currentUser.reload().then((response) => {
-            setVerified(true);
-            if (auth.currentUser) {
-              console.log(auth.currentUser.emailVerified);
-            }
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   useEffect(() => {
+    const verifyEmail = async () => {
+      await applyActionCode(auth, oobCode)
+        .then((response) => {
+          if (auth.currentUser) {
+            updateConfirmed(auth.currentUser.uid);
+            auth.currentUser.reload().then((response) => {
+              setVerified(true);
+              if (auth.currentUser) {
+                console.log(auth.currentUser.emailVerified);
+              }
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
     verifyEmail();
-  });
+  }, [oobCode]);
 
   return (
     <VerifyEmailContainer>

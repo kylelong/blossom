@@ -22,10 +22,7 @@ const corsOptions = {
     process.env.NODE_ENV === "production"
       ? "https://blossomsurveys.io"
       : "http://localhost:3000",
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization",
 };
-app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());

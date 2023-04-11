@@ -33,7 +33,16 @@ const AccountManagement: React.FC = () => {
       return <VerifyEmail oobCode={oobCode} />;
     }
   }
-  return <div>{!validCode && <p>Invalid authorization code</p>}</div>;
+  return (
+    <div>
+      {!validCode && (
+        <p>
+          There was an error. Please try again or contact
+          contact@blossomsurveys.io
+        </p>
+      )}
+    </div>
+  );
 };
 
 export default AccountManagement;
