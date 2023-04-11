@@ -21,7 +21,12 @@ const corsOptions = {
   credentials: true,
 };
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://blossomsurveys.io");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://blossomsurveys.io",
+    "https://www.blossomsurveys.io",
+    "http://localhost:3000"
+  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
