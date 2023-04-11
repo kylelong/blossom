@@ -33,8 +33,8 @@ const endpoint =
 const MobileNavigationMenu = () => {
   const handleLogout = (e) => {
     e.preventDefault();
-    axios.post(`${endpoint}/logout`).then((response) => {});
     auth.signOut();
+    axios.post(`${endpoint}/logout`).then((response) => {});
   };
   return (
     <MobileMenu>

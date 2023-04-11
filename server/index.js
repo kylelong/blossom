@@ -23,7 +23,6 @@ const corsOptions = {
 app.use(function (req, res, next) {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://blossomsurveys.io",
     "https://www.blossomsurveys.io",
     "http://localhost:3000"
   );
@@ -33,6 +32,7 @@ app.use(function (req, res, next) {
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Expose-Headers", "Set-Cookie");
   next();
 });
 app.set("trust proxy", 1);
@@ -129,6 +129,7 @@ app.post("/login", async (req, res) => {
         maxAge: 86400000,
         secure: true,
         httpOnly: true,
+        sameSite: "none",
       });
       res.json(response.rows[0]);
     } else {
