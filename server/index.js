@@ -24,6 +24,7 @@ const corsOptions = {
   ],
   credentials: true,
 };
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://www.blossomsurveys.io");
   res.header(
@@ -39,6 +40,21 @@ app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+function authenticate(req, res, next) {
+  const token = req.cookies.token;
+  if (token === null) {
+    return res.status(401).json({message: "Unauthorized"});
+  }
+
+  jwt.verify(token, process.env.SECRET_ACCESS_TOKEN, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({message: "Forbidden"});
+    }
+    req.user_id = decoded.id;
+    next();
+  });
+}
 
 app.get("/", (req, res) => {
   res.send("BLOSSOM is on: " + process.env.NODE_ENV);
@@ -104,6 +120,10 @@ app.post("/create-payment-intent", async (req, res) => {
 
 // USER AUTH
 // only inset into users if no user has the email
+app.get("/read-cookie", (req, res) => {
+  const cookieValue = req.cookies.token;
+  res.send(`The value of token is: ${cookieValue}`);
+});
 app.post("/login", async (req, res) => {
   try {
     const {email, password} = req.body;
@@ -117,21 +137,18 @@ app.post("/login", async (req, res) => {
 
     let {verified, id} = response.rows[0];
     if (verified) {
-      const options = {
-        expiresIn: "1h",
-      };
-      const token = jwt.sign(
-        {user_id: id},
-        process.env.SECRET_ACCESS_TOKEN,
-        options
-      );
+      const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("token", token, {
-        maxAge: 86400000,
-        secure: true,
         httpOnly: true,
-        sameSite: "none",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? "blossomsurveys.io"
+            : "localhost",
+        path: "/",
       });
-      res.json(response.rows[0]);
+      res.send(`cookie sent with token: ${token}`);
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }
@@ -139,6 +156,7 @@ app.post("/login", async (req, res) => {
     console.error(err.message);
   }
 });
+
 app.post("/logout", async (req, res) => {
   try {
     // TODO: do something with jwt
@@ -159,9 +177,9 @@ app.get("/verify_user/:email/:password", async (req, res) => {
     console.error(err.message);
   }
 });
-app.get("/user_info/:user_id", async (req, res) => {
+app.get("/user_info", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const response = await pool.query(
       "SELECT id, company, email FROM users WHERE id = $1",
       [user_id]
@@ -198,9 +216,10 @@ app.post("/create_user", async (req, res) => {
 });
 
 // update company
-app.put("/update_company", async (req, res) => {
+app.put("/update_company", authenticate, async (req, res) => {
   try {
-    const {company, id} = req.body;
+    const id = req.user_id;
+    const {company} = req.body;
     const response = await pool.query(
       "UPDATE users SET company = $1 WHERE id = $2 RETURNING company",
       [company, id]
@@ -237,14 +256,14 @@ app.put("/confirm_user", async (req, res) => {
 // check if this user email and password matches on login
 
 // # of surveys a user has created
-app.get("/survey_count/:user_id", async (req, res) => {
+app.get("/survey_count", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
-    // console.log(req.session, req.sessionID);
+    const user_id = req.user_id;
     const count = await pool.query(
       "SELECT COUNT(*) FROM survey WHERE user_id = $1",
       [user_id]
     );
+
     res.json(count.rows[0].count);
   } catch (err) {
     console.error(err.message);
@@ -264,9 +283,9 @@ app.get("/published_survey_count/:user_id", async (req, res) => {
   }
 });
 
-app.get("/draft_survey_count/:user_id", async (req, res) => {
+app.get("/draft_survey_count", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const count = await pool.query(
       "SELECT COUNT(*) FROM survey WHERE user_id = $1 AND published = false",
       [user_id]
@@ -278,9 +297,9 @@ app.get("/draft_survey_count/:user_id", async (req, res) => {
 });
 
 // # of questions a user has created
-app.get("/question_count/:user_id", async (req, res) => {
+app.get("/question_count", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const count = await pool.query(
       "SELECT SUM(number_of_questions) FROM survey WHERE user_id = $1 AND published = true",
       [user_id]
@@ -312,9 +331,9 @@ exampe response
     }
 ]
 */
-app.get("/question_type_count/:user_id", async (req, res) => {
+app.get("/question_type_count", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const counts = await pool.query(
       "SELECT q.type, COUNT(q.type) FROM question q INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = $1 GROUP BY type",
       [user_id]
@@ -326,9 +345,9 @@ app.get("/question_type_count/:user_id", async (req, res) => {
 });
 
 // number of responses
-app.get("/number_of_responses/:user_id", async (req, res) => {
+app.get("/number_of_responses", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const count = await pool.query(
       "SELECT COUNT(*) FROM response r INNER JOIN question q ON r.question_id = q.id INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = $1",
       [user_id]
@@ -354,9 +373,9 @@ app.post("/create_survey", async (req, res) => {
 });
 
 // get latest draft
-app.get("/latest_survey/:user_id", async (req, res) => {
+app.get("/latest_survey", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const titles = await pool.query(
       "SELECT title, id, hash, published, redirect_url FROM survey WHERE user_id = $1 AND published = false ORDER BY created_at DESC",
       [user_id]

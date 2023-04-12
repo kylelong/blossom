@@ -20,7 +20,7 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-const user_id = 1;
+axios.defaults.withCredentials = true;
 
 const DashboardOverview = () => {
   const [hasSurvey, setHasSurvey] = useState(false);
@@ -33,7 +33,9 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/survey_count`, {
+        withCredentials: true,
+      });
       const data = await response.data;
       let count = parseInt(data);
 
@@ -45,9 +47,7 @@ const DashboardOverview = () => {
     };
 
     const countDrafts = async () => {
-      const response = await axios.get(
-        `${endpoint}/draft_survey_count/${user_id}`
-      );
+      const response = await axios.get(`${endpoint}/draft_survey_count`);
       const data = await response.data;
       const count = data;
       if (count > 0) {
@@ -56,22 +56,18 @@ const DashboardOverview = () => {
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(`${endpoint}/question_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/question_count`);
       const count = response.data;
       setNumberOfQuestions(count);
     };
 
     const countQuestionTypes = async () => {
-      const response = await axios.get(
-        `${endpoint}/question_type_count/${user_id}`
-      );
+      const response = await axios.get(`${endpoint}/question_type_count`);
       const data = response.data;
       setQuestionTypeCounts(data);
     };
     const countResponses = async () => {
-      const response = await axios.get(
-        `${endpoint}/number_of_responses/${user_id}`
-      );
+      const response = await axios.get(`${endpoint}/number_of_responses`);
       const count = response.data;
       setNumberOfResponses(count);
     };

@@ -43,27 +43,34 @@ const Login: React.FC = () => {
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
   const config = {
+    headers: {"Content-Type": "application/json"},
     withCredentials: true,
     credentials: "same-origin",
   };
 
-  const loginUser = () => {
+  const login = async () => {
+    try {
+      await axios.post(
+        `${endpoint}/login`,
+        {
+          email: loginData.email,
+          password: loginData.password,
+        },
+        config
+      );
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  const loginUser = async () => {
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in
         // ...
-        axios
-          .post(
-            `${endpoint}/login`,
-            {
-              email: loginData.email,
-              password: loginData.password,
-            },
-            config
-          )
-          .then((response) => {
-            console.log(response.status);
-          });
+        login();
       })
       .catch((error) => {
         /**

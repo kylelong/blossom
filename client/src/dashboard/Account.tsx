@@ -17,6 +17,7 @@ import Menu from "../landingPage/Menu";
 type accountData = {
   company: string;
 };
+axios.defaults.withCredentials = true;
 
 const Account = () => {
   const [userData, setUserData] = useState<User | undefined>();
@@ -32,13 +33,11 @@ const Account = () => {
     process.env.REACT_APP_NODE_ENV === "production"
       ? process.env.REACT_APP_LIVE_SERVER_URL
       : process.env.REACT_APP_LOCALHOST_URL;
-  const user_id = 1;
 
   const updateCompany = async (company: string) => {
     try {
       const response = await axios.put(`${endpoint}/update_company`, {
         company: company,
-        id: user_id,
       });
       const data = await response.data;
       if (userData !== undefined) {
@@ -53,7 +52,7 @@ const Account = () => {
 
   const userInfo = useCallback(async () => {
     try {
-      const response = await axios.get(`${endpoint}/user_info/${user_id}`);
+      const response = await axios.get(`${endpoint}/user_info`);
       const data = await response.data;
       setUserData(data);
     } catch (err: any) {
