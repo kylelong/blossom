@@ -45,7 +45,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 function authenticate(req, res, next) {
-  const token = req.cookies.token;
+  const token = req.cookies.blossom_token;
   if (token === null) {
     return res.status(401).json({message: "Unauthorized"});
   }
@@ -123,8 +123,9 @@ app.post("/create-payment-intent", async (req, res) => {
 
 // USER AUTH
 // only inset into users if no user has the email
+// TODO: delete this
 app.get("/read-cookie", (req, res) => {
-  const cookieValue = req.cookies.token;
+  const cookieValue = req.cookies.blossom_token;
   res.send(`The value of token is: ${cookieValue}`);
 });
 app.post("/login", async (req, res) => {
@@ -141,7 +142,7 @@ app.post("/login", async (req, res) => {
     let {verified, id} = response.rows[0];
     if (verified) {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
-      res.cookie("token", token, {
+      res.cookie("blossom_token", token, {
         httpOnly: true,
         sameSite: "none",
         secure: true,
