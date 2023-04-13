@@ -17,13 +17,17 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
 const corsOptions = {
-  origin: [
+  origin: true,
+  credentials: true,
+};
+/* 
+ [
     "https://blossomsurveys.io",
     "https://www.blossomsurveys.io",
     "http://localhost:3000",
-  ],
-  credentials: true,
-};
+  ]
+
+*/
 app.use(cookieParser());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://www.blossomsurveys.io");
@@ -42,7 +46,6 @@ app.use(bodyParser.json());
 
 function authenticate(req, res, next) {
   const token = req.cookies.token;
-  console.log(`authenticate function ${token}`);
   if (token === null) {
     return res.status(401).json({message: "Unauthorized"});
   }
@@ -148,9 +151,6 @@ app.post("/login", async (req, res) => {
             : "localhost",
         path: "/",
       });
-      console.log("cookie set with token: ", token);
-      console.log("cookie: ", req.cookies.token);
-      console.log("headers ", req.headers);
 
       res.send(`cookie sent with token: ${token}`);
     } else {
