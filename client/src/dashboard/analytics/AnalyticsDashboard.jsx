@@ -66,7 +66,6 @@ const AnalyticsDashboard = () => {
     ],
   });
 
-  const user_id = 1;
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const emojis = {
     angry: "0x1F621",
@@ -166,9 +165,7 @@ const AnalyticsDashboard = () => {
   useEffect(() => {
     const loadSurveys = async () => {
       try {
-        const response = await axios.get(
-          `${endpoint}/published_surveys/1` // TODO: remove
-        ); //TODO: change usersid to variable
+        const response = await axios.get(`${endpoint}/published_surveys`);
         const data = await response.data;
 
         setSurveys(data);
@@ -181,7 +178,7 @@ const AnalyticsDashboard = () => {
       setLoaded(true);
     };
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count/${user_id}`);
+      const response = await axios.get(`${endpoint}/survey_count`);
       let count = parseInt(response.data);
 
       if (count > 0) {
@@ -189,9 +186,7 @@ const AnalyticsDashboard = () => {
       }
     };
     const countDrafts = async () => {
-      const response = await axios.get(
-        `${endpoint}/draft_survey_count/${user_id}`
-      );
+      const response = await axios.get(`${endpoint}/draft_survey_count`);
       const data = await response.data;
       const count = data;
       if (count > 0) {
@@ -209,7 +204,7 @@ const AnalyticsDashboard = () => {
       loadQuestions(selectedSurveyId);
     }
     surveyIdRef.current = selectedSurveyId;
-  }, [loaded, selectedSurveyId, loadQuestions, surveys, user_id]);
+  }, [loaded, selectedSurveyId, loadQuestions, surveys]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`

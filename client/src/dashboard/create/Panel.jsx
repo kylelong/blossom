@@ -49,7 +49,7 @@ const Panel = () => {
   const validUrl =
     // eslint-disable-next-line
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
-  const [user] = useAuthState(auth); // TODO: get user_id from postgres
+  const [user] = useAuthState(auth);
 
   const loadQuestions = useCallback(async (survey_id) => {
     try {
@@ -90,8 +90,7 @@ const Panel = () => {
   const loadSurvey = useCallback(async () => {
     // get draft (if it exists)
     try {
-      const id = 1; //TODO: user_id from postgres db
-      const response = await axios.get(`${endpoint}/latest_survey/${id}`);
+      const response = await axios.get(`${endpoint}/latest_survey`);
       const data = await response.data;
       if (data && data.length) {
         setDraft(data[0]);
@@ -124,12 +123,10 @@ const Panel = () => {
       const response = await axios.post(`${endpoint}/create_survey`, {
         title: surveyTitle,
         hash: hash, // how to autogenerate hash in post
-        user_id: 1, //TODO: pull from logged in user
       });
       setDraft(response.data);
       let survey_id = response.data.id;
 
-      // call /create_survey with hash, title, user_id
       // set draft to what is return (id,hash)
       const baseUrl = `${siteUrl}/survey/${response.data.hash}`;
       setBaseSurveyLink(baseUrl);

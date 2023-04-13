@@ -161,6 +161,7 @@ app.post("/login", async (req, res) => {
 app.post("/logout", async (req, res) => {
   try {
     // TODO: do something with jwt
+    res.clearCookie("blossom_token");
     res.send({data: "logout"});
   } catch (err) {
     console.error(err.message);
@@ -210,6 +211,20 @@ app.post("/create_user", async (req, res) => {
       "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $3) RETURNING id",
       [email, password, hash]
     );
+    const id = response.rows[0].id;
+    if (id) {
+      const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
+      res.cookie("blossom_token", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        path: "/",
+      });
+
+      res.send(`cookie sent with token: ${token}`);
+    } else {
+      return res.status(401).json({message: "Invalid credentials"});
+    }
     res.json(response.rows[0].id);
   } catch (err) {
     console.error(err.message);
@@ -360,9 +375,10 @@ app.get("/number_of_responses", authenticate, async (req, res) => {
 });
 
 // ** CREATE **
-app.post("/create_survey", async (req, res) => {
+app.post("/create_survey", authenticate, async (req, res) => {
   try {
-    const {title, hash, user_id} = req.body;
+    const {title, hash} = req.body;
+    const user_id = req.user_id;
     const survey = await pool.query(
       "INSERT INTO survey (title, hash, user_id) VALUES($1, $2, $3) RETURNING title, id, hash, published, redirect_url",
       [title, hash, user_id]
@@ -601,9 +617,9 @@ app.delete("/delete_answer_choice/:answer_id", async (req, res) => {
 // get lastest unpublished survey
 
 // get all survey data form user id
-app.get("/surveys/:user_id", async (req, res) => {
+app.get("/surveys", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const titles = await pool.query(
       "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 ORDER BY created_at DESC",
       [user_id]
@@ -613,9 +629,9 @@ app.get("/surveys/:user_id", async (req, res) => {
     console.error(err.message);
   }
 });
-app.get("/published_surveys/:user_id", async (req, res) => {
+app.get("/published_surveys", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const titles = await pool.query(
       "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
       [user_id]

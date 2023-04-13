@@ -121,7 +121,7 @@ const SurveysList = () => {
     // loads surveys for this users
     const loadSurveys = async () => {
       try {
-        const response = await axios.get(`${endpoint}/surveys/1`); //TODO: change usersid to variable
+        const response = await axios.get(`${endpoint}/surveys`);
         const data = await response.data;
 
         setSurveys(data);
