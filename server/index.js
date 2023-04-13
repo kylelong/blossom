@@ -140,7 +140,7 @@ app.post("/login", async (req, res) => {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("token", token, {
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
         domain:
           process.env.NODE_ENV === "production"
