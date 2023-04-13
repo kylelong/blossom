@@ -33,7 +33,7 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-
+axios.defaults.withCredentials = true;
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
     email: "",
@@ -44,7 +44,6 @@ const Login: React.FC = () => {
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
   const config = {
     headers: {"Content-Type": "application/json"},
-    withCredentials: true,
     credentials: "same-origin",
   };
 

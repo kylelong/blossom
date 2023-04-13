@@ -141,13 +141,16 @@ app.post("/login", async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         domain:
           process.env.NODE_ENV === "production"
             ? "blossomsurveys.io"
             : "localhost",
         path: "/",
       });
+      console.log("cookie set with token: ", token);
+      console.log("cookie: ", req.cookies);
+
       res.send(`cookie sent with token: ${token}`);
     } else {
       return res.status(401).json({message: "Invalid credentials"});
