@@ -145,10 +145,6 @@ app.post("/login", async (req, res) => {
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        domain:
-          process.env.NODE_ENV === "production"
-            ? "blossomsurveys.io"
-            : "localhost",
         path: "/",
       });
 
