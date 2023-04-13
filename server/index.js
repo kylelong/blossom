@@ -24,7 +24,7 @@ const corsOptions = {
   ],
   credentials: true,
 };
-
+app.use(cookieParser());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://www.blossomsurveys.io");
   res.header(
@@ -39,10 +39,10 @@ app.use(function (req, res, next) {
 app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(cookieParser());
 
 function authenticate(req, res, next) {
   const token = req.cookies.token;
+  console.log(`authenticate function ${token}`);
   if (token === null) {
     return res.status(401).json({message: "Unauthorized"});
   }
@@ -149,7 +149,8 @@ app.post("/login", async (req, res) => {
         path: "/",
       });
       console.log("cookie set with token: ", token);
-      console.log("cookie: ", req.cookies);
+      console.log("cookie: ", req.cookies.token);
+      console.log("headers ", req.headers);
 
       res.send(`cookie sent with token: ${token}`);
     } else {
