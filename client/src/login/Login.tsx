@@ -49,14 +49,11 @@ const Login: React.FC = () => {
 
   const login = async () => {
     try {
-      await axios.post(
-        `${endpoint}/login`,
-        {
-          email: loginData.email,
-          password: loginData.password,
-        },
-        config
-      );
+      await axios.post(`${endpoint}/login`, {
+        email: loginData.email,
+        password: loginData.password,
+        config,
+      });
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);

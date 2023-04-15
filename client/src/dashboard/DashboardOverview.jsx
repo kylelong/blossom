@@ -20,7 +20,13 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-axios.defaults.withCredentials = true;
+
+// axios.defaults.withCredentials = true;
+// axios.defaults.headers.common["Content-Type"] = "application/json";
+const config = {
+  headers: {"Content-Type": "application/json"},
+  withCredentials: true,
+};
 
 const DashboardOverview = () => {
   const [hasSurvey, setHasSurvey] = useState(false);
@@ -33,7 +39,7 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     const countSurveys = async () => {
-      const response = await axios.get(`${endpoint}/survey_count`);
+      const response = await axios.get(`${endpoint}/survey_count`, config);
       const data = await response.data;
       let count = parseInt(data);
 
@@ -45,29 +51,42 @@ const DashboardOverview = () => {
     };
 
     const countDrafts = async () => {
-      const response = await axios.get(`${endpoint}/draft_survey_count`);
+      const response = await axios.get(
+        `${endpoint}/draft_survey_count`,
+        config
+      );
       const data = await response.data;
       const count = data;
       if (count > 0) {
         setHasDraft(true);
       }
+      setLoaded(true);
     };
 
     const countQuestions = async () => {
-      const response = await axios.get(`${endpoint}/question_count`);
+      const response = await axios.get(`${endpoint}/question_count`, config);
       const count = response.data;
       setNumberOfQuestions(count);
+      setLoaded(true);
     };
 
     const countQuestionTypes = async () => {
-      const response = await axios.get(`${endpoint}/question_type_count`);
+      const response = await axios.get(
+        `${endpoint}/question_type_count`,
+        config
+      );
       const data = response.data;
       setQuestionTypeCounts(data);
+      setLoaded(true);
     };
     const countResponses = async () => {
-      const response = await axios.get(`${endpoint}/number_of_responses`);
+      const response = await axios.get(
+        `${endpoint}/number_of_responses`,
+        config
+      );
       const count = response.data;
       setNumberOfResponses(count);
+      setLoaded(true);
     };
 
     countSurveys();
@@ -75,7 +94,7 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     countResponses();
-  }, [loaded]);
+  }, [loaded, surveyCount, numberOfQuestions]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
