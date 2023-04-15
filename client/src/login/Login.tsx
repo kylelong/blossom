@@ -49,11 +49,18 @@ const Login: React.FC = () => {
 
   const login = async () => {
     try {
-      await axios.post(`${endpoint}/login`, {
-        email: loginData.email,
-        password: loginData.password,
-        config,
-      });
+      const response = await axios.post(
+        `${endpoint}/login`,
+        {
+          email: loginData.email,
+          password: loginData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      const data = await response.data;
+      console.log(data);
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);
@@ -61,7 +68,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const loginUser = async () => {
+  const loginUser = () => {
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in

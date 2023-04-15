@@ -22,7 +22,10 @@ const corsOptions = {
 };
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000, http://localhost:5000, https://www.blossomsurveys.io, https://www.blossomsurveys.io/, https://blossomsurveys.io/, https://blossomsurveys.io"
+  );
 
   res.header(
     "Access-Control-Allow-Headers",
@@ -33,11 +36,10 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Expose-Headers", "Set-Cookie");
   next();
 });
-
-app.use(bodyParser.json());
 app.use(cookieParser());
-app.set("trust proxy", 1);
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.set("trust proxy", 1);
 
 /* 
  [
@@ -49,14 +51,13 @@ app.use(cors(corsOptions));
 */
 
 const authenticate = (req, res, next) => {
-  const token = req.cookies["blossom_token"];
+  const token = req.cookies.blossom_token;
   if (token === null) {
     return res.status(401).json({message: "Unauthorized"});
   }
 
   jwt.verify(token, process.env.SECRET_ACCESS_TOKEN, (err, decoded) => {
     if (err) {
-      console.log(err);
       return res.status(403).json({message: "Forbidden"});
     }
     req.user_id = decoded.id;
@@ -125,13 +126,15 @@ app.post("/create-payment-intent", async (req, res) => {
     });
   }
 });
+app.get("/set-cookie", (req, res) => {
+  res.cookie("msg", "rip dad");
+});
 
 // USER AUTH
 // only inset into users if no user has the email
 // TODO: delete this
 app.get("/read-cookie", (req, res) => {
-  const cookieValue = req.cookies["blossom_token"];
-  res.send(`The value of token is: ${cookieValue}`);
+  res.send(req.cookies);
 });
 app.post("/login", async (req, res) => {
   try {
@@ -153,8 +156,9 @@ app.post("/login", async (req, res) => {
         secure: true,
         path: "/",
       });
+      // Set Cache-Control header to no-cache
 
-      res.status(200).json({token});
+      res.json({message: "login successful", token: token});
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }
