@@ -33,7 +33,7 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
     email: "",
@@ -42,25 +42,26 @@ const Login: React.FC = () => {
 
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
-  const config = {
-    headers: {"Content-Type": "application/json"},
-    credentials: "same-origin",
+  const options = {
+    withCredentials: true,
+    crossDomain: true,
+    headers: {
+      "Access-Control-Allow-Origin": "http://localhost:3000",
+      "Access-Control-Allow-Credentials": "true",
+      "Content-Type": "application/json",
+    },
   };
 
   const login = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${endpoint}/login`,
         {
           email: loginData.email,
           password: loginData.password,
         },
-        {
-          withCredentials: true,
-        }
+        options
       );
-      const data = await response.data;
-      console.log(data);
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);
