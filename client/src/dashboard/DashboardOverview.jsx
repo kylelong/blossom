@@ -47,11 +47,13 @@ const DashboardOverview = () => {
   const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
+    /* DO NOT REMOVE THIS MAKES page load after /login*/
     if (refresh) {
       setTimeout(() => {
         setRefresh(false);
-      }, 100);
+      }, 500);
     }
+    /* ^ DO NOT REMOVE THIS*/
 
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`, options);
