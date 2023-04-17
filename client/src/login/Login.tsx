@@ -46,7 +46,10 @@ const Login: React.FC = () => {
     withCredentials: true,
     crossDomain: true,
     headers: {
-      "Access-Control-Allow-Origin": "http://localhost:3000",
+      "Access-Control-Allow-Origin":
+        process.env.REACT_APP_NODE_ENV === "production"
+          ? process.env.REACT_APP_LIVE_URL
+          : process.env.REACT_APP_LOCAL_URL,
       "Access-Control-Allow-Credentials": "true",
       "Content-Type": "application/json",
     },

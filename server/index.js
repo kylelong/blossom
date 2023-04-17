@@ -27,7 +27,12 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Origin",
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.LIVE_URL
+      : process.env.LOCAL_URL
+  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
