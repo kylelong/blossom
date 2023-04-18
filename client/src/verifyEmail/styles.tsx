@@ -23,7 +23,7 @@ export const FlowerImage = styled.img`
 export const VerifiedMessaged = styled.div`
   color: #355e3b;
   font-family: sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -33,7 +33,7 @@ export const linkStyle = {
 };
 
 export const LoginButton = styled.button`
-  height: 38px;
+  height: 45px;
   width: 259px;
   border: 0;
   border-radius: 3px;

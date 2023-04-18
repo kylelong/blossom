@@ -73,7 +73,6 @@ const Login: React.FC = () => {
   };
 
   const loginUser = async () => {
-    await login();
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in
@@ -107,6 +106,7 @@ const Login: React.FC = () => {
           setLoginErrors((loginErrors) => [...loginErrors, error_message]);
         }
       });
+    await login();
   };
 
   let loginSchema = yup.object().shape({

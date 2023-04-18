@@ -223,16 +223,17 @@ app.post("/create_user", async (req, res) => {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("blossom_token", token, {
         httpOnly: true,
-        sameSite: "none",
         secure: true,
+        sameSite: "none",
         path: "/",
       });
+      // Set Cache-Control header to no-cache
+      res.setHeader("Authorization", "Bearer " + token);
 
-      res.send(`cookie sent with token: ${token}`);
+      res.json({id: id, token: token});
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }
-    res.json(response.rows[0].id);
   } catch (err) {
     console.error(err.message);
   }

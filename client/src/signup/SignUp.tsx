@@ -42,6 +42,18 @@ interface SignUpInfo {
 }
 
 const SignUp: React.FC = () => {
+  const options = {
+    withCredentials: true,
+    crossDomain: true,
+    headers: {
+      "Access-Control-Allow-Origin":
+        process.env.REACT_APP_NODE_ENV === "production"
+          ? process.env.REACT_APP_LIVE_URL
+          : process.env.REACT_APP_LOCAL_URL,
+      "Access-Control-Allow-Credentials": "true",
+      "Content-Type": "application/json",
+    },
+  };
   const [signUpData, setSignUpData] = useState<SignUpInfo>({
     email: "",
     password: "",
@@ -83,6 +95,30 @@ const SignUp: React.FC = () => {
     });
   };
 
+  const registerPostgres = async (
+    userCredential: UserCredential,
+    hash: string
+  ) => {
+    await axios
+      .post(
+        `${endpoint}/create_user`,
+        {
+          email: signUpData.email,
+          password: signUpData.password,
+          hash: hash,
+        },
+        options
+      )
+      .then((response) => {
+        const id = response.data.id;
+        addUser(userCredential, id);
+        sendConfirmationEmail(userCredential.user);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
   const registerUser = async () => {
     await createUserWithEmailAndPassword(
       auth,
@@ -92,20 +128,7 @@ const SignUp: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         const hash = userCredential.user.uid;
-        axios
-          .post(`${endpoint}/create_user`, {
-            email: signUpData.email,
-            password: signUpData.password,
-            hash: hash,
-          })
-          .then((response) => {
-            const id = response.data;
-            addUser(userCredential, id);
-            sendConfirmationEmail(userCredential.user);
-          })
-          .catch((error) => {
-            console.error(error.message);
-          });
+        registerPostgres(userCredential, hash);
       })
       .catch((error) => {
         const ERRORS = [
