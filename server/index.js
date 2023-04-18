@@ -219,7 +219,7 @@ app.post("/create_user", async (req, res) => {
       [email, password, hash]
     );
     const id = response.rows[0].id;
-    if (id) {
+    if (id > 0) {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("blossom_token", token, {
         httpOnly: true,

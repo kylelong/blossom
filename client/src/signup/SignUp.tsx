@@ -42,6 +42,15 @@ interface SignUpInfo {
 }
 
 const SignUp: React.FC = () => {
+  const ERRORS = [
+    ["auth/email-already-in-use", "email is alreay in use"],
+    ["auth/invalid-email", "invalid email, please try again"],
+    [
+      "auth/operation-not-allowed",
+      "operation not allowed, double check and try again",
+    ],
+    ["auth/weak-password", "password is too weak, please add more complexity"],
+  ];
   const options = {
     withCredentials: true,
     crossDomain: true,
@@ -99,60 +108,54 @@ const SignUp: React.FC = () => {
     userCredential: UserCredential,
     hash: string
   ) => {
-    await axios
-      .post(
-        `${endpoint}/create_user`,
-        {
-          email: signUpData.email,
-          password: signUpData.password,
-          hash: hash,
-        },
-        options
-      )
-      .then((response) => {
-        const id = response.data.id;
-        addUser(userCredential, id);
-        sendConfirmationEmail(userCredential.user);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    try {
+      await axios
+        .post(
+          `${endpoint}/create_user`,
+          {
+            email: signUpData.email,
+            password: signUpData.password,
+            hash: hash,
+          },
+          options
+        )
+        .then((response) => {
+          const id = response.data.id;
+          addUser(userCredential, id);
+          sendConfirmationEmail(userCredential.user);
+        })
+        .catch((err) => {
+          if (err instanceof Error) {
+            console.error(err.message);
+          }
+        });
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
   };
 
   const registerUser = async () => {
-    await createUserWithEmailAndPassword(
-      auth,
-      signUpData.email,
-      signUpData.password
-    )
-      .then((userCredential) => {
-        // Signed in
-        const hash = userCredential.user.uid;
-        registerPostgres(userCredential, hash);
-      })
-      .catch((error) => {
-        const ERRORS = [
-          ["auth/email-already-in-use", "email is alreay in use"],
-          ["auth/invalid-email", "invalid email, please try again"],
-          [
-            "auth/operation-not-allowed",
-            "operation not allowed, double check and try again",
-          ],
-          [
-            "auth/weak-password",
-            "password is too weak, please add more complexity",
-          ],
-        ];
-        const ERROR_CODES = ERRORS.map((item) => item[0]);
-        const errorCode = error.code;
-        if (ERROR_CODES.includes(errorCode)) {
-          let error_array: string[][] = ERRORS.filter(
-            (item) => item[0] === errorCode
-          );
-          let error_message: string = error_array[0][1];
-          setSignUpErrors((signUpErrors) => [...signUpErrors, error_message]);
-        }
-      });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        signUpData.email,
+        signUpData.password
+      );
+      const hash = userCredential.user.uid;
+      await registerPostgres(userCredential, hash);
+    } catch (error: any) {
+      const ERROR_CODES = ERRORS.map((item) => item[0]);
+      const errorCode = error.code;
+      if (ERROR_CODES.includes(errorCode)) {
+        let error_array: string[][] = ERRORS.filter(
+          (item) => item[0] === errorCode
+        );
+        let error_message: string = error_array[0][1];
+        setSignUpErrors((signUpErrors) => [...signUpErrors, error_message]);
+      }
+    }
   };
 
   const onSubmit = (e: React.FormEvent) => {

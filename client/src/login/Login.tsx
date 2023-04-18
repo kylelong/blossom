@@ -33,7 +33,6 @@ const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
-// axios.defaults.withCredentials = true;
 const Login: React.FC = () => {
   const [loginData, setLoginData] = useState<LoginInfo>({
     email: "",
