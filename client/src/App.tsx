@@ -3,7 +3,7 @@ import "./App.css";
 import LandingPage from "./landingPage/LandingPage";
 import Login from "./login/Login";
 import SignUp from "./signup/SignUp";
-import ForgotPassword from "./forgotPassword/ForgotPassword";
+// import ForgotPassword from "./forgotPassword/ForgotPassword";
 import AccountManagement from "./accountManagment/AccountManagement";
 import Dashboard from "./dashboard/Dashboard";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
@@ -36,7 +36,7 @@ function App() {
             <Route path="/account" element={<Account />}></Route>
           </Route>
 
-          <Route path="/reset" element={<ForgotPassword />}></Route>
+          {/* <Route path="/reset" element={<ForgotPassword />}></Route> */}
           <Route path="/survey/:id" element={<Survey />}></Route>
           <Route path="/payment" element={<Payment />}></Route>
           <Route path="/completion" element={<Completion />}></Route>

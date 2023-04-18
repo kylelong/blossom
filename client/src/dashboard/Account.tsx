@@ -1,6 +1,9 @@
 import React, {useEffect, useState, useCallback} from "react";
 import DashboardMenu from "./DashboardMenu";
 import axios from "axios";
+import {auth, app} from "../firebase-config";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {getFirestore, doc, updateDoc} from "firebase/firestore";
 import {useForm, SubmitHandler} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
 import {
@@ -20,6 +23,13 @@ type accountData = {
 axios.defaults.withCredentials = true;
 
 const Account = () => {
+  const [user] = useAuthState(auth);
+  const db = getFirestore(app);
+  const endpoint =
+    process.env.REACT_APP_NODE_ENV === "production"
+      ? process.env.REACT_APP_LIVE_SERVER_URL
+      : process.env.REACT_APP_LOCALHOST_URL;
+
   const [userData, setUserData] = useState<User | undefined>();
   const [loaded, setLoaded] = useState<boolean>(false);
   const {register, handleSubmit} = useForm<accountData>({
@@ -29,10 +39,6 @@ const Account = () => {
   });
   const onSubmit: SubmitHandler<accountData> = (data) =>
     updateCompany(data.company);
-  const endpoint =
-    process.env.REACT_APP_NODE_ENV === "production"
-      ? process.env.REACT_APP_LIVE_SERVER_URL
-      : process.env.REACT_APP_LOCALHOST_URL;
 
   const updateCompany = async (company: string) => {
     try {
@@ -47,6 +53,18 @@ const Account = () => {
       }
     } catch (err: any) {
       console.error(err.message);
+    }
+
+    // firebase
+    if (user && company) {
+      const userDoc = doc(db, "users", user.uid);
+      try {
+        await updateDoc(userDoc, {
+          company: company,
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 

@@ -22,8 +22,8 @@ import {
   linkStyle,
   PasswordContainer,
   eyeStyle,
-  ForgotPassword,
 } from "./styles";
+// ForgotPassword
 
 interface LoginInfo {
   email: string;
@@ -190,10 +190,10 @@ const Login: React.FC = () => {
           <SignUp>Sign up</SignUp>
         </Link>
       </SignUpLink>
-      <Link to="/reset" style={linkStyle}>
+      {/* <Link to="/reset" style={linkStyle}>
         {" "}
         <ForgotPassword>Forgot Password?</ForgotPassword>
-      </Link>
+      </Link> */}
       {
         <ErrorList>
           {" "}

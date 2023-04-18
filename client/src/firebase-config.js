@@ -14,6 +14,17 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
+// blossom-dev
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDeufL2TEO_Z9PVZ2EHDsakf2fUl70eWMo",
+//   authDomain: "blossom-dev-65213.firebaseapp.com",
+//   projectId: "blossom-dev-65213",
+//   storageBucket: "blossom-dev-65213.appspot.com",
+//   messagingSenderId: "688573040710",
+//   appId: "1:688573040710:web:fd2d5f2a8ad6d0ce882247",
+//   measurementId: "G-1LZNV5VNQX",
+// };
+
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

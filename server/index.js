@@ -173,6 +173,7 @@ app.post("/logout", async (req, res) => {
     console.error(err.message);
   }
 });
+app.put("/update_password", async (req, res) => {});
 app.get("/verify_user/:email/:password", async (req, res) => {
   try {
     const {email, password} = req.params;
@@ -262,16 +263,14 @@ app.put("/update_hash", async (req, res) => {
 
 app.put("/confirm_user", async (req, res) => {
   try {
-    const {user_id} = req.body;
-    await pool.query("UPDATE users SET confirmed = true WHERE id = $1", [
-      user_id,
+    const {hash} = req.body;
+    await pool.query("UPDATE users SET confirmed = true WHERE hash = $1", [
+      hash,
     ]);
   } catch (err) {
     console.error(err.message);
   }
 });
-
-// TODO: confirm user when they confirm email
 
 // DASHBOARD
 

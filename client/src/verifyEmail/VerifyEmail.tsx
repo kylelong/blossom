@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {auth, app} from "../firebase-config";
 import {applyActionCode} from "firebase/auth";
+import axios from "axios";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import {
@@ -24,6 +25,10 @@ import {Link} from "react-router-dom";
 //import axios from "axios";
 
 const db = getFirestore(app);
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 interface Props {
   oobCode: string;
@@ -32,22 +37,24 @@ interface Props {
 const VerifyEmail: React.FC<Props> = ({oobCode}) => {
   const [verified, setVerified] = useState<boolean>(false);
 
-  // TODO: set postgres user.confirmed = true, set confirm for postgres
-  /**
-   * axios.put(`${endpoint}/confirm_user`)
-   */
-  const updateConfirmed = async (uid: string) => {
-    const q = query(collection(db, "users"), where("uid", "==", uid));
-    const querySnapShot = await getDocs(q);
-    querySnapShot.forEach((document) => {
-      const docRef = doc(db, "users", document.id);
-      updateDoc(docRef, {
-        confirmed: true,
-      });
+  const confirmPostgres = async (hash: string) => {
+    await axios.put(`${endpoint}/confirm_user`, {
+      hash: hash,
     });
   };
 
   useEffect(() => {
+    const updateConfirmed = async (uid: string) => {
+      confirmPostgres(uid);
+      const q = query(collection(db, "users"), where("uid", "==", uid));
+      const querySnapShot = await getDocs(q);
+      querySnapShot.forEach((document) => {
+        const docRef = doc(db, "users", document.id);
+        updateDoc(docRef, {
+          confirmed: true,
+        });
+      });
+    };
     const verifyEmail = async () => {
       await applyActionCode(auth, oobCode)
         .then((response) => {
