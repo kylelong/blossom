@@ -44,17 +44,8 @@ const DashboardOverview = () => {
   const [loaded, setLoaded] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
-  const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
-    /* DO NOT REMOVE THIS MAKES page load after /login*/
-    if (refresh) {
-      setTimeout(() => {
-        setRefresh(false);
-      }, 500);
-    }
-    /* ^ DO NOT REMOVE THIS*/
-
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`, options);
       const data = await response.data;
@@ -111,7 +102,7 @@ const DashboardOverview = () => {
     countQuestions();
     countQuestionTypes();
     countResponses();
-  }, [loaded, surveyCount, numberOfQuestions, refresh]);
+  }, [loaded, surveyCount, numberOfQuestions]);
 
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`

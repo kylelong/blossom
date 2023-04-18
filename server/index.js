@@ -292,9 +292,9 @@ app.get("/survey_count", authenticate, async (req, res) => {
   }
 });
 
-app.get("/published_survey_count/:user_id", async (req, res) => {
+app.get("/published_survey_count", authenticate, async (req, res) => {
   try {
-    const {user_id} = req.params;
+    const user_id = req.user_id;
     const count = await pool.query(
       "SELECT COUNT(*) FROM survey WHERE user_id = $1 AND published = true",
       [user_id]

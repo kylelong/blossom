@@ -72,16 +72,16 @@ const Login: React.FC = () => {
     }
   };
 
-  const loginUser = () => {
+  const loginUser = async () => {
+    await login();
     signInWithEmailAndPassword(auth, loginData.email, loginData.password)
       .then((userCredential) => {
         // Signed in
         // ...
-        login();
       })
       .catch((error) => {
         /**
-                auth/user-not-found Firebase: Error (auth/user-not-found). 
+                auth/user-not-found Firebase: Error (auth/user-not-found).
                 auth/wrong-password Firebase: Error (auth/wrong-password).
             **/
         const ERRORS = [
