@@ -184,7 +184,7 @@ app.post("/create_user", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.status(200).json({msg: "login successful", token: token});
+      res.status(200).json({msg: "creation successful", token: token});
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }

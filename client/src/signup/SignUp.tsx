@@ -9,10 +9,10 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   User,
-  UserCredential,
+  // UserCredential,
 } from "firebase/auth";
-import {auth, app} from "../firebase-config";
-import {getFirestore, serverTimestamp, setDoc, doc} from "firebase/firestore";
+import {auth} from "../firebase-config";
+// import {getFirestore, serverTimestamp, setDoc, doc} from "firebase/firestore";
 
 import {
   SignUpContainer,
@@ -30,7 +30,7 @@ import {
   eyeStyle,
 } from "./styles";
 
-const db = getFirestore(app);
+// const db = getFirestore(app);
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -58,6 +58,7 @@ const SignUp: React.FC = () => {
   });
   const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
+
   const options = {
     withCredentials: true,
     crossDomain: true,
@@ -89,26 +90,18 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const addUser = async (userCredential: UserCredential, id: number) => {
-    const email = signUpData.email;
-    // make doc id the user id
-    const uid = userCredential.user.uid;
-    await setDoc(doc(db, "users", uid), {
-      id: id,
-      company: "",
-      email: email,
-      uid: uid,
-      confirmed: false,
-      premium: false, // update to true on stripe confirmation page
-      contact: {firstName: "", lastName: ""},
-      createdAt: serverTimestamp(),
-    });
-  };
+  function generateRandomString(length: number) {
+    const characters =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
 
-  const registerPostgres = async (
-    userCredential: UserCredential,
-    hash: string
-  ) => {
+  const registerPostgres = async (hash: string) => {
     try {
       await axios.post(
         `${endpoint}/create_user`,
@@ -120,8 +113,8 @@ const SignUp: React.FC = () => {
         options
       );
       /**
-    *  // const id = response.data.id;
-          // addUser(userCredential, id);
+        const id = response.data.id;
+          addUser(userCredential, id);
           sendConfirmationEmail(userCredential.user);
     * **/
     } catch (err) {
@@ -132,25 +125,24 @@ const SignUp: React.FC = () => {
   };
 
   const registerUser = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        signUpData.email,
-        signUpData.password
-      );
-      const hash = userCredential.user.uid;
-      await registerPostgres(userCredential, hash);
-    } catch (error: any) {
-      const ERROR_CODES = ERRORS.map((item) => item[0]);
-      const errorCode = error.code;
-      if (ERROR_CODES.includes(errorCode)) {
-        let error_array: string[][] = ERRORS.filter(
-          (item) => item[0] === errorCode
-        );
-        let error_message: string = error_array[0][1];
-        setSignUpErrors((signUpErrors) => [...signUpErrors, error_message]);
-      }
-    }
+    createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password)
+      .then((userCredential) => {
+        sendConfirmationEmail(userCredential.user);
+      })
+      .catch((error) => {
+        const ERROR_CODES = ERRORS.map((item) => item[0]);
+        const errorCode = error.code;
+        if (ERROR_CODES.includes(errorCode)) {
+          let error_array: string[][] = ERRORS.filter(
+            (item) => item[0] === errorCode
+          );
+          let error_message: string = error_array[0][1];
+          setSignUpErrors((signUpErrors) => [...signUpErrors, error_message]);
+        }
+      });
+
+    const randomString = generateRandomString(28);
+    await registerPostgres(randomString);
   };
 
   const onSubmit = (e: React.FormEvent) => {
