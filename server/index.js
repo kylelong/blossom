@@ -155,7 +155,36 @@ app.post("/login", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.json({token: token});
+      res.status(200).json({msg: "login successful", token: token});
+    } else {
+      return res.status(401).json({message: "Invalid credentials"});
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// TODO: insert hash from firebase
+app.post("/create_user", async (req, res) => {
+  try {
+    const {email, password, hash} = req.body;
+    const response = await pool.query(
+      "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $3) RETURNING *",
+      [email, password, hash]
+    );
+    const id = response.rows[0].id;
+    if (id) {
+      const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
+      res.cookie("blossom_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
+      // Set Cache-Control header to no-cache
+      res.setHeader("Authorization", "Bearer " + token);
+
+      res.status(200).json({msg: "login successful", token: token});
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }
@@ -206,34 +235,6 @@ app.get("/email_exists/:email", async (req, res) => {
       [email]
     );
     res.json(response.rows[0]).count;
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-// TODO: insert hash from firebase
-app.post("/create_user", async (req, res) => {
-  try {
-    const {email, password, hash} = req.body;
-    const response = await pool.query(
-      "INSERT INTO users (email, password, hash) VALUES($1, crypt($2, gen_salt('bf')), $3) RETURNING id",
-      [email, password, hash]
-    );
-    const id = response.rows[0].id;
-    if (id > 0) {
-      const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
-      res.cookie("blossom_token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-      });
-      // Set Cache-Control header to no-cache
-      res.setHeader("Authorization", "Bearer " + token);
-
-      res.json({id: id, token: token});
-    } else {
-      return res.status(401).json({message: "Invalid credentials"});
-    }
   } catch (err) {
     console.error(err.message);
   }

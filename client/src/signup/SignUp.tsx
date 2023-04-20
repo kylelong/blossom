@@ -51,6 +51,13 @@ const SignUp: React.FC = () => {
     ],
     ["auth/weak-password", "password is too weak, please add more complexity"],
   ];
+
+  const [signUpData, setSignUpData] = useState<SignUpInfo>({
+    email: "",
+    password: "",
+  });
+  const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
+  const [eyeIcon, setEyeIcon] = useState<boolean>(true);
   const options = {
     withCredentials: true,
     crossDomain: true,
@@ -59,16 +66,10 @@ const SignUp: React.FC = () => {
         process.env.REACT_APP_NODE_ENV === "production"
           ? process.env.REACT_APP_LIVE_URL
           : process.env.REACT_APP_LOCAL_URL,
-      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Credentials": true,
       "Content-Type": "application/json",
     },
   };
-  const [signUpData, setSignUpData] = useState<SignUpInfo>({
-    email: "",
-    password: "",
-  });
-  const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
-  const [eyeIcon, setEyeIcon] = useState<boolean>(true);
 
   let signUpSchema = yup.object().shape({
     email: yup.string().email().required("email is required"),
@@ -109,26 +110,20 @@ const SignUp: React.FC = () => {
     hash: string
   ) => {
     try {
-      await axios
-        .post(
-          `${endpoint}/create_user`,
-          {
-            email: signUpData.email,
-            password: signUpData.password,
-            hash: hash,
-          },
-          options
-        )
-        .then((response) => {
-          const id = response.data.id;
-          addUser(userCredential, id);
+      await axios.post(
+        `${endpoint}/create_user`,
+        {
+          email: signUpData.email,
+          password: signUpData.password,
+          hash: hash,
+        },
+        options
+      );
+      /**
+    *  // const id = response.data.id;
+          // addUser(userCredential, id);
           sendConfirmationEmail(userCredential.user);
-        })
-        .catch((err) => {
-          if (err instanceof Error) {
-            console.error(err.message);
-          }
-        });
+    * **/
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);

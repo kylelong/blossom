@@ -48,7 +48,7 @@ export const InputBox = styled.input`
   padding-left: 5px;
 `;
 export const SubmitButton = styled.button`
-  height: 38px;
+  height: 45px;
   border: 0;
   width: 259px;
   border-radius: 3px;
@@ -56,7 +56,7 @@ export const SubmitButton = styled.button`
   color: white;
   background-color: #355e3b;
   font-family: sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   margin-bottom: 15px;
   text-align: center;

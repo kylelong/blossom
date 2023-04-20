@@ -49,7 +49,7 @@ const Login: React.FC = () => {
         process.env.REACT_APP_NODE_ENV === "production"
           ? process.env.REACT_APP_LIVE_URL
           : process.env.REACT_APP_LOCAL_URL,
-      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Credentials": true,
       "Content-Type": "application/json",
     },
   };

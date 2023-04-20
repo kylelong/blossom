@@ -39,6 +39,7 @@ const AnalyticsDashboard = () => {
   const [hasSurvey, setHasSurvey] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
+  const [publishedCount, setPublishedCount] = useState(0);
   const [emojiAnalytics, setEmojiAnalytics] = useState([]);
   const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
   const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
@@ -185,6 +186,12 @@ const AnalyticsDashboard = () => {
         setHasSurvey(true);
       }
     };
+    const publishedSurveyCount = async () => {
+      const response = await axios.get(`${endpoint}/published_survey_count`);
+      let count = parseInt(response.data);
+
+      setPublishedCount(count);
+    };
     const countDrafts = async () => {
       const response = await axios.get(`${endpoint}/draft_survey_count`);
       const data = await response.data;
@@ -197,6 +204,7 @@ const AnalyticsDashboard = () => {
       countSurveys();
       countDrafts();
       loadSurveys();
+      publishedSurveyCount();
     }
 
     if (surveyIdRef.current !== selectedSurveyId) {
@@ -213,7 +221,7 @@ const AnalyticsDashboard = () => {
   if (loaded && !hasSurvey) {
     return <Welcome />;
   }
-  if (hasDraft) {
+  if (loaded && publishedCount === 0 && hasDraft) {
     return (
       <>
         <a href="/create">
