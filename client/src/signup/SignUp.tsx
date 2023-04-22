@@ -63,10 +63,6 @@ const SignUp: React.FC = () => {
     withCredentials: true,
     crossDomain: true,
     headers: {
-      "Access-Control-Allow-Origin":
-        process.env.REACT_APP_NODE_ENV === "production"
-          ? process.env.REACT_APP_LIVE_URL
-          : process.env.REACT_APP_LOCAL_URL,
       "Access-Control-Allow-Credentials": true,
       "Content-Type": "application/json",
     },
@@ -100,6 +96,11 @@ const SignUp: React.FC = () => {
     }
     return result;
   }
+  /**
+        const id = response.data.id;
+          addUser(userCredential, id);
+          sendConfirmationEmail(userCredential.user);
+    * **/
 
   const registerPostgres = async (hash: string) => {
     try {
@@ -112,11 +113,6 @@ const SignUp: React.FC = () => {
         },
         options
       );
-      /**
-        const id = response.data.id;
-          addUser(userCredential, id);
-          sendConfirmationEmail(userCredential.user);
-    * **/
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);
@@ -125,6 +121,7 @@ const SignUp: React.FC = () => {
   };
 
   const registerUser = async () => {
+    // WORKS
     createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password)
       .then((userCredential) => {
         sendConfirmationEmail(userCredential.user);

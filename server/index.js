@@ -27,12 +27,12 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-  res.header(
-    "Access-Control-Allow-Origin",
-    process.env.NODE_ENV === "production"
-      ? process.env.LIVE_URL
-      : process.env.LOCAL_URL
-  );
+  // res.header(
+  //   "Access-Control-Allow-Origin",
+  //   process.env.NODE_ENV === "production"
+  //     ? process.env.LIVE_URL
+  //     : process.env.LOCAL_URL
+  // );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -184,7 +184,7 @@ app.post("/create_user", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.status(200).json({msg: "creation successful", token: token});
+      res.status(200).json({msg: "creation successful", token: token, id: id});
     } else {
       return res.status(401).json({message: "Invalid credentials"});
     }
