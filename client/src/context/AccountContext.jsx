@@ -22,8 +22,11 @@ const options = {
 const UserContext = ({children}) => {
   const [user, setUser] = useState({loggedIn: null});
   useEffect(() => {
-    const response = axios.get(`${endpoint}/isAuthenticated`, options);
-    setUser({...response.data});
+    const loadUser = async () => {
+      const response = await axios.get(`${endpoint}/isAuthenticated`, options);
+      setUser({...response.data});
+    };
+    loadUser();
   }, []);
   return (
     <AccountContext.Provider value={{user, setUser}}>

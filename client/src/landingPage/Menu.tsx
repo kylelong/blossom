@@ -43,6 +43,7 @@ const Menu: React.FC = () => {
 
   const logout = async () => {
     await axios.post(`${endpoint}/logout`);
+
     setUser({loggedIn: false});
   };
   const menuToShow = () => {

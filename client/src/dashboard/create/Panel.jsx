@@ -13,8 +13,6 @@ import QuestionOverview from "./questions/QuestionOverview";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import randomstring from "randomstring";
-import {auth} from "../../firebase-config";
-import {useAuthState} from "react-firebase-hooks/auth";
 import "./panel.css";
 
 const endpoint =
@@ -49,7 +47,6 @@ const Panel = () => {
   const validUrl =
     // eslint-disable-next-line
     /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
-  const [user] = useAuthState(auth);
 
   const loadQuestions = useCallback(async (survey_id) => {
     try {
@@ -649,7 +646,6 @@ const Panel = () => {
     errors,
     loadSurvey,
     surveyStateLoaded,
-    user.uid,
     questionId,
   ]);
   return (
