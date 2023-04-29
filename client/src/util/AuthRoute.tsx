@@ -1,25 +1,29 @@
-import React from "react";
-import {auth} from "../firebase-config";
-import {useAuthState} from "react-firebase-hooks/auth";
+import React, {useContext} from "react";
 import {Outlet, Navigate} from "react-router-dom";
+import {AccountContext} from "../context/AccountContext";
 import Loader from "../loader";
 
-/**
- * if you hit these pages you should be redirected to the dashboard
- * if the user is logged in
- */
+const useAuth = () => {
+  const {user} = useContext(AccountContext);
+  return user;
+};
+
 const AuthRoute: React.FC = () => {
-  const [user, loading] = useAuthState(auth);
-  if (loading) {
+  const user = useAuth();
+
+  if (user.loggedIn === null) {
     return <Loader />;
   }
-  if (user) {
+
+  if (user && user.loggedIn) {
     return <Navigate to="/dashboard" />;
   }
+
   return (
     <>
       <Outlet />
     </>
   );
 };
+
 export default AuthRoute;

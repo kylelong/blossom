@@ -1,18 +1,21 @@
-import React from "react";
-import { auth } from "../firebase-config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { Outlet, Navigate } from "react-router-dom";
+import React, {useContext} from "react";
+import {Outlet, Navigate} from "react-router-dom";
 import Loader from "../loader";
+import {AccountContext} from "../context/AccountContext";
 
 /**
  * logged out: redirect to "/"
  */
+const useAuth = () => {
+  const {user} = useContext(AccountContext);
+  return user;
+};
 const AuthRouteLoggedOut: React.FC = () => {
-  const [user, loading] = useAuthState(auth);
-  if (loading) {
+  const user = useAuth();
+  if (user.loggedIn === null) {
     return <Loader />;
   }
-  if (user) {
+  if (user && user.loggedIn) {
     return <Outlet />;
   }
   return (

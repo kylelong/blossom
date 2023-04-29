@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
@@ -7,6 +7,7 @@ import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../firebase-config";
 import axios from "axios";
+import {AccountContext} from "../context/AccountContext";
 
 import {
   LoginContainer,
@@ -38,6 +39,7 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
+  const {setUser} = useContext(AccountContext);
 
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
@@ -56,7 +58,7 @@ const Login: React.FC = () => {
 
   const login = async () => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${endpoint}/login`,
         {
           email: loginData.email,
@@ -64,6 +66,7 @@ const Login: React.FC = () => {
         },
         options
       );
+      setUser({...response.data});
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);

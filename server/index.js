@@ -155,9 +155,9 @@ app.post("/login", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.status(200).json({msg: "login successful", token: token});
+      res.status(200).json({loggedIn: true, token: token, email: email});
     } else {
-      return res.status(401).json({message: "Invalid credentials"});
+      return res.status(401).json({loggedIn: false});
     }
   } catch (err) {
     console.error(err.message);
@@ -196,8 +196,9 @@ app.post("/create_user", async (req, res) => {
 app.post("/logout", async (req, res) => {
   try {
     // TODO: do something with jwt
+    req.user_id = null;
     res.clearCookie("blossom_token");
-    res.send({data: "logout"});
+    res.status(200).json({loggedIn: false});
   } catch (err) {
     console.error(err.message);
   }
@@ -223,6 +224,19 @@ app.get("/user_info", authenticate, async (req, res) => {
       [user_id]
     );
     res.json(response.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+app.get("/isAuthenticated", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+
+    if (user_id) {
+      res.status(200).json({loggedIn: true});
+    } else {
+      res.status(401).send({loggedIn: false});
+    }
   } catch (err) {
     console.error(err.message);
   }

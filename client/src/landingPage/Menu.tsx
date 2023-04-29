@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
-import {auth} from "../firebase-config";
 import axios from "axios";
+import {AccountContext} from "../context/AccountContext";
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -37,53 +37,41 @@ const endpoint =
     : process.env.REACT_APP_LOCALHOST_URL;
 
 const Menu: React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setLoggedIn(true);
-      setLoading(false);
-    } else {
-      setLoggedIn(false);
-      setLoading(false);
-    }
-  });
-  const logout = () => {
-    axios.post(`${endpoint}/logout`).then((response) => {});
+  const {user, setUser} = useContext(AccountContext);
+
+  const logout = async () => {
+    await axios.post(`${endpoint}/logout`);
+    setUser({loggedIn: false});
   };
   const menuToShow = () => {
-    if (loading) {
-      return <div></div>;
+    if (user.loggedIn) {
+      return (
+        <MenuContainer>
+          <MenuItem
+            onClick={() => {
+              logout();
+            }}
+          >
+            sign out
+          </MenuItem>
+          <Link to="/account" style={linkStyle}>
+            <MenuItem>account</MenuItem>
+          </Link>
+        </MenuContainer>
+      );
     } else {
-      if (loggedIn) {
-        return (
-          <MenuContainer>
-            <MenuItem
-              onClick={() => {
-                auth.signOut();
-                logout();
-              }}
-            >
-              sign out
-            </MenuItem>
-            <Link to="/account" style={linkStyle}>
-              <MenuItem>account</MenuItem>
-            </Link>
-          </MenuContainer>
-        );
-      } else {
-        return (
-          <MenuContainer>
-            <Link to="/login" style={linkStyle}>
-              <MenuItem>login</MenuItem>
-            </Link>
-            <Link to="/signup" style={linkStyle}>
-              <MenuItem>sign up</MenuItem>
-            </Link>
-          </MenuContainer>
-        );
-      }
+      return (
+        <MenuContainer>
+          <Link to="/login" style={linkStyle}>
+            <MenuItem>login</MenuItem>
+          </Link>
+          <Link to="/signup" style={linkStyle}>
+            <MenuItem>sign up</MenuItem>
+          </Link>
+        </MenuContainer>
+      );
     }
   };
   return <>{menuToShow()}</>;

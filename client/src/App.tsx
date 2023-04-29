@@ -16,36 +16,39 @@ import Account from "./dashboard/Account";
 import Survey from "./survey/Survey";
 import Payment from "./stripe/Payment";
 import Completion from "./stripe/Completion";
+import UserContext from "./context/AccountContext";
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route element={<AuthRoute />}>
-            <Route path="/" element={<LandingPage />}></Route>
-            <Route path="/signup" element={<SignUp />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-          </Route>
+      <UserContext>
+        <Router>
+          <Routes>
+            <Route element={<AuthRoute />}>
+              <Route path="/" element={<LandingPage />}></Route>
+              <Route path="/signup" element={<SignUp />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+            </Route>
 
-          <Route element={<AuthRouteLoggedOut />}>
-            <Route path="/dashboard" element={<Dashboard />}></Route>
-            <Route path="/create" element={<Create />}></Route>
-            <Route path="/surveys" element={<Surveys />}></Route>
-            <Route path="/analytics" element={<Analytics />}></Route>
-            <Route path="/account" element={<Account />}></Route>
-          </Route>
+            <Route element={<AuthRouteLoggedOut />}>
+              <Route path="/dashboard" element={<Dashboard />}></Route>
+              <Route path="/create" element={<Create />}></Route>
+              <Route path="/surveys" element={<Surveys />}></Route>
+              <Route path="/analytics" element={<Analytics />}></Route>
+              <Route path="/account" element={<Account />}></Route>
+            </Route>
 
-          {/* <Route path="/reset" element={<ForgotPassword />}></Route> */}
-          <Route path="/survey/:id" element={<Survey />}></Route>
-          <Route path="/payment" element={<Payment />}></Route>
-          <Route path="/completion" element={<Completion />}></Route>
-          <Route
-            path="/account_management/*"
-            element={<AccountManagement />}
-          ></Route>
-        </Routes>
-      </Router>
+            {/* <Route path="/reset" element={<ForgotPassword />}></Route> */}
+            <Route path="/survey/:id" element={<Survey />}></Route>
+            <Route path="/payment" element={<Payment />}></Route>
+            <Route path="/completion" element={<Completion />}></Route>
+            <Route
+              path="/account_management/*"
+              element={<AccountManagement />}
+            ></Route>
+          </Routes>
+        </Router>
+      </UserContext>
     </div>
   );
 }

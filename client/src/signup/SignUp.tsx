@@ -6,15 +6,6 @@ import * as yup from "yup";
 import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  User,
-  // UserCredential,
-} from "firebase/auth";
-import {auth} from "../firebase-config";
-// import {getFirestore, serverTimestamp, setDoc, doc} from "firebase/firestore";
-
-import {
   SignUpContainer,
   LogoContainer,
   FlowerImage,
@@ -30,7 +21,6 @@ import {
   eyeStyle,
 } from "./styles";
 
-// const db = getFirestore(app);
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -42,15 +32,15 @@ interface SignUpInfo {
 }
 
 const SignUp: React.FC = () => {
-  const ERRORS = [
-    ["auth/email-already-in-use", "email is alreay in use"],
-    ["auth/invalid-email", "invalid email, please try again"],
-    [
-      "auth/operation-not-allowed",
-      "operation not allowed, double check and try again",
-    ],
-    ["auth/weak-password", "password is too weak, please add more complexity"],
-  ];
+  // const ERRORS = [
+  //   ["auth/email-already-in-use", "email is alreay in use"],
+  //   ["auth/invalid-email", "invalid email, please try again"],
+  //   [
+  //     "auth/operation-not-allowed",
+  //     "operation not allowed, double check and try again",
+  //   ],
+  //   ["auth/weak-password", "password is too weak, please add more complexity"],
+  // ];
 
   const [signUpData, setSignUpData] = useState<SignUpInfo>({
     email: "",
@@ -73,19 +63,6 @@ const SignUp: React.FC = () => {
     password: yup.string().min(8).required("password is required"),
   });
 
-  const sendConfirmationEmail = async (user: User) => {
-    if (user) {
-      // let actionCodeSettings = {
-      //     url: "http://localhost:3000/confirm_email?email="+ user.email
-      // }
-      try {
-        await sendEmailVerification(user);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-
   function generateRandomString(length: number) {
     const characters =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -96,11 +73,6 @@ const SignUp: React.FC = () => {
     }
     return result;
   }
-  /**
-        const id = response.data.id;
-          addUser(userCredential, id);
-          sendConfirmationEmail(userCredential.user);
-    * **/
 
   const registerPostgres = async (hash: string) => {
     try {
@@ -121,23 +93,6 @@ const SignUp: React.FC = () => {
   };
 
   const registerUser = async () => {
-    // WORKS
-    createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password)
-      .then((userCredential) => {
-        sendConfirmationEmail(userCredential.user);
-      })
-      .catch((error) => {
-        const ERROR_CODES = ERRORS.map((item) => item[0]);
-        const errorCode = error.code;
-        if (ERROR_CODES.includes(errorCode)) {
-          let error_array: string[][] = ERRORS.filter(
-            (item) => item[0] === errorCode
-          );
-          let error_message: string = error_array[0][1];
-          setSignUpErrors((signUpErrors) => [...signUpErrors, error_message]);
-        }
-      });
-
     const randomString = generateRandomString(28);
     await registerPostgres(randomString);
   };

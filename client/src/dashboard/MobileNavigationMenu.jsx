@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {auth} from "../firebase-config";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {AccountContext} from "../context/AccountContext";
 import {
   HamburgerMenuIcon,
   DashboardIcon,
@@ -31,10 +32,12 @@ const endpoint =
     : process.env.REACT_APP_LOCALHOST_URL;
 
 const MobileNavigationMenu = () => {
-  const handleLogout = (e) => {
+  const {setUser} = useContext(AccountContext);
+  const handleLogout = async (e) => {
     e.preventDefault();
     auth.signOut();
-    axios.post(`${endpoint}/logout`).then((response) => {});
+    const response = await axios.post(`${endpoint}/logout`);
+    setUser({...response.data});
   };
   return (
     <MobileMenu>
