@@ -4,8 +4,6 @@ import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
 import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
-import {signInWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../firebase-config";
 import axios from "axios";
 import {AccountContext} from "../context/AccountContext";
 
@@ -74,41 +72,93 @@ const Login: React.FC = () => {
     }
   };
 
+  const validEmail = async () => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/email_exists/${loginData.email}`,
+        options
+      );
+      return parseInt(response.data.count) === 1;
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  const validPassword = async () => {
+    try {
+      const response = await axios.post(
+        `${endpoint}/validPassword`,
+        {
+          email: loginData.email,
+          password: loginData.password,
+        },
+        options
+      );
+      return response.data.verified;
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
+  };
+
   const loginUser = async () => {
-    signInWithEmailAndPassword(auth, loginData.email, loginData.password)
-      .then((userCredential) => {
-        // Signed in
-        // ...
-      })
-      .catch((error) => {
-        /**
+    // user-not-found if email does not exists
+    const isValidEmail = await validEmail();
+    let valid = true;
+    if (!isValidEmail) {
+      setLoginErrors((loginErrors) => [
+        ...loginErrors,
+        "invalid email, please try again",
+      ]);
+      valid = false;
+    }
+    const isValidPassword = await validPassword();
+    if (!isValidPassword) {
+      setLoginErrors((loginErrors) => [
+        ...loginErrors,
+        "wrong password, please try again",
+      ]);
+      valid = false;
+    }
+    if (valid) {
+      setLoginErrors([]);
+    }
+
+    //  auth/wrong-password
+
+    /**
                 auth/user-not-found Firebase: Error (auth/user-not-found).
                 auth/wrong-password Firebase: Error (auth/wrong-password).
             **/
-        const ERRORS = [
-          ["auth/wrong-password", "wrong password, please try again"],
-          ["auth/user-not-found", "invalid credentials, please try again"],
-          ["auth/invalid-email", "invalid email, please try again"],
-          [
-            "auth/user-disabled",
-            "the account you are trying to update has been disabled",
-          ],
-          [
-            "too-many-requests",
-            "too many failed attempts, try again later or reset your password",
-          ],
-        ];
-        const ERROR_CODES = ERRORS.map((item) => item[0]);
-        const errorCode = error.code;
-        if (ERROR_CODES.includes(errorCode)) {
-          let error_array: string[][] = ERRORS.filter(
-            (item) => item[0] === errorCode
-          );
-          let error_message: string = error_array[0][1];
-          setLoginErrors((loginErrors) => [...loginErrors, error_message]);
-        }
-      });
-    await login();
+    // const ERRORS = [
+    //   ["auth/wrong-password", "wrong password, please try again"],
+    //   ["auth/user-not-found", "invalid credentials, please try again"],
+    //   ["auth/invalid-email", "invalid email, please try again"],
+    //   [
+    //     "auth/user-disabled",
+    //     "the account you are trying to update has been disabled",
+    //   ],
+    //   [
+    //     "too-many-requests",
+    //     "too many failed attempts, try again later or reset your password",
+    //   ],
+    // ];
+    // const ERROR_CODES = ERRORS.map((item) => item[0]);
+    // const errorCode = error.code;
+    // if (ERROR_CODES.includes(errorCode)) {
+    //   let error_array: string[][] = ERRORS.filter(
+    //     (item) => item[0] === errorCode
+    //   );
+    //   let error_message: string = error_array[0][1];
+    //   setLoginErrors((loginErrors) => [...loginErrors, error_message]);
+    // }
+    // no errors then login
+    if (valid) {
+      await login();
+    }
   };
 
   let loginSchema = yup.object().shape({

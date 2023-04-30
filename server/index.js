@@ -164,6 +164,21 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/validPassword", async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    const response = await pool.query(
+      "SELECT id, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      [password, email]
+    );
+
+    let {verified} = response.rows[0];
+    res.json({verified: verified});
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // TODO: insert hash from firebase
 app.post("/create_user", async (req, res) => {
   try {

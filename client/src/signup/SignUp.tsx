@@ -95,9 +95,34 @@ const SignUp: React.FC = () => {
     }
   };
 
+  const validateEmail = async () => {
+    try {
+      const response = await axios.get(
+        `${endpoint}/email_exists/${signUpData.email}`,
+        options
+      );
+      return parseInt(response.data.count) === 1;
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+    }
+  };
+
   const registerUser = async () => {
     const randomString = generateRandomString(28);
-    await registerPostgres(randomString);
+    let valid = true;
+    const emailExists = await validateEmail();
+    if (emailExists) {
+      setSignUpErrors((signUpErrors) => [
+        ...signUpErrors,
+        "email already in use, please log in",
+      ]);
+      valid = false;
+    }
+    if (valid) {
+      await registerPostgres(randomString);
+    }
   };
 
   const onSubmit = (e: React.FormEvent) => {
