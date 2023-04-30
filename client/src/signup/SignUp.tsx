@@ -127,7 +127,7 @@ const SignUp: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: insert
+
     signUpSchema
       .isValid({
         email: signUpData.email,

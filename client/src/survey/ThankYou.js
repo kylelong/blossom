@@ -38,7 +38,6 @@ const ThankYou = ({redirectUrl, surveyHash}) => {
     redirectUrl = "http://" + redirectUrl;
   }
   useEffect(() => {
-    //TODO: remove id from local storage bsmr
     localStorage.removeItem("bsmr");
     if (localStorage.getItem("sids") === null) {
       localStorage.setItem("sids", JSON.stringify([surveyHash]));

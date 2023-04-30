@@ -88,6 +88,17 @@ CREATE INDEX question_id_index_response ON response (question_id);
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto; -- for insertion
 
+
+/** to reset surveys :
+    drop table response cascade;
+    drop table answer_choice cascade;
+    drop table question cascade;
+    drop table survey cascade;
+    drop table users cascade;
+**/
+
+
+
 /* 
     TESTING:
     create users, survey, question, answer_choice, response

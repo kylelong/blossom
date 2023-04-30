@@ -50,7 +50,7 @@ const SurveysList = () => {
                       setCurrentSurveyIndex(index);
                       setQuestionId(survey.id);
                       getQuestions(survey.id);
-                      setLink(`${siteUrl}/survey/${survey.hash}`); // TODO: remove
+                      setLink(`${siteUrl}/survey/${survey.hash}`);
                     }}
                   >
                     <RadioGroup.Indicator className="RadioGroupIndicator" />
@@ -153,7 +153,7 @@ const SurveysList = () => {
             />
           </div>
 
-          {surveys[currentSurveyIndex].published ? ( //TODO: test for published surveys
+          {surveys[currentSurveyIndex].published ? (
             <div className="surveyListLinkContainer">
               <div className="surveyLinkHeaderContainer">
                 <div className="surveyLinkHeader">survey link:</div>

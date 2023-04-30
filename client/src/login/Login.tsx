@@ -54,6 +54,46 @@ const Login: React.FC = () => {
     },
   };
 
+  const sendVerificationEmail = () => {
+    /*
+    // Send an email with the Postmark.js library
+
+// Install with npm from the command line:
+npm install postmark --save
+
+// Require:
+var postmark = require("postmark");
+
+// Send an email:
+var client = new postmark.ServerClient(REACT_APP_POSTMARK_KEY);
+
+url = endpoint/verifyEmail/user_hash
+
+client.sendEmailWithTemplate({
+  "From": "sender@example.com",
+  "To": "recipient@example.com",
+  "TemplateAlias": "welcome",
+  "TemplateModel": {
+    "product_url": "product_url_Value",
+    "product_name": "Blossom",
+    "name": "",
+    "action_url": "action_url_Value", // make this endpoint / what ever 
+    "company_name": "Blossom",
+    "company_address": "contact@blossomsurveys.io",
+    "login_url": "login_url_Value",
+    "username": "username_Value",
+    "trial_length": "trial_length_Value",
+    "trial_start_date": "trial_start_date_Value",
+    "trial_end_date": "trial_end_date_Value",
+    "support_email": "support_email_Value",
+    "live_chat_url": "live_chat_url_Value",
+    "sender_name": "sender_name_Value",
+    "help_url": "help_url_Value"
+  }
+});
+    */
+  };
+
   const login = async () => {
     try {
       const response = await axios.post(

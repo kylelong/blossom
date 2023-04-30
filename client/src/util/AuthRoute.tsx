@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {Outlet, Navigate} from "react-router-dom";
 import {AccountContext} from "../context/AccountContext";
-import Loader from "../loader";
 
 const useAuth = () => {
   const {user} = useContext(AccountContext);
@@ -10,10 +9,6 @@ const useAuth = () => {
 
 const AuthRoute: React.FC = () => {
   const user = useAuth();
-
-  if (user.loggedIn === null) {
-    return <Loader />;
-  }
 
   if (user && user.loggedIn) {
     return <Navigate to="/dashboard" />;

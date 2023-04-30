@@ -26,7 +26,7 @@ const Survey = () => {
   const [loaded, setLoaded] = useState(false);
   const [invalidSurvey, setInvalidSurvey] = useState(false);
   const [questionIds, setQuestionIds] = useState([]);
-  // TODO: add response ref
+
   const loadAnswers = async (questions) => {
     let question_copy = [];
     for (let i = 0; i < questions.length; i++) {
@@ -93,7 +93,6 @@ const Survey = () => {
   );
 
   useEffect(() => {
-    // TODO: if localStorage.getItem("bsmr") != mull and key != params.id -> removeItem
     async function loadQuestionIds(res) {
       for (let i = 0; i < res.length; i++) {
         let question = res[i];
