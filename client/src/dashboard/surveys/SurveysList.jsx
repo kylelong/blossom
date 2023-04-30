@@ -1,6 +1,4 @@
 import React, {useEffect, useState, useRef, useCallback} from "react";
-import {auth} from "../../firebase-config";
-import {useAuthState} from "react-firebase-hooks/auth";
 import axios from "axios";
 
 import SurveyPreview from "../surveyPreview/SurveyPreview";
@@ -20,8 +18,6 @@ const siteUrl =
     : process.env.REACT_APP_LOCAL_URL;
 
 const SurveysList = () => {
-  const [user] = useAuthState(auth);
-  const uid = user.uid;
   const [surveys, setSurveys] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -134,7 +130,7 @@ const SurveysList = () => {
     if (!loaded) {
       loadSurveys();
     }
-  }, [loaded, uid, currentSurveyIndex, questionId, surveys, getQuestions]);
+  }, [loaded, currentSurveyIndex, questionId, surveys, getQuestions]);
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {

@@ -129,10 +129,6 @@ const Login: React.FC = () => {
 
     //  auth/wrong-password
 
-    /**
-                auth/user-not-found Firebase: Error (auth/user-not-found).
-                auth/wrong-password Firebase: Error (auth/wrong-password).
-            **/
     // const ERRORS = [
     //   ["auth/wrong-password", "wrong password, please try again"],
     //   ["auth/user-not-found", "invalid credentials, please try again"],
