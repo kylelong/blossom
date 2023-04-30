@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import {auth} from "../firebase-config";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import axios from "axios";
@@ -35,7 +34,6 @@ const MobileNavigationMenu = () => {
   const {setUser} = useContext(AccountContext);
   const handleLogout = async (e) => {
     e.preventDefault();
-    auth.signOut();
     const response = await axios.post(`${endpoint}/logout`);
     setUser({...response.data});
   };

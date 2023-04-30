@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import axios from "axios";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import * as yup from "yup";
 import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
+import {AccountContext} from "../context/AccountContext";
 import {
   SignUpContainer,
   LogoContainer,
@@ -48,6 +49,7 @@ const SignUp: React.FC = () => {
   });
   const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
+  const {setUser} = useContext(AccountContext);
 
   const options = {
     withCredentials: true,
@@ -76,7 +78,7 @@ const SignUp: React.FC = () => {
 
   const registerPostgres = async (hash: string) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${endpoint}/create_user`,
         {
           email: signUpData.email,
@@ -85,6 +87,7 @@ const SignUp: React.FC = () => {
         },
         options
       );
+      setUser({...response.data});
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);

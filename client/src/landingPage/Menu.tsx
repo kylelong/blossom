@@ -37,8 +37,6 @@ const endpoint =
     : process.env.REACT_APP_LOCALHOST_URL;
 
 const Menu: React.FC = () => {
-  // const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
   const {user, setUser} = useContext(AccountContext);
 
   const logout = async () => {
