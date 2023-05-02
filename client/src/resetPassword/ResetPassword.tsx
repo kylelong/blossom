@@ -24,11 +24,11 @@ import {
 } from "./styles";
 
 interface Props {
-  oobCode: string | null;
+  hash: string | null;
 }
 
 // form to reset password
-const ResetPassword: React.FC<Props> = ({oobCode}) => {
+const ResetPassword: React.FC<Props> = ({hash}) => {
   const [password, setPassword] = useState<string>("");
   const [eyeIcon, setEyeIcon] = useState<boolean>(true);
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
@@ -44,8 +44,8 @@ const ResetPassword: React.FC<Props> = ({oobCode}) => {
 
   //TODO: update postgres password
   const changePassword = () => {
-    if (oobCode) {
-      confirmPasswordReset(auth, oobCode, password)
+    if (hash) {
+      confirmPasswordReset(auth, hash, password)
         .then((response) => {
           console.log(response);
           setPasswordReset(true);

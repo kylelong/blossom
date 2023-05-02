@@ -2,35 +2,46 @@ import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import ResetPassword from "../resetPassword/ResetPassword";
 import VerifyEmail from "../verifyEmail/VerifyEmail";
-import {auth} from "../firebase-config";
-import {checkActionCode} from "firebase/auth";
+import axios from "axios";
+
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 // reset password & verify email
 const AccountManagement: React.FC = () => {
   const {search} = useLocation();
   const mode = new URLSearchParams(search).get("mode");
-  const oobCode = new URLSearchParams(search).get("oobCode");
+  const hash = new URLSearchParams(search).get("hash");
   // const apiKey= new URLSearchParams(search).get('apiKey');
   const [validCode, setValidCode] = useState(false);
 
   useEffect(() => {
-    if (oobCode) {
+    const validateHash = async () => {
       try {
-        checkActionCode(auth, oobCode).then((response) => {
+        const response = await axios.get(`${endpoint}/valid_hash/${hash}`);
+        if (parseInt(response.data.count) === 1) {
           setValidCode(true);
-        });
+        }
       } catch (err) {
-        console.log(err);
+        if (err instanceof Error) {
+          console.error(err.message);
+        }
       }
-    }
-  }, [oobCode]);
+    };
 
-  // firebase auth for mode and oobCode
-  if (oobCode) {
+    if (hash && !validCode) {
+      validateHash();
+    }
+  }, [hash, validCode]);
+
+  // firebase auth for mode and hash
+  if (hash) {
     if (mode === "resetPassword") {
-      return <ResetPassword oobCode={oobCode} />;
+      return <ResetPassword hash={hash} />;
     } else if (mode === "verifyEmail") {
-      return <VerifyEmail oobCode={oobCode} />;
+      return <VerifyEmail hash={hash} />;
     }
   }
   return (

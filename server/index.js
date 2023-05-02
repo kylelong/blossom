@@ -307,6 +307,20 @@ app.get("/email_exists/:email", async (req, res) => {
   }
 });
 
+// TODO: make it so the email is valid for the hash
+app.get("/valid_hash/:hash", async (req, res) => {
+  try {
+    const {hash} = req.params;
+    const response = await pool.query(
+      "SELECT COUNT(*) FROM users WHERE hash = $1",
+      [hash]
+    );
+    res.json(response.rows[0]).count;
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // update company
 app.put("/update_company", authenticate, async (req, res) => {
   try {
