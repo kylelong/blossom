@@ -32,12 +32,12 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(function (req, res, next) {
-  // res.header(
-  //   "Access-Control-Allow-Origin",
-  //   process.env.NODE_ENV === "production"
-  //     ? process.env.LIVE_URL
-  //     : process.env.LOCAL_URL
-  // );
+  res.header(
+    "Access-Control-Allow-Origin",
+    process.env.NODE_ENV === "production"
+      ? process.env.LIVE_URL
+      : process.env.LOCAL_URL
+  );
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -80,7 +80,7 @@ app.post("/send_welcome_email", (req, res) => {
     const client = new postmark.ServerClient(process.env.POSTMARK_KEY);
     const {email, hash} = req.body;
 
-    const url = `${endpoint}/account_management/auth/action?mode=verifyEmail?hash=${hash}`;
+    const url = `${endpoint}/account_management/auth/action?mode=verifyEmail&hash=${hash}`;
 
     client.sendEmailWithTemplate({
       From: process.env.CONTACT_EMAIL,
@@ -350,6 +350,7 @@ app.put("/confirm_user", async (req, res) => {
     await pool.query("UPDATE users SET confirmed = true WHERE hash = $1", [
       hash,
     ]);
+    res.sendStatus(200);
   } catch (err) {
     console.error(err.message);
   }

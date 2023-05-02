@@ -170,8 +170,10 @@ const AnalyticsDashboard = () => {
         const data = await response.data;
 
         setSurveys(data);
-        setSelectedSurveyId(data[0].id);
-        loadQuestions(data[0].id);
+        if (data && data.length) {
+          setSelectedSurveyId(data[0].id);
+          loadQuestions(data[0].id);
+        }
       } catch (err) {
         console.error(err.message);
       }

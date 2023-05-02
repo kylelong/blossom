@@ -26,15 +26,21 @@ const VerifyEmail: React.FC<Props> = ({hash}) => {
   const [verified, setVerified] = useState<boolean>(false);
 
   const confirmPostgres = async (hash: string) => {
-    await axios.put(`${endpoint}/confirm_user`, {
-      hash: hash,
-    });
-    setVerified(true);
+    axios
+      .put(`${endpoint}/confirm_user`, {
+        hash: hash,
+      })
+      .then((response) => {
+        setVerified(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
     confirmPostgres(hash);
-  }, [hash]);
+  }, [hash, verified]);
 
   return (
     <VerifyEmailContainer>

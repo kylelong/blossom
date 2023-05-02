@@ -31,9 +31,7 @@ const AccountManagement: React.FC = () => {
       }
     };
 
-    if (hash && !validCode) {
-      validateHash();
-    }
+    validateHash();
   }, [hash, validCode]);
 
   // firebase auth for mode and hash
