@@ -76,6 +76,23 @@ const SignUp: React.FC = () => {
     return result;
   }
 
+  const sendVerificationEmail = async (hash: string) => {
+    // Send an email:
+    try {
+      const response = await axios.post(
+        `${endpoint}/send_welcome_email`,
+        {
+          email: signUpData.email,
+          hash: hash,
+        },
+        options
+      );
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const registerPostgres = async (hash: string) => {
     try {
       const response = await axios.post(
@@ -122,6 +139,7 @@ const SignUp: React.FC = () => {
     }
     if (valid) {
       await registerPostgres(randomString);
+      await sendVerificationEmail(randomString);
     }
   };
 

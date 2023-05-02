@@ -13,6 +13,7 @@ const cors = require("cors");
 const pool = require("./db");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const postmark = require("postmark");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
@@ -21,6 +22,10 @@ const corsOptions = {
   credentials: true,
   methods: "POST, PUT, GET ,OPTIONS, DELETE",
 };
+const endpoint =
+  process.env.NODE_ENV === "production"
+    ? process.env.LOCAL_URL
+    : process.env.LIVE_URL;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -49,7 +54,6 @@ app.use(function (req, res, next) {
     "https://www.blossomsurveys.io",
     "http://localhost:3000",
   ]
-
 */
 
 const authenticate = (req, res, next) => {
@@ -69,6 +73,40 @@ const authenticate = (req, res, next) => {
 
 app.get("/", (req, res) => {
   res.send("BLOSSOM is on: " + process.env.NODE_ENV);
+});
+
+app.post("/send_welcome_email", (req, res) => {
+  try {
+    const client = new postmark.ServerClient(process.env.POSTMARK_KEY);
+    const {email, hash} = req.body;
+
+    const url = `${endpoint}/account_management/auth/action?mode=verifyEmail?hash=${hash}`;
+
+    client.sendEmailWithTemplate({
+      From: process.env.CONTACT_EMAIL,
+      To: email,
+      TemplateAlias: "welcome",
+      TemplateModel: {
+        product_url: "product_url_Value",
+        product_name: "Blossom",
+        name: "",
+        action_url: url, // make this endpoint / what ever
+        company_name: "Blossom",
+        company_address: process.env.CONTACT_EMAIL,
+        login_url: "login_url_Value",
+        username: "username_Value",
+        trial_length: "trial_length_Value",
+        trial_start_date: "trial_start_date_Value",
+        trial_end_date: "trial_end_date_Value",
+        support_email: "support_email_Value",
+        live_chat_url: "live_chat_url_Value",
+        sender_name: "sender_name_Value",
+        help_url: "help_url_Value",
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 app.get("/config", (req, res) => {

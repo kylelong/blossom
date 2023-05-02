@@ -16,11 +16,10 @@ export default function CheckoutForm() {
     process.env.REACT_APP_NODE_ENV === "production"
       ? "price_1Mu6vSHadwp6AsWcMjUvVGFG"
       : "price_1M6QudHadwp6AsWci1if6CyF";
-  console.log(process.env.REACT_APP_NODE_ENV, priceId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = "kylel95@vt.edu";
+    const email = "kylelong2014@yahoo.com";
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -41,6 +40,11 @@ export default function CheckoutForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin":
+            process.env.REACT_APP_NODE_ENV === "production"
+              ? process.env.REACT_APP_LIVE_URL
+              : process.env.REACT_APP_LOCAL_URL,
+          "Access-Control-Allow-Credentials": true,
         },
         body: JSON.stringify({
           paymentMethod: paymentMethod?.paymentMethod?.id,
