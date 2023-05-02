@@ -24,8 +24,8 @@ const corsOptions = {
 };
 const endpoint =
   process.env.NODE_ENV === "production"
-    ? process.env.LOCAL_URL
-    : process.env.LIVE_URL;
+    ? process.env.LIVE_URL
+    : process.env.LOCAL_URL;
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
