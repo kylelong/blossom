@@ -251,7 +251,7 @@ app.post("/logout", async (req, res) => {
     // TODO: do something with jwt
     req.user_id = null;
     res.clearCookie("blossom_token");
-    res.status(200).json({loggedIn: null});
+    res.status(200).json({loggedIn: false});
   } catch (err) {
     console.error(err.message);
   }
