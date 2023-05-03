@@ -6,6 +6,7 @@ import * as yup from "yup";
 import {Link} from "react-router-dom";
 import {HiOutlineEye, HiOutlineEyeOff} from "react-icons/hi";
 import {AccountContext} from "../context/AccountContext";
+import DialogBox from "./Dialog";
 import {
   SignUpContainer,
   LogoContainer,
@@ -126,7 +127,7 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const registerUser = async () => {
+  const canRegisterUser = async () => {
     const randomString = generateRandomString(28);
     let valid = true;
     const emailExists = await validateEmail();
@@ -138,13 +139,19 @@ const SignUp: React.FC = () => {
       valid = false;
     }
     if (valid) {
-      await registerPostgres(randomString);
-      await sendVerificationEmail(randomString);
+      // TODO: after stripe succeeds
+      // await registerPostgres(randomString);
+      // await sendVerificationEmail(randomString);
     }
   };
 
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    if (signUpErrors.length === 0) {
+      e.preventDefault();
+    }
+    console.log(
+      `create_user: {email: ${signUpData.email}, password: ${signUpData.password}}`
+    );
 
     signUpSchema
       .isValid({
@@ -166,7 +173,6 @@ const SignUp: React.FC = () => {
             });
         } else {
           setSignUpErrors([]);
-          registerUser();
         }
       });
   };
@@ -210,7 +216,10 @@ const SignUp: React.FC = () => {
             />
           )}
         </PasswordContainer>
-        <SubmitButton onClick={onSubmit}>Next</SubmitButton>
+
+        <DialogBox
+          button={<SubmitButton onClick={onSubmit}>Next</SubmitButton>}
+        />
       </SignUpForm>
       <LoginLink>
         Already have an account?{" "}
