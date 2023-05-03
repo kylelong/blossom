@@ -30,7 +30,7 @@ export default function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
-    const email = "kylelong9506@gmail.com";
+    const email = "kylel95@vt.edu";
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -61,7 +61,16 @@ export default function CheckoutForm() {
           email: email,
           priceId: priceId,
         }),
-      }).then((r) => r.json());
+      })
+        .then((r) => {
+          return r.json();
+        })
+        .catch((err) => {
+          setError(`Payment failed ${err.message}`);
+        });
+      if (response && response.raw) {
+        setError(response.raw.message + " Please try again.");
+      }
 
       const confirmPayment = await stripe.confirmCardPayment(
         response.clientSecret,
@@ -100,7 +109,7 @@ export default function CheckoutForm() {
           {processing ? (
             <div className="spinner" id="spinner"></div>
           ) : (
-            "Pay now"
+            "Subscribe"
           )}
         </span>
       </button>
@@ -111,7 +120,7 @@ export default function CheckoutForm() {
         </div>
       )}
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {!error && message && <div id="payment-message">{message}</div>}
     </form>
   );
 }

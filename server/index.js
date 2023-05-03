@@ -117,34 +117,38 @@ app.get("/config", (req, res) => {
 app.post("/create-subscription", async (req, res) => {
   const {email, priceId, paymentMethod} = req.body;
 
-  // create user
-  const customer = await stripe.customers.create({
-    email: email,
-    payment_method: paymentMethod,
-    invoice_settings: {
-      default_payment_method: paymentMethod,
-    },
-  });
-
-  // create subscription
-  const subscription = await stripe.subscriptions.create({
-    customer: customer.id,
-    items: [{price: priceId}],
-    payment_settings: {
-      payment_method_options: {
-        card: {
-          request_three_d_secure: "automatic",
-        },
+  try {
+    // create user
+    const customer = await stripe.customers.create({
+      email: email,
+      payment_method: paymentMethod,
+      invoice_settings: {
+        default_payment_method: paymentMethod,
       },
-      payment_method_types: ["card"],
-      save_default_payment_method: "on_subscription",
-    },
-    expand: ["latest_invoice.payment_intent"],
-  });
-  res.send({
-    clientSecret: subscription.latest_invoice.payment_intent.client_secret,
-    subscriptionId: subscription.id,
-  });
+    });
+
+    // create subscription
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{price: priceId}],
+      payment_settings: {
+        payment_method_options: {
+          card: {
+            request_three_d_secure: "automatic",
+          },
+        },
+        payment_method_types: ["card"],
+        save_default_payment_method: "on_subscription",
+      },
+      expand: ["latest_invoice.payment_intent"],
+    });
+    res.send({
+      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+      subscriptionId: subscription.id,
+    });
+  } catch (err) {
+    return res.status(402).json(err);
+  }
 });
 app.post("/create-payment-intent", async (req, res) => {
   try {
