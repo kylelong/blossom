@@ -133,7 +133,7 @@ app.post("/create-subscription", async (req, res) => {
     payment_settings: {
       payment_method_options: {
         card: {
-          request_three_d_secure: "any",
+          request_three_d_secure: "automatic",
         },
       },
       payment_method_types: ["card"],
@@ -149,7 +149,7 @@ app.post("/create-subscription", async (req, res) => {
 app.post("/create-payment-intent", async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      currency: "USD",
+      currency: "usd",
       amount: 2500,
       automatic_payment_methods: {enabled: true},
     });

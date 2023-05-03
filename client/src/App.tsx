@@ -15,7 +15,6 @@ import Analytics from "./dashboard/analytics/Analytics";
 import Account from "./dashboard/Account";
 import Survey from "./survey/Survey";
 import Payment from "./stripe/Payment";
-import Completion from "./stripe/Completion";
 import UserContext from "./context/AccountContext";
 
 function App() {
@@ -41,7 +40,6 @@ function App() {
             {/* <Route path="/reset" element={<ForgotPassword />}></Route> */}
             <Route path="/survey/:id" element={<Survey />}></Route>
             <Route path="/payment" element={<Payment />}></Route>
-            <Route path="/completion" element={<Completion />}></Route>
             <Route
               path="/account_management/*"
               element={<AccountManagement />}

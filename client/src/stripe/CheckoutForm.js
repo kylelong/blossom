@@ -1,6 +1,5 @@
-import {CardElement} from "@stripe/react-stripe-js";
 import {useState} from "react";
-import {useStripe, useElements} from "@stripe/react-stripe-js";
+import {CardElement, useStripe, useElements} from "@stripe/react-stripe-js";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -11,22 +10,33 @@ export default function CheckoutForm() {
   const elements = useElements();
 
   const [message, setMessage] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
+  const [error, setError] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+
   const priceId =
     process.env.REACT_APP_NODE_ENV === "production"
-      ? "price_1Mu6vSHadwp6AsWcMjUvVGFG"
-      : "price_1M6QudHadwp6AsWci1if6CyF";
+      ? process.env.REACT_APP_LIVE_PRICE_ID
+      : process.env.REACT_APP_TEST_PRICE_ID;
+
+  const handleChange = async (event) => {
+    // Listen for changes in the CardElement
+    // and display any errors as the customer types their card details
+    setDisabled(event.empty);
+    setError(event.error ? event.error.message : "");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = "kylelong2014@yahoo.com";
+    setProcessing(true);
+    const email = "kylelong9506@gmail.com";
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
-    setIsProcessing(true);
     try {
       const paymentMethod = await stripe.createPaymentMethod({
         type: "card",
@@ -56,37 +66,50 @@ export default function CheckoutForm() {
       const confirmPayment = await stripe.confirmCardPayment(
         response.clientSecret,
         {
-          return_url: `${window.location.origin}/completion`,
+          receipt_email: email,
         }
       );
       if (confirmPayment.error) {
         setMessage(confirmPayment.error.message);
-        console.log(confirmPayment.error.message);
+        setError(`Payment failed ${confirmPayment.error.message}`);
+        setProcessing(false);
       } else {
-        setMessage("Payment succeeded. Thank you :)");
+        setError(null);
+        setProcessing(false);
+        setSucceeded(true);
+        setMessage("Payment succeeded. Thank you 😊");
       }
     } catch (err) {
       console.error(err.message);
-      setMessage("An unexpected error occured. " + err.message);
+      setMessage("Payment failed. Please try again.");
     }
 
-    setIsProcessing(false);
+    setProcessing(false);
   };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <CardElement id="card-element" />
+      <CardElement id="card-element" onChange={handleChange} />
       <button
-        className="payment-button"
-        disabled={isProcessing || !stripe || !elements}
+        disabled={processing || disabled || succeeded}
         id="submit"
+        className="payment-button"
+        style={{opacity: disabled ? "0.5" : "1"}}
       >
-        <div className="spinner hidden" id="spinner"></div>
         <span id="button-text">
-          {isProcessing ? "Processing ... " : "Subscribe"}
+          {processing ? (
+            <div className="spinner" id="spinner"></div>
+          ) : (
+            "Pay now"
+          )}
         </span>
       </button>
-      <p id="card-error" role="alert"></p>
+      {/* Show any error that happens when processing the payment */}
+      {error && (
+        <div className="card-error" role="alert">
+          {error}
+        </div>
+      )}
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
