@@ -112,7 +112,7 @@ const Panel = () => {
   const createSurvey = async (data) => {
     try {
       let hash = randomstring.generate({
-        length: 20,
+        length: 24,
         charset: "alphanumeric",
       });
       // create survey with unique hash
@@ -133,7 +133,7 @@ const Panel = () => {
       // /add_question
       try {
         hash = randomstring.generate({
-          length: 16,
+          length: 24,
           charset: "alphanumeric",
         });
         const response = await axios.post(`${endpoint}/add_question`, {
@@ -167,7 +167,7 @@ const Panel = () => {
      *  draft is updated with id: survey_id and
      * **/
     let hash = randomstring.generate({
-      length: 16,
+      length: 24,
       charset: "alphanumeric",
     });
     let data = {

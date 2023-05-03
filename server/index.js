@@ -454,10 +454,10 @@ app.get("/number_of_responses", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
     const count = await pool.query(
-      "SELECT COUNT(*) FROM response r INNER JOIN question q ON r.question_id = q.id INNER JOIN survey s ON s.id = q.survey_id WHERE s.user_id = $1",
+      "SELECT SUM(responses) FROM survey WHERE user_id = $1",
       [user_id]
     );
-    res.json(count.rows[0].count);
+    res.json(count.rows[0].sum);
   } catch (err) {
     console.error(err.message);
   }
@@ -556,11 +556,24 @@ app.put("/update_survey_title/:survey_id", async (req, res) => {
   try {
     const {survey_id} = req.params;
     const {title} = req.body;
-    const update = await pool.query(
+    await pool.query(
       "UPDATE survey SET title = $1 WHERE id = $2 RETURNING title",
       [title, survey_id]
     );
     res.json("survey title updated!");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.put("/update_survey_response_count", async (req, res) => {
+  try {
+    const {survey_hash} = req.body;
+    await pool.query(
+      "UPDATE survey SET responses = responses + 1 WHERE hash = $1",
+      [survey_hash]
+    );
+    res.json("survey resposne recorded!");
   } catch (err) {
     console.error(err.message);
   }

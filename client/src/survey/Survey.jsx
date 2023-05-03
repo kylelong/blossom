@@ -216,6 +216,13 @@ const Survey = () => {
         }
       }
     }
+    try {
+      await axios.put(`${endpoint}/update_survey_response_count`, {
+        survey_hash: params.id,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
   if (invalidSurvey) {
     return (

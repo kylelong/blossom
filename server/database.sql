@@ -32,6 +32,7 @@ CREATE TABLE survey (
     hash VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     number_of_questions INT NOT NULL DEFAULT 1,
+    responses INT NULL DEFAULT 0,
     user_id INT NOT NULL REFERENCES users,
     redirect_url VARCHAR(255) NULL DEFAULT '',
     published BOOLEAN NOT NULL DEFAULT FALSE
@@ -94,6 +95,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto; -- for insertion
     drop table answer_choice cascade;
     drop table question cascade;
     drop table survey cascade;
+
+
+    -- to delete everuthing 
     drop table users cascade;
 **/
 
