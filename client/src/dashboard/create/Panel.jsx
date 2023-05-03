@@ -786,6 +786,7 @@ const Panel = () => {
                   <ClipboardCopyIcon
                     className="copyIcon"
                     onClick={handleCopy}
+                    style={{width: "20px", height: "20px"}}
                   ></ClipboardCopyIcon>
                 </CopyToClipboard>
                 {showCopied && (

@@ -6,11 +6,12 @@ import {AccountContext} from "../context/AccountContext";
 export const MenuContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
   margin-bottom: 24px;
-  width: 155px;
+  width: 100%;
   position: fixed;
-  right: 14px;
-  justify-content: space-around;
+  right: 18px;
+  justify-content: flex-end;
   @media (max-width: 745px) {
     position: unset;
     right: unset;
@@ -52,6 +53,7 @@ const Menu: React.FC = () => {
             onClick={() => {
               logout();
             }}
+            style={{marginRight: "24px"}}
           >
             sign out
           </MenuItem>
@@ -64,7 +66,7 @@ const Menu: React.FC = () => {
       return (
         <MenuContainer>
           <Link to="/login" style={linkStyle}>
-            <MenuItem>login</MenuItem>
+            <MenuItem style={{marginRight: "24px"}}>login</MenuItem>
           </Link>
           <Link to="/signup" style={linkStyle}>
             <MenuItem>sign up</MenuItem>
