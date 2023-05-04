@@ -1,9 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
 import DashboardMenu from "./DashboardMenu";
 import axios from "axios";
-import {auth, app} from "../firebase-config";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {getFirestore, doc, updateDoc} from "firebase/firestore";
 import {useForm, SubmitHandler} from "react-hook-form";
 import * as Label from "@radix-ui/react-label";
 import {
@@ -12,10 +9,12 @@ import {
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
+  PaymenContainer,
 } from "./dashboardStyles";
 import "./account.css";
 import User from "./types";
 import Menu from "../landingPage/Menu";
+import Payment from "../stripe/Payment";
 
 type accountData = {
   company: string;
@@ -23,8 +22,6 @@ type accountData = {
 axios.defaults.withCredentials = true;
 
 const Account = () => {
-  const [user] = useAuthState(auth);
-  const db = getFirestore(app);
   const endpoint =
     process.env.REACT_APP_NODE_ENV === "production"
       ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -53,18 +50,6 @@ const Account = () => {
       }
     } catch (err: any) {
       console.error(err.message);
-    }
-
-    // firebase
-    if (user && company) {
-      const userDoc = doc(db, "users", user.uid);
-      try {
-        await updateDoc(userDoc, {
-          company: company,
-        });
-      } catch (err) {
-        console.log(err);
-      }
     }
   };
 
@@ -125,7 +110,11 @@ const Account = () => {
               </button>
             </form>
           </div>
+          <PaymenContainer>
+            <Payment email={userData?.email} />
+          </PaymenContainer>
         </DashboardContent>
+
         <MenuContainer>
           <Menu />
         </MenuContainer>

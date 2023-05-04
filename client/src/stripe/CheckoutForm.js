@@ -5,7 +5,7 @@ const endpoint =
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
 
-export default function CheckoutForm() {
+export default function CheckoutForm({email}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -30,7 +30,6 @@ export default function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
-    const email = "kylel95@vt.edu";
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -107,7 +106,8 @@ export default function CheckoutForm() {
       >
         <span id="button-text">
           {processing ? (
-            <div className="spinner" id="spinner"></div>
+            // <div className="spinner" id="spinner"></div>
+            <div>Processing...</div>
           ) : (
             "Subscribe"
           )}

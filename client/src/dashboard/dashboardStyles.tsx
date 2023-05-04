@@ -49,6 +49,12 @@ export const DashboardContent = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+export const PaymenContainer = styled.div`
+  border-top: 2px solid rgb(243, 243, 243);
+  position: relative;
+  top: 25px;
+`;
 export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;

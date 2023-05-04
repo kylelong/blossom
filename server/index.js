@@ -171,6 +171,21 @@ app.post("/create-payment-intent", async (req, res) => {
   }
 });
 
+// FREE TRIAL
+
+/*
+if premium is false after trial date (trial date is positive) show button subscribe to continue using blossom
+
+ get end of trial date - Your 2 week free trial ends in X days on [date]. Subscribe here to continue to use blossom's features.
+    select created_at + INTERVAL '2 weeks'  from users where id = ? (auth endpoint)
+
+days from now until end of period, should be negative 
+    SELECT
+  EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_since_created
+FROM
+  users where id = ?
+*/
+
 // USER AUTH
 // only inset into users if no user has the email
 

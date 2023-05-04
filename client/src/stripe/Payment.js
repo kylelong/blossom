@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {Elements} from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
@@ -9,7 +9,7 @@ const endpoint =
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
 
-function Payment() {
+function Payment({email}) {
   const [stripePromise, setStripePromise] = useState(null);
 
   useEffect(() => {
@@ -21,10 +21,12 @@ function Payment() {
 
   return (
     <div className="stripe-container">
-      <h1>React Stripe and the Payment Element</h1>
+      <h5>Your 2 week free trial will end in 10 days.</h5>
+      <h5>Become a premium user to continue using Blossom.</h5>
+      <h5>Billed Monthly at $25 / mo. Cancel or Pause anytime.</h5>
       {stripePromise && (
         <Elements stripe={stripePromise}>
-          <CheckoutForm />
+          <CheckoutForm email={email} />
         </Elements>
       )}
     </div>
