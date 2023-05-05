@@ -1,5 +1,7 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {CardElement, useStripe, useElements} from "@stripe/react-stripe-js";
+import stripeLogo from "../images/stripe-cropped.svg";
+import axios from "axios";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -14,6 +16,12 @@ export default function CheckoutForm({email}) {
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(true);
+  const [trialData, setTriaData] = useState({
+    msg: "",
+    access: false,
+    premium: false,
+  });
+  const [loaded, setLoaded] = useState(false);
 
   const priceId =
     process.env.REACT_APP_NODE_ENV === "production"
@@ -94,33 +102,76 @@ export default function CheckoutForm({email}) {
 
     setProcessing(false);
   };
+  useEffect(() => {
+    const getTrialMessage = async () => {
+      const response = await axios.get(`${endpoint}/trial_info`);
+      setTriaData(response.data);
+    };
+    getTrialMessage();
+    setLoaded(true);
+  }, []);
+  if (succeeded) {
+    // set premium to true with axios call for this user with id, authenticated route
+    return (
+      <div className="subscribe-message">
+        Congratulations. You are now subscribed and can continue using Blossom.
+        Thank you 😊
+      </div>
+    );
+  }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <CardElement id="card-element" onChange={handleChange} />
-      <button
-        disabled={processing || disabled || succeeded}
-        id="submit"
-        className="payment-button"
-        style={{opacity: disabled ? "0.5" : "1"}}
-      >
-        <span id="button-text">
-          {processing ? (
-            // <div className="spinner" id="spinner"></div>
-            <div>Processing...</div>
-          ) : (
-            "Subscribe"
+    <div className="stripe-container">
+      <div className="trail-container">
+        <div className="trail-message">{trialData.msg}</div>
+        {!trialData.premium && (
+          <>
+            {" "}
+            <div className="trail-message">
+              Become a premium user to continue using Blossom.
+            </div>
+            <div className="trail-message">
+              Billed Monthly at $25 / mo. Cancel or Pause anytime.
+            </div>
+          </>
+        )}
+      </div>
+      {!trialData.premium && (
+        <form id="payment-form" onSubmit={handleSubmit}>
+          <CardElement id="card-element" onChange={handleChange} />
+          <button
+            disabled={processing || disabled || succeeded}
+            id="submit"
+            className="payment-button"
+            style={{opacity: disabled ? "0.5" : "1"}}
+          >
+            <span id="button-text">
+              {processing ? (
+                // <div className="spinner" id="spinner"></div>
+                <div>Processing...</div>
+              ) : (
+                "Subscribe"
+              )}
+            </span>
+          </button>
+          {/* Show any error that happens when processing the payment */}
+          {error && (
+            <div className="card-error" role="alert">
+              {error}
+            </div>
           )}
-        </span>
-      </button>
-      {/* Show any error that happens when processing the payment */}
-      {error && (
-        <div className="card-error" role="alert">
-          {error}
-        </div>
+          {/* Show any error or success messages */}
+          {!error && message && <div id="payment-message">{message}</div>}
+          <a href="https://stripe.com/" target="_blank" rel="noreferrer">
+            {" "}
+            <img
+              src={stripeLogo}
+              alt="powered by stripe"
+              className="stripeLogo"
+            />
+          </a>
+        </form>
       )}
-      {/* Show any error or success messages */}
-      {!error && message && <div id="payment-message">{message}</div>}
-    </form>
+    </div>
   );
 }

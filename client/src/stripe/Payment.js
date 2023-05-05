@@ -20,16 +20,13 @@ function Payment({email}) {
   }, []);
 
   return (
-    <div className="stripe-container">
-      <h5>Your 2 week free trial will end in 10 days.</h5>
-      <h5>Become a premium user to continue using Blossom.</h5>
-      <h5>Billed Monthly at $25 / mo. Cancel or Pause anytime.</h5>
+    <>
       {stripePromise && (
         <Elements stripe={stripePromise}>
           <CheckoutForm email={email} />
         </Elements>
       )}
-    </div>
+    </>
   );
 }
 

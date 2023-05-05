@@ -5,11 +5,23 @@
 
 #payment-form {
   width: 400px;
+
   align-self: center;
   box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
     0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
   border-radius: 7px;
   padding: 40px;
+}
+.subscribe-message {
+  margin-top: 15px;
+  width: 350px;
+  font-size: 17px;
+}
+@media (max-width: 768px) {
+  #payment-form {
+    width: unset;
+    max-width: 400px;
+  }
 }
 
 .InputElement {
@@ -42,12 +54,30 @@
 .hidden {
   display: none;
 }
+.trail-container {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  margin-bottom: 24px;
+  margin-top: 8px;
+}
+.trail-message {
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 12px;
+  text-align: center;
+}
+.stripeLogo {
+  width: 150px;
+  position: relative;
+  top: 35px;
+}
 
 .card-error {
   color: rgb(105, 115, 134);
   font-size: 16px;
   line-height: 20px;
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: center;
 }
 
