@@ -229,6 +229,19 @@ app.get("/trial_info", authenticate, async (req, res) => {
   }
 });
 
+app.put("/upgrade_account", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const response = await pool.query(
+      "UPDATE users SET premium = true WHERE id = $1 RETURNING premium",
+      [user_id]
+    );
+    res.json({premium: response.rows[0].premium});
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // USER AUTH
 // only inset into users if no user has the email
 

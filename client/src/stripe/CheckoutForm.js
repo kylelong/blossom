@@ -19,7 +19,7 @@ export default function CheckoutForm({email}) {
   const [trialData, setTriaData] = useState({
     msg: "",
     access: false,
-    premium: false,
+    premium: true,
   });
   const [loaded, setLoaded] = useState(false);
 
@@ -33,6 +33,10 @@ export default function CheckoutForm({email}) {
     // and display any errors as the customer types their card details
     setDisabled(event.empty);
     setError(event.error ? event.error.message : "");
+  };
+  const upgradeAccount = async () => {
+    const response = await axios.put(`${endpoint}/upgrade_account`);
+    console.log(response.data);
   };
 
   const handleSubmit = async (e) => {
@@ -93,7 +97,8 @@ export default function CheckoutForm({email}) {
         setError(null);
         setProcessing(false);
         setSucceeded(true);
-        setMessage("Payment succeeded. Thank you 😊");
+        // setMessage("Payment succeeded. Thank you 😊");
+        await upgradeAccount();
       }
     } catch (err) {
       console.error(err.message);

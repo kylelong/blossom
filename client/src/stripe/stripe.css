@@ -22,6 +22,10 @@
     width: unset;
     max-width: 400px;
   }
+  .trail-message {
+    width: unset;
+    max-width: 336px;
+  }
 }
 
 .InputElement {
