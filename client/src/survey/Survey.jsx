@@ -4,12 +4,17 @@ import "./survey.css";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 import SurveyViewer from "./SurveyViewer";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
+const linkStyle = {
+  textDecoration: "none",
+  color: "black",
+};
 
 const Survey = () => {
   const params = useParams();
@@ -239,10 +244,12 @@ const Survey = () => {
     <div className="surveyParentContainer">
       {loaded && (
         <>
-          <div className="logoContainer">
-            <Logo />
-            <img src={flower} alt="flower" className="flowerLogoImg" />
-          </div>
+          <Link to="/" style={linkStyle}>
+            <div className="logoContainer">
+              <Logo />
+              <img src={flower} alt="flower" className="flowerLogoImg" />
+            </div>
+          </Link>
           <SurveyViewer
             questions={questions}
             surveyName={survey.title}
