@@ -20,7 +20,12 @@ const options = {
 };
 
 const UserContext = ({children}) => {
-  const [user, setUser] = useState({loggedIn: null});
+  const [user, setUser] = useState({
+    loggedIn: null,
+    confirmed: null,
+    premium: null,
+    access: null,
+  });
   useEffect(() => {
     const loadUser = async () => {
       const response = await axios.get(`${endpoint}/isAuthenticated`, options);

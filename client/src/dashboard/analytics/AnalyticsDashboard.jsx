@@ -1,4 +1,14 @@
-import React, {useEffect, useState, useCallback, useRef, useMemo} from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  useContext,
+} from "react";
+import {AccountContext} from "../../context/AccountContext";
+import VerifyEmailNotice from "../VerifyEmailNotice";
+import SubscribeNotice from "../SubscribeNotice";
 import Welcome from "../Welcome";
 import {
   AnalyticsContainer,
@@ -44,6 +54,7 @@ const AnalyticsDashboard = () => {
   const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
   const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
+  const {user} = useContext(AccountContext);
   /**
    * colors: [#fa5f55, ]
    */
@@ -219,6 +230,13 @@ const AnalyticsDashboard = () => {
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
     : `create a new survey ${String.fromCodePoint("0x1F680")}`;
+
+  if (user && !user.confirmed) {
+    return <VerifyEmailNotice />;
+  }
+  if (user && !user.access && !user.premium) {
+    return <SubscribeNotice />;
+  }
 
   if (loaded && !hasSurvey) {
     return <Welcome />;

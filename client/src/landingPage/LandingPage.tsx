@@ -126,7 +126,7 @@ const LandingPage: React.FC = () => {
             ${price}
             <Month>/month</Month>
           </Price>
-          <Trial>start with a 2 week trial</Trial>
+          <Trial>start with a 2 week trial. no credit card required.</Trial>
           <PricingHeader>
             All you need to create beautiful surveys
           </PricingHeader>
@@ -184,8 +184,8 @@ const LandingPage: React.FC = () => {
           <QuestionContainer>
             <QuestionLabel>How much does this cost?</QuestionLabel>
             <AnswerLabel>
-              ${price} / month. Start today with a 2 week free trial. Cancel
-              anytime
+              ${price} / month. Start today with a 2 week free trial. No credit
+              card required.
             </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>
