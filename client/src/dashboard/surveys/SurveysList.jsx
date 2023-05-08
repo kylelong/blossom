@@ -1,7 +1,15 @@
-import React, {useEffect, useState, useRef, useCallback} from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import axios from "axios";
 
 import SurveyPreview from "../surveyPreview/SurveyPreview";
+import {AccountContext} from "../../context/AccountContext";
+import VerifyEmailNotice from "../VerifyEmailNotice";
 import Welcome from "../Welcome";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
@@ -26,6 +34,7 @@ const SurveysList = () => {
   const [showCopied, setShowCopied] = useState(false);
   const [link, setLink] = useState("");
   const timerRef = useRef(0);
+  const {user} = useContext(AccountContext);
 
   const RadioDemo = () => {
     return (
@@ -131,6 +140,12 @@ const SurveysList = () => {
       loadSurveys();
     }
   }, [loaded, currentSurveyIndex, questionId, surveys, getQuestions]);
+
+  if (user && !user.confirmed) {
+    return <VerifyEmailNotice />;
+  }
+
+  //TODO: if not premium
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {

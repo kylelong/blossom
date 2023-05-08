@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import axios from "axios";
+
 // import jwt_decode from "jwt-decode";
 
 import Welcome from "./Welcome";
+import {AccountContext} from "../context/AccountContext";
 import {
   DashboardStatHeader,
   DashboardOverviewHeader,
@@ -16,6 +18,7 @@ import {
   QuestionTypeLabel,
   QuestionTypeNumber,
 } from "./dashboardStyles";
+import VerifyEmailNotice from "./VerifyEmailNotice";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -44,6 +47,7 @@ const DashboardOverview = () => {
   const [loaded, setLoaded] = useState(false);
   const [hasDraft, setHasDraft] = useState(false);
   const [questionTypeCounts, setQuestionTypeCounts] = useState([]);
+  const {user} = useContext(AccountContext);
 
   useEffect(() => {
     const countSurveys = async () => {
@@ -107,6 +111,10 @@ const DashboardOverview = () => {
   const buttonText = hasDraft
     ? `finish your draft survey ${String.fromCodePoint("0x1F91D")}`
     : `create a new survey ${String.fromCodePoint("0x1F680")}`;
+
+  if (user && !user.confirmed) {
+    return <VerifyEmailNotice />;
+  }
 
   if (loaded && !hasSurvey) {
     return <Welcome />;

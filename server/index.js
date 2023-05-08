@@ -207,6 +207,7 @@ app.get("/trial_info", authenticate, async (req, res) => {
       });
     } else {
       if (days_until_trial_ends < 0) {
+        // access && !premium
         res.send({
           msg: `Your 2 week free trial ends in ${Math.abs(
             days_until_trial_ends
@@ -222,8 +223,6 @@ app.get("/trial_info", authenticate, async (req, res) => {
         });
       }
     }
-
-    res.send(response.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -249,14 +248,14 @@ app.post("/login", async (req, res) => {
   try {
     const {email, password} = req.body;
     const response = await pool.query(
-      "SELECT id, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      "SELECT id, confirmed, premium, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
       [password, email]
     );
     if (response.error) {
       console.log(response.error);
     }
 
-    let {verified, id} = response.rows[0];
+    let {verified, id, confirmed, premium} = response.rows[0];
     if (verified) {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("blossom_token", token, {
@@ -268,7 +267,13 @@ app.post("/login", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.status(200).json({loggedIn: true, token: token, email: email});
+      res.status(200).json({
+        loggedIn: true,
+        token: token,
+        email: email,
+        confirmed: confirmed,
+        premium: premium,
+      });
     } else {
       return res.status(401).json({loggedIn: false});
     }
@@ -326,7 +331,7 @@ app.post("/logout", async (req, res) => {
     // TODO: do something with jwt
     req.user_id = null;
     res.clearCookie("blossom_token");
-    res.status(200).json({loggedIn: false});
+    res.status(200).json({loggedIn: false, premium: null, confirmed: null});
   } catch (err) {
     console.error(err.message);
   }
@@ -359,11 +364,21 @@ app.get("/user_info", authenticate, async (req, res) => {
 app.get("/isAuthenticated", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
+    const response = await pool.query(
+      "SELECT confirmed, premium FROM users WHERE id = $1",
+      [user_id]
+    );
+
+    let {confirmed, premium} = response.rows[0];
 
     if (user_id) {
-      res.status(200).json({loggedIn: true});
+      res
+        .status(200)
+        .json({loggedIn: true, confirmed: confirmed, premium: premium});
     } else {
-      res.status(401).send({loggedIn: false});
+      res
+        .status(401)
+        .send({loggedIn: false, confirmed: confirmed, premium: premium});
     }
   } catch (err) {
     console.error(err.message);

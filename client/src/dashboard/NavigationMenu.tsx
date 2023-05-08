@@ -1,6 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import {InfoCircledIcon} from "@radix-ui/react-icons";
+import axios from "axios";
 import {
   DashboardIcon,
   ImageIcon,
@@ -82,19 +84,53 @@ const SelectedMenuItem = styled.div`
   background-color: #fa5f55;
 `;
 
+const TrialContainer = styled.a`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-top: 12px;
+  margin-right: 10px;
+  background-color: #eff5fb;
+  color: rgb(250, 95, 85);
+  padding: 1.25rem 0.5rem 1.25rem 1.5rem;
+  border-radius: 4px;
+`;
+const TrialMessage = styled.div`
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 22px;
+`;
+
 const linkStyle = {
   textDecoration: "none",
-  color: "black",
+  color: "rgb(250, 95, 85)",
 };
+const endpoint =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? process.env.REACT_APP_LIVE_SERVER_URL
+    : process.env.REACT_APP_LOCALHOST_URL;
 
 const NavigationMenu: React.FC = () => {
   const [item, setItem] = useState<string | null>(
     window.location.pathname.replace("/", "")
   );
+  const [trialData, setTrialData] = useState({
+    msg: "",
+    access: false,
+    premium: true,
+  });
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setItem((e.target as HTMLElement).textContent);
   };
+
+  useEffect(() => {
+    const getTrialMessage = async () => {
+      const response = await axios.get(`${endpoint}/trial_info`);
+      setTrialData(response.data);
+    };
+    getTrialMessage();
+  }, []);
 
   return (
     <NavigationContainer>
@@ -171,6 +207,20 @@ const NavigationMenu: React.FC = () => {
             </MenuItem>
           )}
         </Link>
+
+        {trialData.access && !trialData.premium && (
+          <TrialContainer>
+            <Link to="/account" style={linkStyle}>
+              <TrialMessage>
+                <InfoCircledIcon
+                  style={{position: "relative", top: "3px", right: "2px"}}
+                />
+                {trialData.msg} Click here to subscribe to continue using
+                Blossom.
+              </TrialMessage>
+            </Link>
+          </TrialContainer>
+        )}
       </MenuContainer>
     </NavigationContainer>
   );

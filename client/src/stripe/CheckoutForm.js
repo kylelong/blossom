@@ -16,12 +16,11 @@ export default function CheckoutForm({email}) {
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(true);
-  const [trialData, setTriaData] = useState({
+  const [trialData, setTrialData] = useState({
     msg: "",
     access: false,
     premium: true,
   });
-  const [loaded, setLoaded] = useState(false);
 
   const priceId =
     process.env.REACT_APP_NODE_ENV === "production"
@@ -110,10 +109,9 @@ export default function CheckoutForm({email}) {
   useEffect(() => {
     const getTrialMessage = async () => {
       const response = await axios.get(`${endpoint}/trial_info`);
-      setTriaData(response.data);
+      setTrialData(response.data);
     };
     getTrialMessage();
-    setLoaded(true);
   }, []);
   if (succeeded) {
     // set premium to true with axios call for this user with id, authenticated route
