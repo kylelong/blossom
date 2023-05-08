@@ -28,10 +28,16 @@ const VerifyEmailNotice = () => {
     <TrialContainer>
       <TrialMessage>
         <InfoCircledIcon
-          style={{position: "relative", top: "3px", right: "2px"}}
+          style={{
+            position: "relative",
+            top: "2px",
+            right: "2px",
+            marginRight: "2px",
+          }}
         />
-        Please check your inbox to confirm your email. Once confirmed, refresh
-        the page to continue using Blossom. Check your spam folder just in case.
+        Please check your inbox to confirm your email. Refresh the page
+        afterwards to continue using Blossom. Check your spam folder just in
+        case.
       </TrialMessage>
     </TrialContainer>
   );

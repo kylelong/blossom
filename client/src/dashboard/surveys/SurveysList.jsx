@@ -10,6 +10,7 @@ import axios from "axios";
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 import {AccountContext} from "../../context/AccountContext";
 import VerifyEmailNotice from "../VerifyEmailNotice";
+import SubscribeNotice from "../SubscribeNotice";
 import Welcome from "../Welcome";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
@@ -145,7 +146,9 @@ const SurveysList = () => {
     return <VerifyEmailNotice />;
   }
 
-  //TODO: if not premium
+  if (user && !user.access && !user.premium) {
+    return <SubscribeNotice />;
+  }
 
   // <SurveyPreview questions={survey} />
   if (loaded && surveys.length === 0) {

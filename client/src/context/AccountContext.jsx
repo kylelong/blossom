@@ -24,6 +24,7 @@ const UserContext = ({children}) => {
     loggedIn: null,
     confirmed: null,
     premium: null,
+    access: null,
   });
   useEffect(() => {
     const loadUser = async () => {

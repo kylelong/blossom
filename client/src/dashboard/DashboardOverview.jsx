@@ -19,6 +19,7 @@ import {
   QuestionTypeNumber,
 } from "./dashboardStyles";
 import VerifyEmailNotice from "./VerifyEmailNotice";
+import SubscribeNotice from "./SubscribeNotice";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -114,6 +115,10 @@ const DashboardOverview = () => {
 
   if (user && !user.confirmed) {
     return <VerifyEmailNotice />;
+  }
+
+  if (user && !user.access && !user.premium) {
+    return <SubscribeNotice />;
   }
 
   if (loaded && !hasSurvey) {

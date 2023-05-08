@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import {AccountContext} from "../../context/AccountContext";
 import VerifyEmailNotice from "../VerifyEmailNotice";
+import SubscribeNotice from "../SubscribeNotice";
 import Welcome from "../Welcome";
 import {
   AnalyticsContainer,
@@ -233,6 +234,10 @@ const AnalyticsDashboard = () => {
   if (user && !user.confirmed) {
     return <VerifyEmailNotice />;
   }
+  if (user && !user.access && !user.premium) {
+    return <SubscribeNotice />;
+  }
+
   if (loaded && !hasSurvey) {
     return <Welcome />;
   }

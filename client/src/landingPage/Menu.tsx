@@ -15,6 +15,7 @@ export const MenuContainer = styled.div`
   @media (max-width: 745px) {
     position: unset;
     right: unset;
+    justify-content: center;
   }
 `;
 

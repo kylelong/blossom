@@ -84,7 +84,7 @@ const SelectedMenuItem = styled.div`
   background-color: #fa5f55;
 `;
 
-const TrialContainer = styled.a`
+const TrialContainer = styled.div`
   display: flex;
   flex-direction: column;
   text-align: left;

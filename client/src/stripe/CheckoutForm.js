@@ -34,8 +34,7 @@ export default function CheckoutForm({email}) {
     setError(event.error ? event.error.message : "");
   };
   const upgradeAccount = async () => {
-    const response = await axios.put(`${endpoint}/upgrade_account`);
-    console.log(response.data);
+    await axios.put(`${endpoint}/upgrade_account`);
   };
 
   const handleSubmit = async (e) => {
@@ -126,21 +125,21 @@ export default function CheckoutForm({email}) {
   return (
     <div className="stripe-container">
       <div className="trail-container">
-        <div className="trail-message">{trialData.msg}</div>
+        <div className="trial-message">{trialData.msg}</div>
         {!trialData.premium && (
           <>
             {" "}
-            <div className="trail-message">
+            <div className="trial-message">
               Become a premium user to continue using Blossom.
             </div>
-            <div className="trail-message">
+            <div className="trial-message">
               Billed Monthly at $25 / mo. Cancel or Pause anytime.
             </div>
           </>
         )}
       </div>
       {!trialData.premium && (
-        <form id="payment-form" onSubmit={handleSubmit}>
+        <form id="payment-form" className="stripe-form" onSubmit={handleSubmit}>
           <CardElement id="card-element" onChange={handleChange} />
           <button
             disabled={processing || disabled || succeeded}

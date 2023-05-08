@@ -201,9 +201,10 @@ app.get("/trial_info", authenticate, async (req, res) => {
     const {days_until_trial_ends, premium} = response.rows[0];
     if (premium) {
       res.send({
-        msg: "You are subscribed and have complete access to all of Blossom's features. Thank you 😊",
+        msg: "You are a premium member and have access to all of Blossom's features. Thank you 😊",
         access: true,
         premium: premium,
+        access: days_until_trial_ends < 0,
       });
     } else {
       if (days_until_trial_ends < 0) {
@@ -214,12 +215,14 @@ app.get("/trial_info", authenticate, async (req, res) => {
           )} days.`,
           access: true,
           premium: premium,
+          access: days_until_trial_ends < 0,
         });
       } else {
         res.send({
-          msg: `Your 2 week free trial has ended. Please subscribe to continue to use Blossom`,
+          msg: `Your 2 week free trial has ended. Please click here to subscribe to continue using Blossom.`,
           access: false,
           premium: premium,
+          access: days_until_trial_ends < 0,
         });
       }
     }
@@ -248,14 +251,15 @@ app.post("/login", async (req, res) => {
   try {
     const {email, password} = req.body;
     const response = await pool.query(
-      "SELECT id, confirmed, premium, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      "SELECT id, confirmed, premium, (password = crypt($1, password)) AS verified, EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_until_trial_ends FROM users WHERE email = $2",
       [password, email]
     );
     if (response.error) {
       console.log(response.error);
     }
 
-    let {verified, id, confirmed, premium} = response.rows[0];
+    let {verified, id, confirmed, premium, days_until_trial_ends} =
+      response.rows[0];
     if (verified) {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("blossom_token", token, {
@@ -273,6 +277,7 @@ app.post("/login", async (req, res) => {
         email: email,
         confirmed: confirmed,
         premium: premium,
+        access: days_until_trial_ends < 0,
       });
     } else {
       return res.status(401).json({loggedIn: false});
@@ -331,7 +336,9 @@ app.post("/logout", async (req, res) => {
     // TODO: do something with jwt
     req.user_id = null;
     res.clearCookie("blossom_token");
-    res.status(200).json({loggedIn: false, premium: null, confirmed: null});
+    res
+      .status(200)
+      .json({loggedIn: false, premium: null, confirmed: null, access: null});
   } catch (err) {
     console.error(err.message);
   }
@@ -365,20 +372,26 @@ app.get("/isAuthenticated", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
     const response = await pool.query(
-      "SELECT confirmed, premium FROM users WHERE id = $1",
+      "SELECT confirmed, premium, EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_until_trial_ends FROM users WHERE id = $1",
       [user_id]
     );
 
-    let {confirmed, premium} = response.rows[0];
+    let {confirmed, premium, days_until_trial_ends} = response.rows[0];
 
     if (user_id) {
-      res
-        .status(200)
-        .json({loggedIn: true, confirmed: confirmed, premium: premium});
+      res.status(200).json({
+        loggedIn: true,
+        confirmed: confirmed,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
     } else {
-      res
-        .status(401)
-        .send({loggedIn: false, confirmed: confirmed, premium: premium});
+      res.status(401).send({
+        loggedIn: false,
+        confirmed: confirmed,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
     }
   } catch (err) {
     console.error(err.message);
