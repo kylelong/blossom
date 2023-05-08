@@ -1,4 +1,13 @@
-import React, {useState, useEffect, useCallback, useRef} from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
+import {AccountContext} from "../../context/AccountContext";
+import VerifyEmailNotice from "../VerifyEmailNotice";
+import SubscribeNotice from "../SubscribeNotice";
 import {useForm} from "react-hook-form";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Label from "@radix-ui/react-label";
@@ -24,6 +33,7 @@ const siteUrl =
     ? process.env.REACT_APP_LIVE_URL
     : process.env.REACT_APP_LOCAL_URL;
 const Panel = () => {
+  const {user} = useContext(AccountContext);
   const {register} = useForm();
   // survey
   const [draft, setDraft] = useState({
@@ -648,6 +658,13 @@ const Panel = () => {
     surveyStateLoaded,
     questionId,
   ]);
+  if (user && !user.confirmed) {
+    return <VerifyEmailNotice />;
+  }
+
+  if (user && !user.access && !user.premium) {
+    return <SubscribeNotice />;
+  }
   return (
     <div className="panelContainer">
       <SurveyPreview

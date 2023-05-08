@@ -4,7 +4,7 @@ import Menu from "../landingPage/Menu";
 import Panel from "./create/Panel";
 import {
   DashboardContainer,
-  DashboardSectionContainer,
+  DashboardSectionContainerCenter,
   DashboardContent,
   DashboardHeaderTextDesktop,
   MenuContainer,
@@ -14,7 +14,7 @@ import {
 const Create = () => {
   return (
     <DashboardContainer>
-      <DashboardSectionContainer>
+      <DashboardSectionContainerCenter>
         <DashboardMenu headerText={"create"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
@@ -26,7 +26,7 @@ const Create = () => {
         <MenuContainer>
           <Menu />
         </MenuContainer>
-      </DashboardSectionContainer>
+      </DashboardSectionContainerCenter>
     </DashboardContainer>
   );
 };

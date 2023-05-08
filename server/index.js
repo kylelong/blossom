@@ -117,39 +117,43 @@ app.get("/config", (req, res) => {
 app.post("/create-subscription", async (req, res) => {
   const {email, priceId, paymentMethod} = req.body;
 
-  // create user
-  const customer = await stripe.customers.create({
-    email: email,
-    payment_method: paymentMethod,
-    invoice_settings: {
-      default_payment_method: paymentMethod,
-    },
-  });
-
-  // create subscription
-  const subscription = await stripe.subscriptions.create({
-    customer: customer.id,
-    items: [{price: priceId}],
-    payment_settings: {
-      payment_method_options: {
-        card: {
-          request_three_d_secure: "any",
-        },
+  try {
+    // create user
+    const customer = await stripe.customers.create({
+      email: email,
+      payment_method: paymentMethod,
+      invoice_settings: {
+        default_payment_method: paymentMethod,
       },
-      payment_method_types: ["card"],
-      save_default_payment_method: "on_subscription",
-    },
-    expand: ["latest_invoice.payment_intent"],
-  });
-  res.send({
-    clientSecret: subscription.latest_invoice.payment_intent.client_secret,
-    subscriptionId: subscription.id,
-  });
+    });
+
+    // create subscription
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{price: priceId}],
+      payment_settings: {
+        payment_method_options: {
+          card: {
+            request_three_d_secure: "automatic",
+          },
+        },
+        payment_method_types: ["card"],
+        save_default_payment_method: "on_subscription",
+      },
+      expand: ["latest_invoice.payment_intent"],
+    });
+    res.send({
+      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+      subscriptionId: subscription.id,
+    });
+  } catch (err) {
+    return res.status(402).json(err);
+  }
 });
 app.post("/create-payment-intent", async (req, res) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      currency: "USD",
+      currency: "usd",
       amount: 2500,
       automatic_payment_methods: {enabled: true},
     });
@@ -167,6 +171,79 @@ app.post("/create-payment-intent", async (req, res) => {
   }
 });
 
+// FREE TRIAL
+
+/*
+- menu: if premium is false after trial date (trial date is positive) show button subscribe to continue using blossom
+add subscribed date column to users table
+
+- account: only show form if premium is false and trail period has not passed
+- account: once form is successful show thank you by setting state and on refresh so premium user check mark
+
+ get end of trial date - Your 2 week free trial ends in X days on [date]. Subscribe here to continue to use blossom's features.
+    select created_at + INTERVAL '2 weeks'  from users where id = ? (auth endpoint)
+
+days from now until end of period, should be negative 
+    SELECT
+  EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_since_created
+FROM
+  users where id = ?
+*/
+// what shows up on /account instead of the card element
+
+app.get("/trial_info", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const response = await pool.query(
+      "SELECT premium, EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_until_trial_ends FROM users where id = $1",
+      [user_id]
+    );
+    const {days_until_trial_ends, premium} = response.rows[0];
+    if (premium) {
+      res.send({
+        msg: "You are a premium member and have access to all of Blossom's features. Thank you 😊",
+        access: true,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
+    } else {
+      if (days_until_trial_ends < 0) {
+        // access && !premium
+        res.send({
+          msg: `Your 2 week free trial ends in ${Math.abs(
+            days_until_trial_ends
+          )} days.`,
+          access: true,
+          premium: premium,
+          access: days_until_trial_ends < 0,
+        });
+      } else {
+        res.send({
+          msg: `Your 2 week free trial has ended. Please click here to subscribe to continue using Blossom.`,
+          access: false,
+          premium: premium,
+          access: days_until_trial_ends < 0,
+        });
+      }
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.put("/upgrade_account", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user_id;
+    const response = await pool.query(
+      "UPDATE users SET premium = true WHERE id = $1 RETURNING premium",
+      [user_id]
+    );
+    res.json({premium: response.rows[0].premium});
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // USER AUTH
 // only inset into users if no user has the email
 
@@ -174,14 +251,15 @@ app.post("/login", async (req, res) => {
   try {
     const {email, password} = req.body;
     const response = await pool.query(
-      "SELECT id, (password = crypt($1, password)) AS verified FROM users WHERE email = $2",
+      "SELECT id, confirmed, premium, (password = crypt($1, password)) AS verified, EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_until_trial_ends FROM users WHERE email = $2",
       [password, email]
     );
     if (response.error) {
       console.log(response.error);
     }
 
-    let {verified, id} = response.rows[0];
+    let {verified, id, confirmed, premium, days_until_trial_ends} =
+      response.rows[0];
     if (verified) {
       const token = jwt.sign({id}, process.env.SECRET_ACCESS_TOKEN); //TODO: expire with refresh token
       res.cookie("blossom_token", token, {
@@ -193,7 +271,14 @@ app.post("/login", async (req, res) => {
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
 
-      res.status(200).json({loggedIn: true, token: token, email: email});
+      res.status(200).json({
+        loggedIn: true,
+        token: token,
+        email: email,
+        confirmed: confirmed,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
     } else {
       return res.status(401).json({loggedIn: false});
     }
@@ -251,7 +336,9 @@ app.post("/logout", async (req, res) => {
     // TODO: do something with jwt
     req.user_id = null;
     res.clearCookie("blossom_token");
-    res.status(200).json({loggedIn: false});
+    res
+      .status(200)
+      .json({loggedIn: false, premium: null, confirmed: null, access: null});
   } catch (err) {
     console.error(err.message);
   }
@@ -284,11 +371,27 @@ app.get("/user_info", authenticate, async (req, res) => {
 app.get("/isAuthenticated", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
+    const response = await pool.query(
+      "SELECT confirmed, premium, EXTRACT(DAY FROM (DATE_TRUNC('day', NOW()) - DATE_TRUNC('day', created_at + INTERVAL '2 weeks'))) AS days_until_trial_ends FROM users WHERE id = $1",
+      [user_id]
+    );
+
+    let {confirmed, premium, days_until_trial_ends} = response.rows[0];
 
     if (user_id) {
-      res.status(200).json({loggedIn: true});
+      res.status(200).json({
+        loggedIn: true,
+        confirmed: confirmed,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
     } else {
-      res.status(401).send({loggedIn: false});
+      res.status(401).send({
+        loggedIn: false,
+        confirmed: confirmed,
+        premium: premium,
+        access: days_until_trial_ends < 0,
+      });
     }
   } catch (err) {
     console.error(err.message);

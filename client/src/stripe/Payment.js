@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {Elements} from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
@@ -9,7 +9,7 @@ const endpoint =
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
 
-function Payment() {
+function Payment({email}) {
   const [stripePromise, setStripePromise] = useState(null);
 
   useEffect(() => {
@@ -20,14 +20,13 @@ function Payment() {
   }, []);
 
   return (
-    <div className="stripe-container">
-      <h1>React Stripe and the Payment Element</h1>
+    <>
       {stripePromise && (
         <Elements stripe={stripePromise}>
-          <CheckoutForm />
+          <CheckoutForm email={email} />
         </Elements>
       )}
-    </div>
+    </>
   );
 }
 
