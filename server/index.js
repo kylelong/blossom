@@ -131,6 +131,7 @@ app.post("/create-subscription", async (req, res) => {
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{price: priceId}],
+      trial_period_days: 0,
       payment_settings: {
         payment_method_options: {
           card: {
