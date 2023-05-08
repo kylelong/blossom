@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Label from "@radix-ui/react-label";
+import {DebounceInput} from "react-debounce-input";
 import {ChevronDownIcon, MinusCircledIcon} from "@radix-ui/react-icons";
 import classNames from "classnames";
 import QuestionTypeSelectMenu from "./QuestionTypeSelectMenu";
@@ -74,6 +75,14 @@ const QuestionOverview = ({
       }
     }
   };
+  const updateNumberOfAnswerChoices = (e, question) => {
+    let value = e.target.value;
+    let num = value === "" ? 0 : parseInt(value);
+    if (num < 0 || num > 5) return;
+    setNumberOfAnswers(num);
+    // creates new blank answer choices
+    updateQuestion(question.id, "answerChoices", num, null);
+  };
 
   useEffect(() => {}, [questions, questionType, numberOfAnswers]);
   return (
@@ -107,9 +116,10 @@ const QuestionOverview = ({
                       defaultQuestionType={question.type}
                     />
                     {hasOptions && (
-                      <input
+                      <DebounceInput
                         type="text"
-                        maxLength="1"
+                        minLength={0}
+                        debounceTimeout={200}
                         className="answerChoices"
                         placeholder="# of answers"
                         value={
@@ -118,18 +128,10 @@ const QuestionOverview = ({
                             ? question.answerChoices.length
                             : ""
                         }
-                        onChange={(e) => {
-                          let num = e.target.value;
-                          setNumberOfAnswers(num === "" ? 0 : num);
-                          // creates new blank answer choices
-                          updateQuestion(
-                            question.id,
-                            "answerChoices",
-                            num,
-                            null
-                          );
-                        }}
-                      ></input>
+                        onChange={(e) =>
+                          updateNumberOfAnswerChoices(e, question)
+                        }
+                      />
                     )}
                   </div>
 

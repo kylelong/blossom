@@ -454,18 +454,19 @@ const Panel = () => {
           removeAnswerChoices(id);
         }
       } else if (property === "answerChoices") {
-        if (value === "") {
+        if (value === 0) {
           // remove exisiting answers
           removeAnswerChoices(id);
         }
-        if (value > 5 || value < 0 || value === "") return;
-
+        if (value > 5 || value < 0 || value === 0) return;
         async function insertChoice() {
           for (let i = 0; i < value; i++) {
             await addAnswerChoice("", i, id);
           }
         }
-        insertChoice();
+        if (value > 0 && value <= 5) {
+          insertChoice();
+        }
       } else if (property === "addAnswerChoice") {
         if (value !== null && answerChoiceId !== null) {
           // update answer choice call to backend
