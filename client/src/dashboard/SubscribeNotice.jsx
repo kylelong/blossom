@@ -54,7 +54,7 @@ const SubscribeNotice = () => {
           <Link to="/account" style={linkStyle}>
             <TrialMessage>
               <InfoCircledIcon
-                style={{position: "relative", top: "3px", right: "2px"}}
+                style={{position: "relative", top: "2.45px", right: "2px"}}
               />
               {trialData.msg}
             </TrialMessage>

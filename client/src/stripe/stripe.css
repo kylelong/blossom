@@ -2,8 +2,12 @@
   display: flex;
   align-items: center;
 } */
+.stripe-container {
+  display: flex;
+  flex-direction: column;
+}
 
-#payment-form {
+.stripe-form {
   width: 400px;
 
   align-self: center;
@@ -18,10 +22,6 @@
   font-size: 17px;
 }
 @media (max-width: 768px) {
-  #payment-form {
-    width: 100%;
-    max-width: 320px;
-  }
   .trial-message {
     width: unset;
     max-width: 336px;
