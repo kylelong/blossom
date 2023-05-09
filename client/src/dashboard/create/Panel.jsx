@@ -811,7 +811,7 @@ const Panel = () => {
                   <div className="copiedContainer">
                     <div className="copiedText">copied to clipboard</div>
                     <CheckCircledIcon
-                      style={{marginLeft: "3px", marginTop: "3px"}}
+                      style={{marginLeft: "4px", marginTop: "4px"}}
                     />
                   </div>
                 )}

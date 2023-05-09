@@ -120,16 +120,23 @@ export const DashboardOverviewContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  height: 30vh;
+
   margin-left: 50px;
   margin-top: 90px;
+  @media (min-width: 769px) {
+    height: 30vh;
+  }
 `;
 export const DashboardStatContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 32px;
-
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 export const DashboardOverviewHeader = styled.div`
   color: #525f7f;
@@ -150,6 +157,12 @@ export const DashboardStat = styled.div`
   flex-direction: column;
   text-align: center;
   margin-right: 32px;
+  background-color: #eff5fb;
+  padding: 1.25rem 0.5rem 1.25rem 1.5rem;
+  border-radius: 4px;
+  @media (max-width: 768px) {
+    margin-bottom: 24px;
+  }
 `;
 
 export const DashboardNumber = styled.div`
