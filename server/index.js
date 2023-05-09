@@ -266,6 +266,10 @@ app.post("/login", async (req, res) => {
         secure: true,
         sameSite: "none",
         path: "/",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".blossomsurveys.io"
+            : "localhost",
       });
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
@@ -317,6 +321,10 @@ app.post("/create_user", async (req, res) => {
         secure: true,
         sameSite: "none",
         path: "/",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".blossomsurveys.io"
+            : "localhost",
       });
       // Set Cache-Control header to no-cache
       res.setHeader("Authorization", "Bearer " + token);
