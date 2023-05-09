@@ -58,9 +58,6 @@ const Menu: React.FC = () => {
           >
             sign out
           </MenuItem>
-          <Link to="/account" style={linkStyle}>
-            <MenuItem>account</MenuItem>
-          </Link>
         </MenuContainer>
       );
     } else {

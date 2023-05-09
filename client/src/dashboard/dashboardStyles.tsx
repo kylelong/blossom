@@ -108,7 +108,6 @@ export const DashboardHeaderTextDesktop = styled.div`
   }
 `;
 export const DashboardHeaderDetail = styled.div`
-  font-weight: bold;
   font-size: 18px;
   @media (max-width: 768px) {
     margin-top: 12px;

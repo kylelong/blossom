@@ -19,7 +19,7 @@ const Dashboard = () => {
         <DashboardContent>
           <DashboardHeaderTextDesktop>surveys</DashboardHeaderTextDesktop>
           <DashboardHeaderDetail>
-            view the surveys you've created
+            view your created surveys
           </DashboardHeaderDetail>
           <SurveysList />
         </DashboardContent>

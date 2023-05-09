@@ -73,9 +73,9 @@ const Account = () => {
   return (
     <DashboardContainer>
       <DashboardSectionContainerCenter>
-        <DashboardMenu headerText={"account"} />
+        <DashboardMenu headerText={"settings"} />
         <DashboardContent>
-          <DashboardHeaderTextDesktop>account</DashboardHeaderTextDesktop>
+          <DashboardHeaderTextDesktop>settings</DashboardHeaderTextDesktop>
           <div className="accountContainer">
             <div className="accountLabel">
               Email: <span className="accountField">{userData?.email}</span>

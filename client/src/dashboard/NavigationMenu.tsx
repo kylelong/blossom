@@ -8,6 +8,7 @@ import {
   ImageIcon,
   CubeIcon,
   Pencil2Icon,
+  GearIcon,
 } from "@radix-ui/react-icons";
 import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
@@ -135,10 +136,12 @@ const NavigationMenu: React.FC = () => {
   return (
     <NavigationContainer>
       <MenuContainer>
-        <LogoContainer>
-          <Logo />
-          <FlowerImage src={flower} />
-        </LogoContainer>
+        <Link to="/dashboard" style={linkStyle}>
+          <LogoContainer>
+            <Logo />
+            <FlowerImage src={flower} />
+          </LogoContainer>
+        </Link>
         <Link to="/dashboard" style={linkStyle}>
           {item === "dashboard" ? (
             <SelectedMenuItem onClick={handleClick}>
@@ -204,6 +207,23 @@ const NavigationMenu: React.FC = () => {
                 <CubeIcon />
               </MenuIcon>
               analytics
+            </MenuItem>
+          )}
+        </Link>
+        <Link to="/account" style={linkStyle}>
+          {item === "account" ? (
+            <SelectedMenuItem onClick={handleClick}>
+              <MenuIcon>
+                <GearIcon />
+              </MenuIcon>
+              settings
+            </SelectedMenuItem>
+          ) : (
+            <MenuItem onClick={handleClick}>
+              <MenuIcon>
+                <GearIcon />
+              </MenuIcon>
+              settings
             </MenuItem>
           )}
         </Link>

@@ -18,9 +18,7 @@ const Create = () => {
         <DashboardMenu headerText={"create"} />
         <DashboardContent>
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
-          <DashboardHeaderDetail>
-            create a new survey below
-          </DashboardHeaderDetail>
+          <DashboardHeaderDetail>create a new survey</DashboardHeaderDetail>
           <Panel />
         </DashboardContent>
         <MenuContainer>
