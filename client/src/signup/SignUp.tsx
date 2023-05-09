@@ -135,7 +135,10 @@ const SignUp: React.FC = () => {
     }
     if (valid) {
       await registerPostgres(randomString);
-      await sendVerificationEmail(randomString);
+      // limit usage of postmark
+      if (process.env.REACT_APP_NODE_ENV === "production") {
+        await sendVerificationEmail(randomString);
+      }
     }
   };
 
