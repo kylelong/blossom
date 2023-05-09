@@ -122,7 +122,7 @@ const Panel = () => {
   const createSurvey = async (data) => {
     try {
       let hash = randomstring.generate({
-        length: 24,
+        length: 5, //24
         charset: "alphanumeric",
       });
       // create survey with unique hash
