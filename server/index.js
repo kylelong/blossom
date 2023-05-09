@@ -211,9 +211,7 @@ app.get("/trial_info", authenticate, async (req, res) => {
       if (days_until_trial_ends < 0) {
         // access && !premium
         res.send({
-          msg: `Your 2 week free trial ends in ${Math.abs(
-            days_until_trial_ends
-          )} days.`,
+          msg: `${Math.abs(days_until_trial_ends)} trial days remaining`,
           access: true,
           premium: premium,
           access: days_until_trial_ends < 0,

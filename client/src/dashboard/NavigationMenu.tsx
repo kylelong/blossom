@@ -96,7 +96,7 @@ const TrialContainer = styled.div`
   border-radius: 4px;
 `;
 const TrialMessage = styled.div`
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 22px;
 `;
@@ -213,10 +213,9 @@ const NavigationMenu: React.FC = () => {
             <Link to="/account" style={linkStyle}>
               <TrialMessage>
                 <InfoCircledIcon
-                  style={{position: "relative", top: "3px", right: "2px"}}
+                  style={{position: "relative", top: "2px", right: "3px"}}
                 />
-                {trialData.msg} Click here to subscribe to continue using
-                Blossom.
+                {trialData.msg}
               </TrialMessage>
             </Link>
           </TrialContainer>
