@@ -54,10 +54,6 @@ const SignUp: React.FC = () => {
   const options = {
     withCredentials: true,
     crossDomain: true,
-    headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Content-Type": "application/json",
-    },
   };
 
   let signUpSchema = yup.object().shape({

@@ -9,14 +9,6 @@ const endpoint =
 const options = {
   withCredentials: true,
   crossDomain: true,
-  headers: {
-    "Access-Control-Allow-Origin":
-      process.env.REACT_APP_NODE_ENV === "production"
-        ? process.env.REACT_APP_LIVE_URL
-        : process.env.REACT_APP_LOCAL_URL,
-    "Access-Control-Allow-Credentials": true,
-    "Content-Type": "application/json",
-  },
 };
 
 const UserContext = ({children}) => {

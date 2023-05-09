@@ -44,20 +44,12 @@ const Login: React.FC = () => {
   const options = {
     withCredentials: true,
     crossDomain: true,
-    headers: {
-      "Access-Control-Allow-Origin":
-        process.env.REACT_APP_NODE_ENV === "production"
-          ? process.env.REACT_APP_LIVE_URL
-          : process.env.REACT_APP_LOCAL_URL,
-      "Access-Control-Allow-Credentials": true,
-      "Content-Type": "application/json",
-    },
   };
 
   const login = async () => {
     try {
       const response = await axios.post(
-        `${endpoint}/login`,
+        `${endpoint}/login/`,
         {
           email: loginData.email,
           password: loginData.password,
@@ -75,7 +67,7 @@ const Login: React.FC = () => {
   const validEmail = async () => {
     try {
       const response = await axios.get(
-        `${endpoint}/email_exists/${loginData.email}`,
+        `${endpoint}/email_exists/${loginData.email}/`,
         options
       );
       return parseInt(response.data.count) === 1;
@@ -89,7 +81,7 @@ const Login: React.FC = () => {
   const validPassword = async () => {
     try {
       const response = await axios.post(
-        `${endpoint}/validPassword`,
+        `${endpoint}/validPassword/`,
         {
           email: loginData.email,
           password: loginData.password,
