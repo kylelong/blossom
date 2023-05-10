@@ -11,6 +11,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
     "multi_select",
     "emoji_sentiment",
     "open_ended",
+    "short_answer",
   ];
   // use value={choice}
   return (
@@ -41,6 +42,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
               <SelectItem value="single_select">single select</SelectItem>
               <SelectItem value="multi_select">multi-select</SelectItem>
               <SelectItem value="emoji_sentiment">emoji sentiment</SelectItem>
+              <SelectItem value="short_answer">short answer</SelectItem>
               <SelectItem value="open_ended">open ended</SelectItem>
             </Select.Group>
           </Select.Viewport>

@@ -55,7 +55,8 @@ const QuestionOverview = ({
     single_select: "select one option (at most 5 choices)",
     multi_select: "select all that apply (at most 5 choices)",
     emoji_sentiment: "range of emojis to gauage interest level",
-    open_ended: "input box for text responses",
+    open_ended: "input box for longer text responses",
+    short_answer: "input text for short answers",
   };
 
   // snippet below all question options (title, type, and # of answers selector)
@@ -70,6 +71,8 @@ const QuestionOverview = ({
           return questionDetails.emoji_sentiment;
         case "open_ended":
           return questionDetails.open_ended;
+        case "short_answer":
+          return questionDetails.short_answer;
         default:
           return "";
       }
