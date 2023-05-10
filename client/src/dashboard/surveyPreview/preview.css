@@ -61,7 +61,7 @@
 .questionViewerContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 34px;
+  margin-top: 20px;
   align-items: center;
 }
 .answerChoicesContainer {
