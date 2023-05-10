@@ -3,6 +3,7 @@ import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
 import Emojis from "./Emojis";
+import ShortAnswer from "./ShortAnswer";
 import flower from "../images/sunflower.svg";
 const QuestionViewer = ({
   title,
@@ -46,6 +47,18 @@ const QuestionViewer = ({
                 updateResponse={updateResponse}
                 surveyHash={surveyHash}
               />
+            </>
+          );
+        case "short_answer":
+          return (
+            <>
+              {" "}
+              <ShortAnswer
+                handleProceed={handleProceed}
+                index={index}
+                updateResponse={updateResponse}
+                surveyHash={surveyHash}
+              />{" "}
             </>
           );
         case "open_ended":

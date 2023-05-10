@@ -79,6 +79,7 @@ const AnalyticsDashboard = () => {
   });
 
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
+  const open_ended_choice = useMemo(() => ["open_ended", "short_answer"], []);
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",
@@ -96,11 +97,11 @@ const AnalyticsDashboard = () => {
         loadAnswerChoiceAnalytics(id);
       } else if (type === "emoji_sentiment") {
         loadEmojiAnalytics(id);
-      } else if (type === "open_ended") {
+      } else if (open_ended_choice.includes(type)) {
         loadOpenEnededAnalytics(id);
       }
     },
-    [multiple_choice]
+    [multiple_choice, open_ended_choice]
   );
   const loadEmojiAnalytics = async (question_id) => {
     try {
@@ -344,7 +345,7 @@ const AnalyticsDashboard = () => {
                     );
                   })}
                 {validQuestions &&
-                  questions[questionIndex].type === "open_ended" && (
+                  open_ended_choice.includes(questions[questionIndex].type) && (
                     <ScrollArea data={openEndedAnalytics} />
                   )}
               </AnswerWrapper>
