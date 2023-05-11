@@ -53,6 +53,7 @@ const Panel = () => {
   const [surveyLink, setSurveyLink] = useState("");
   const [baseSurveyLink, setBaseSurveyLink] = useState("");
   const [hasDraft, setHasDraft] = useState(false);
+  const [addingQuestion, setAddingQuestion] = useState(false);
   const timerRef = useRef(0);
   const validUrl =
     // eslint-disable-next-line
@@ -176,6 +177,7 @@ const Panel = () => {
      * insert question in question table with survey_id & questions.legnth as index
      *  draft is updated with id: survey_id and
      * **/
+    setAddingQuestion(true);
     let hash = randomstring.generate({
       length: 24,
       charset: "alphanumeric",
@@ -199,6 +201,7 @@ const Panel = () => {
         });
         data.id = response.data.id;
         setQuestions((questions) => [...questions, data]);
+        setAddingQuestion(false);
       } catch (err) {
         console.error(err.message);
       }
@@ -713,15 +716,21 @@ const Panel = () => {
             </Accordion.Root>
           </div>
           <div className="panelBtnGroup">
-            <button
-              className="addQuestionBtn panelBtn"
-              onClick={(e) => {
-                e.preventDefault();
-                addQuestion();
-              }}
-            >
-              add question <PlusCircledIcon style={{marginLeft: "5px"}} />
-            </button>
+            {addingQuestion ? (
+              <button className="addQuestionBtnDisabled panelBtn">
+                add question <PlusCircledIcon style={{marginLeft: "5px"}} />
+              </button>
+            ) : (
+              <button
+                className="addQuestionBtn panelBtn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  addQuestion();
+                }}
+              >
+                add question <PlusCircledIcon style={{marginLeft: "5px"}} />
+              </button>
+            )}
             {questions.length > 0 && (
               <>
                 <AlertDialog.Root>
