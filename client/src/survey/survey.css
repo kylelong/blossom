@@ -40,7 +40,7 @@
   padding: 12px;
   border-radius: 5px;
   border: 2px solid #f6f6f6;
-  height: 480px;
+  height: 500px;
   width: 46vw;
   margin-right: 5vw;
   position: relative;
@@ -225,8 +225,11 @@
   cursor: pointer;
 }
 @media (max-width: 768px) {
-  .previewButton {
+  .previewButton,
+  .disabledButton {
     width: 75px;
+    position: relative;
+    top: 15px;
   }
   .surveyParentContainer {
     display: flex;
