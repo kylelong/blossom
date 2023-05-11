@@ -207,6 +207,7 @@ const Panel = () => {
       }
     } else {
       createSurvey(data);
+      setAddingQuestion(false);
     }
   };
 
