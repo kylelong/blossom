@@ -24,6 +24,8 @@ export const Slogan = styled.div`
   margin-bottom: 24px;
   margin-right: 12px;
   font-size: 20px;
+  width: 80%;
+  text-align: center;
 `;
 export const SignUpForm = styled.form`
   display: flex;

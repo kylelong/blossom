@@ -1,6 +1,7 @@
 import React, {useContext} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import {ArrowRightIcon} from "@radix-ui/react-icons";
 import axios from "axios";
 import {AccountContext} from "../context/AccountContext";
 export const MenuContainer = styled.div`
@@ -32,6 +33,7 @@ export const MenuItem = styled.div`
 
 export const linkStyle = {
   textDecoration: "none",
+  display: "flex",
 };
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
@@ -65,9 +67,16 @@ const Menu: React.FC = () => {
         <MenuContainer>
           <Link to="/login" style={linkStyle}>
             <MenuItem style={{marginRight: "24px"}}>login</MenuItem>
-          </Link>
-          <Link to="/signup" style={linkStyle}>
-            <MenuItem>sign up</MenuItem>
+            <ArrowRightIcon
+              style={{
+                width: "20px",
+                height: "20px",
+                position: "relative",
+                right: "17px",
+                top: "1px",
+                color: "#355e3b",
+              }}
+            />
           </Link>
         </MenuContainer>
       );

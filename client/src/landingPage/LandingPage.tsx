@@ -60,10 +60,12 @@ const LandingPage: React.FC = () => {
     <LandingPageContainer>
       <HeaderContainer>
         <LogoContainer>
-          <Logo />
-          <FlowerImage src={flower} />
+          <div style={{display: "flex", flexDirection: "row"}}>
+            <Logo />
+            <FlowerImage src={flower} />
+          </div>
+          <Menu />
         </LogoContainer>
-        <Menu />
       </HeaderContainer>
       <SloganContainer>
         <Slogan>Understand the people you want to reach</Slogan>
@@ -71,8 +73,9 @@ const LandingPage: React.FC = () => {
           Create beautiful surveys that help grow your business.
         </SloganDetail>
       </SloganContainer>
-      <FlowerImageSection src={flower6} />
+
       <SectionContainer>
+        <FlowerImageSection src={flower6} />
         <SectionHeader>Benefits</SectionHeader>
         <BenefitsContainer>
           <BenefitsItem>
@@ -116,10 +119,10 @@ const LandingPage: React.FC = () => {
             </ul>
           </BenefitsItem>
         </BenefitsContainer>
-        <FlowerImageSection src={flower2} />
       </SectionContainer>
 
       <PricingSectionContainer id="pricing">
+        <FlowerImageSection src={flower2} style={{marginBottom: "5px"}} />
         <SectionHeader>Pricing</SectionHeader>
         <PriceContainer>
           <Price>
@@ -142,10 +145,10 @@ const LandingPage: React.FC = () => {
             })}
           </PricingLabelContainer>
         </PriceContainer>
-        <FlowerImageSection src={flower3} />
       </PricingSectionContainer>
 
       <FAQSectionContainer>
+        <FlowerImageSection src={flower3} style={{marginBottom: "8px"}} />
         <SectionHeader>FAQs</SectionHeader>
         <FAQContainer>
           <QuestionContainer>

@@ -21,7 +21,9 @@ export const LandingPageContainer = styled.div`
 
 export const LogoContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  margin-bottom: 32px; //TODO: fix mobile
+  margin-left: 24px;
 `;
 
 export const FlowerImage = styled.img`
@@ -39,14 +41,16 @@ export const SloganContainer = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin-bottom: 32px;
 `;
 
 export const Slogan = styled.div`
   font-weight: bold;
   color: #355e3b;
-  font-size: 32px;
-  width: 350px;
-  margin-bottom: 15px;
+  font-size: 36px;
+  width: 97%;
+  max-width: 400px;
+  margin-bottom: 32px;
 `;
 
 export const SloganDetail = styled.div`
@@ -63,7 +67,7 @@ export const HeaderContainer = styled.div`
   flex-direction: row;
   align-items: end;
   width: 100%;
-  justify-content: space-around;
+  justify-content: space-between;
   position: relative;
 
   @media (max-width: 745px) {
@@ -86,8 +90,9 @@ export const BenefitsItem = styled.div`
 export const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 14px;
   text-align: center;
+  margin-bottom: 48px;
 `;
 
 export const BenefitsContainer = styled.div`
@@ -114,6 +119,7 @@ export const SectionHeader = styled.div`
   color: #355e3b;
   font-size: 25px;
   text-align: center;
+  margin-bottom: 10px;
 `;
 
 export const BenefitsListItem = styled.li`
@@ -130,9 +136,10 @@ export const BenefitsListItem = styled.li`
 export const FAQSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 18px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 48px;
 `;
 
 export const FAQContainer = styled.div`
@@ -191,7 +198,7 @@ export const PriceContainer = styled.div`
   border-radius: 5px;
   max-width: 350px;
   padding: 25px 50px;
-  margin-bottom: 24px;
+  margin-bottom: 48px;
   background-color: #faf9f6;
 `;
 
@@ -238,10 +245,10 @@ export const Month = styled.span`
 export const PricingSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 28px;
+  margin-top: 18px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 48px;
   @media (max-width: 500px) {
     padding: 10px;
   }
