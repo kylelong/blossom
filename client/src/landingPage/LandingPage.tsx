@@ -70,12 +70,12 @@ const LandingPage: React.FC = () => {
       <SloganContainer>
         <Slogan>Understand the people you want to reach</Slogan>
         <SloganDetail>
-          Create beautiful surveys that help grow your business.
+          Create beautiful surveys that help you understand your audience.
         </SloganDetail>
       </SloganContainer>
 
       <SectionContainer>
-        <FlowerImageSection src={flower6} />
+        <FlowerImageSection src={flower6} style={{marginBottom: "12px"}} />
         <SectionHeader>Benefits</SectionHeader>
         <BenefitsContainer>
           <BenefitsItem>
