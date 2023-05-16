@@ -845,7 +845,7 @@ app.get("/published_surveys", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
     const titles = await pool.query(
-      "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
+      "SELECT title, id, hash, published, redirect_url, number_of_questions, responses FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
       [user_id]
     );
     res.json(titles.rows);

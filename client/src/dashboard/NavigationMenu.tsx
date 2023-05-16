@@ -26,6 +26,7 @@ export const FlowerImage = styled.img`
 const NavigationContainer = styled.div`
   display: flex;
   flex-direction: column;
+  position: fixed;
   @media (max-width: 768px) {
     width: unset;
   }

@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import axios from "axios";
+import styled from "styled-components";
 
 import SurveyPreview from "../surveyPreview/SurveyPreview";
 import {AccountContext} from "../../context/AccountContext";
@@ -16,6 +17,33 @@ import * as RadioGroup from "@radix-ui/react-radio-group";
 import {ClipboardCopyIcon, CheckCircledIcon} from "@radix-ui/react-icons";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import "./surveys.css";
+
+export const FinishButton = styled.button`
+  all: unset;
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 17px;
+  padding: 0 18px;
+  line-height: 38px;
+  height: 46px;
+  width: auto;
+  margin-left: 12px;
+  color: white;
+  background-color: #355e3b;
+  box-shadow: 0 2px 10px var(--blackA7);
+
+  &:hover {
+    background-color: rgb(0, 100, 0);
+    cursor: pointer;
+  }
+  @media (min-width: 1260px) {
+    margin-left: 155px;
+  }
+`;
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
@@ -207,12 +235,9 @@ const SurveysList = () => {
             </div>
           ) : (
             <a href="/create">
-              <button
-                className="createBtn"
-                style={{display: "flex", marginTop: "10px"}}
-              >
+              <FinishButton>
                 finish your draft survey {String.fromCodePoint("0x1F91D")}
-              </button>
+              </FinishButton>
             </a>
           )}
         </>

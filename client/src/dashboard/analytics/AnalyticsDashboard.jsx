@@ -25,7 +25,9 @@ import {
   Emoji,
   EmojiContainer,
   AnswerWrapper,
+  QuestionWrapper,
   SurveyButton,
+  ResponsesHeader,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DropdownMenu from "./DropdownMenu";
@@ -59,6 +61,8 @@ const AnalyticsDashboard = () => {
    * colors: [#fa5f55, ]
    */
   // eslint-disable-next-line
+
+  // TODO build json object of all answer data
   const [userData, setUserData] = useState({
     labels: UserData.map((data) => data.year),
     datasets: [
@@ -258,98 +262,76 @@ const AnalyticsDashboard = () => {
       {loaded && (
         <AnalyticsContainer>
           <SurveyTitle>{survey.title}</SurveyTitle>
-
+          <SurveyContainer>
+            <DropdownMenu
+              surveys={surveys}
+              setSelectedSurveyId={setSelectedSurveyId}
+            />
+            {survey.title && (
+              <ResponsesHeader>{survey.responses} responses</ResponsesHeader>
+            )}
+          </SurveyContainer>
           <SurveyRow>
-            <SurveyContainer>
-              <DropdownMenu
-                surveys={surveys}
-                setSelectedSurveyId={setSelectedSurveyId}
-              />
-            </SurveyContainer>
             <QuestionContainer>
-              <ContainerHeader> questions </ContainerHeader>
-              <div>
-                {questions.map((question, index) => {
-                  return (
-                    <div key={question.id}>
-                      {index === questionIndex ? (
-                        <SelectedQuestion
-                          onClick={() =>
-                            handleQuestionChange(
-                              index,
-                              question.type,
-                              question.id
-                            )
-                          }
-                        >
-                          {question.title}
-                          <QuestionType>{question.type}</QuestionType>
-                        </SelectedQuestion>
-                      ) : (
-                        <Question
-                          onClick={() =>
-                            handleQuestionChange(
-                              index,
-                              question.type,
-                              question.id
-                            )
-                          }
-                        >
-                          {question.title}
-                          <QuestionType>{question.type}</QuestionType>
-                        </Question>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </QuestionContainer>
-            <AnswerChoiceContainer>
-              <ContainerHeader> answer choices </ContainerHeader>
-              {validQuestions &&
-                questions[questionIndex].type === "emoji_sentiment" && (
-                  <EmojiRow>
-                    {Object.entries(emojis)
-                      .reverse()
-                      .map(([key, value]) => {
-                        let index = emojiAnalytics.findIndex(
-                          (em) => em.answer === value
-                        );
-                        let progress =
-                          index > -1 ? emojiAnalytics[index].avg * 100 : 0;
-                        return (
-                          <EmojiContainer key={key}>
-                            <Emoji>{String.fromCodePoint(value)}</Emoji>
-                            <ProgressBar number={progress} />
-                            <EmojiStat
-                              emoji={value}
-                              emojiAnalytics={emojiAnalytics}
-                            />
-                          </EmojiContainer>
-                        );
-                      })}
-                  </EmojiRow>
-                )}
+              {questions.map((question, index) => {
+                return (
+                  <QuestionWrapper key={question.id}>
+                    <Question
+                      onClick={() =>
+                        handleQuestionChange(index, question.type, question.id)
+                      }
+                    >
+                      {index + 1}. {question.title}
+                      <QuestionType>{question.type}</QuestionType>
+                    </Question>
 
-              <AnswerWrapper>
-                {validQuestions &&
-                  multiple_choice.includes(questions[questionIndex].type) &&
-                  questions[questionIndex].answerChoices &&
-                  questions[questionIndex].answerChoices.map((answer) => {
-                    return (
-                      <AnswerChoice
-                        key={answer.id}
-                        choice={answer.choice}
-                        answerChoiceAnalytics={answerChoiceAnalytics}
-                      />
-                    );
-                  })}
-                {validQuestions &&
-                  open_ended_choice.includes(questions[questionIndex].type) && (
-                    <ScrollArea data={openEndedAnalytics} />
-                  )}
-              </AnswerWrapper>
-            </AnswerChoiceContainer>
+                    <AnswerWrapper>
+                      {validQuestions &&
+                        questions[index].type === "emoji_sentiment" && (
+                          <EmojiRow>
+                            {Object.entries(emojis)
+                              .reverse()
+                              .map(([key, value]) => {
+                                let idx = emojiAnalytics.findIndex(
+                                  (em) => em.answer === value
+                                );
+                                let progress =
+                                  idx > -1 ? emojiAnalytics[idx].avg * 100 : 0;
+                                return (
+                                  <EmojiContainer key={key}>
+                                    <Emoji>{String.fromCodePoint(value)}</Emoji>
+                                    <ProgressBar number={progress} />
+                                    <EmojiStat
+                                      emoji={value}
+                                      emojiAnalytics={emojiAnalytics}
+                                    />
+                                  </EmojiContainer>
+                                );
+                              })}
+                          </EmojiRow>
+                        )}
+
+                      {validQuestions &&
+                        multiple_choice.includes(questions[index].type) &&
+                        questions[index].answerChoices &&
+                        questions[index].answerChoices.map((answer) => {
+                          return (
+                            <AnswerChoice
+                              key={answer.id}
+                              choice={answer.choice}
+                              answerChoiceAnalytics={answerChoiceAnalytics}
+                            />
+                          );
+                        })}
+                      {validQuestions &&
+                        open_ended_choice.includes(questions[index].type) && (
+                          <ScrollArea data={openEndedAnalytics} />
+                        )}
+                    </AnswerWrapper>
+                  </QuestionWrapper>
+                );
+              })}
+            </QuestionContainer>
           </SurveyRow>
         </AnalyticsContainer>
       )}
