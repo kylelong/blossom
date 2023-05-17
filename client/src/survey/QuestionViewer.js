@@ -18,10 +18,15 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
-  const types = ["emoji_sentiment", "open_ended", "short_answer"];
-  const dynamicStyle = {
+  const types = ["emoji_sentiment", "short_answer"];
+  let dynamicStyle = {
     marginTop: types.includes(type) ? "100px" : "30px",
   };
+  if (type === "open_ended") {
+    dynamicStyle = {
+      marginTop: types.includes(type) ? "75px" : "30px",
+    };
+  }
 
   const preview = () => {
     if (questionStarted) {

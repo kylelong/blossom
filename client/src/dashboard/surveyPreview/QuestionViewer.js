@@ -8,10 +8,15 @@ import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
   const questionStarted =
     (title && title.length > 0) || (type && type.length > 0); // title, type, can be changes by user
-  const types = ["emoji_sentiment", "open_ended", "short_answer"];
-  const dynamicStyle = {
+  const types = ["emoji_sentiment", "short_answer"];
+  let dynamicStyle = {
     marginTop: types.includes(type) ? "100px" : "30px",
   };
+  if (type === "open_ended") {
+    dynamicStyle = {
+      marginTop: "75px",
+    };
+  }
   const preview = () => {
     if (questionStarted) {
       switch (type) {
