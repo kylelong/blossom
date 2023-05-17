@@ -113,7 +113,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/emoji_analytics/${question_id}`
       );
       const data = await response.data;
-      setEmojiAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
@@ -124,7 +124,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/answer_choice_analytics/${question_id}`
       );
       const data = await response.data;
-      setAnswerChoiceAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
@@ -135,7 +135,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/open_ended_analytics/${question_id}`
       );
       const data = await response.data;
-      setOpenEndedAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
@@ -152,6 +152,20 @@ const AnalyticsDashboard = () => {
         const response = await axios.get(`${endpoint}/answer_choices/${id}`);
         const data = await response.data;
         question_array[0].answerChoices = data;
+
+        if (multiple_choice.includes(question.type)) {
+          loadAnswerChoiceAnalytics(question.id).then(
+            (resp) => (question_array[0].analytics = resp)
+          );
+        } else if (question.type === "emoji_sentiment") {
+          loadEmojiAnalytics(question.id).then(
+            (resp) => (question_array[0].analytics = resp)
+          );
+        } else if (open_ended_choice.includes(question.type)) {
+          loadOpenEnededAnalytics(question.id).then(
+            (resp) => (question_array[0].analytics = resp)
+          );
+        }
         question_copy.push(question_array);
       } catch (err) {
         console.error(err.message);
@@ -159,6 +173,7 @@ const AnalyticsDashboard = () => {
     }
 
     setQuestions(question_copy.flat());
+    setLoaded(true);
   };
 
   const loadQuestions = useCallback(
@@ -193,8 +208,6 @@ const AnalyticsDashboard = () => {
       } catch (err) {
         console.error(err.message);
       }
-
-      setLoaded(true);
     };
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`);
@@ -319,13 +332,13 @@ const AnalyticsDashboard = () => {
                             <AnswerChoice
                               key={answer.id}
                               choice={answer.choice}
-                              answerChoiceAnalytics={answerChoiceAnalytics}
+                              answerChoiceAnalytics={questions[index].analytics}
                             />
                           );
                         })}
                       {validQuestions &&
                         open_ended_choice.includes(questions[index].type) && (
-                          <ScrollArea data={openEndedAnalytics} />
+                          <ScrollArea data={questions[index].analytics} />
                         )}
                     </AnswerWrapper>
                   </QuestionWrapper>

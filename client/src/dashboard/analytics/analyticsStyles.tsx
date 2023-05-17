@@ -56,10 +56,10 @@ export const QuestionWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 550px;
-  border: 3px solid rgb(249, 248, 249);
+  // border: 1.8px solid #525f7f;
   padding: 5px;
   border-radius: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 `;
 export const SurveyButton = styled.button`
   all: unset;
