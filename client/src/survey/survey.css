@@ -244,6 +244,7 @@
   .surveyQuestionTitle {
     font-size: 18px;
     line-height: 1.3;
+    text-align: center;
   }
   .surveyContainer {
     /* height: 100%; */
