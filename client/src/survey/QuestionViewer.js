@@ -18,6 +18,10 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
+  const types = ["emoji_sentiment", "open_ended", "short_answer"];
+  const dynamicStyle = {
+    marginTop: types.includes(type) ? "100px" : "30px",
+  };
 
   const preview = () => {
     if (questionStarted) {
@@ -90,7 +94,7 @@ const QuestionViewer = ({
     }
   };
   return (
-    <div className="questionViewerContainer">
+    <div className="questionViewerContainer" style={dynamicStyle}>
       {questionStarted && <div className="surveyQuestionTitle">{title}</div>}
       <div>
         {!questionStarted && (

@@ -8,6 +8,10 @@ import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
   const questionStarted =
     (title && title.length > 0) || (type && type.length > 0); // title, type, can be changes by user
+  const types = ["emoji_sentiment", "open_ended", "short_answer"];
+  const dynamicStyle = {
+    marginTop: types.includes(type) ? "100px" : "30px",
+  };
   const preview = () => {
     if (questionStarted) {
       switch (type) {
@@ -51,7 +55,7 @@ const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
     }
   };
   return (
-    <div className="questionViewerContainer">
+    <div className="questionViewerContainer" style={dynamicStyle}>
       {questionStarted && <div className="surveyQuestionTitle">{title}</div>}
       <div>
         {!questionStarted && (
