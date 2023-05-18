@@ -17,6 +17,11 @@ const postmark = require("postmark");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
 });
+const {Configuration, OpenAIApi} = require("openai");
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 const corsOptions = {
   origin: true,
   credentials: true,
@@ -1023,6 +1028,20 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
   }
 });
 
+app.get("/ai", async (req, res) => {
+  try {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: "Hello world",
+    });
+    console.log(completion.data.choices[0].text);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.listen(config.PORT, () => {
   console.log(`server listening on port http://${config.HOST}:${config.PORT}`);
 });
+
+// OPEN AI - POST https://api.openai.com/v1/completions
