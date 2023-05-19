@@ -173,7 +173,7 @@ const Survey = () => {
     }
   };
 
-  // text based answer for open_ended
+  // text based answer for open_ended / short answer
   const insertAnswerResponse = async (answer, question_id) => {
     try {
       await axios.post(`${endpoint}/add_response_with_answer`, {
@@ -198,7 +198,7 @@ const Survey = () => {
   };
 
   const submitSurvey = async () => {
-    for (let i = 0; i < response.length; i++) {
+    for (let i = 0; i < questions.length; i++) {
       let res = response[i];
       let question_id = questionIds[i];
       // loop through res.answers
@@ -214,7 +214,7 @@ const Survey = () => {
             })();
           })();
         } else if (hash.length === 0 && answers.length > 0) {
-          // add_response_with_answer for emojis / open_ended
+          // add_response_with_answer for emojis / open_ended / short_answer
           (async function () {
             await insertAnswerResponse(answer, question_id);
           })();

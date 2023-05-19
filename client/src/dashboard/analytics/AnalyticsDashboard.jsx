@@ -367,7 +367,6 @@ const AnalyticsDashboard = () => {
                                 columns={columns}
                                 data={questions[index].analytics}
                                 pagination
-                                fixedHeader
                               />
                             </OpenEndedContainer>
                           )}
