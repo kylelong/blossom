@@ -164,9 +164,6 @@
   .surveyContainer {
     width: 86vw;
   }
-  .panelContainer {
-    flex-direction: column;
-  }
 
   .surveyContainerParent {
     margin-bottom: 24px;

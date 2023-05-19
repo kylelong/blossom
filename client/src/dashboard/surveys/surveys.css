@@ -11,13 +11,45 @@
 .surveyListParentContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .surveyListContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 24px;
+  margin-left: 24vw;
   width: 76vw;
+}
+@media (max-width: 768px) {
+  .surveyListContainer {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: unset;
+    margin-left: 5vw;
+  }
+}
+@media (min-width: 769px) and (max-width: 1260px) {
+  .surveyListContainer {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: unset;
+  }
+  .surveySelectorContainer {
+    margin-bottom: 32px;
+  }
+  .surveyListLinkContainer {
+    margin-left: 10px;
+  }
+}
+@media (min-width: 1269px) {
+  .surveyListLinkContainer {
+    margin-left: 270px;
+  }
 }
 .surveySelectorContainer {
   display: flex;
@@ -37,22 +69,6 @@
   padding: 5px;
   display: flex;
   flex-direction: column;
-}
-@media (max-width: 1260px) {
-  .surveyListContainer {
-    margin-top: 32px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: unset;
-    margin-left: 5vw;
-  }
-  .surveySelectorContainer {
-    margin-bottom: 32px;
-  }
-  .surveyListLinkContainer {
-    margin-left: 10px;
-  }
 }
 
 /* reset */

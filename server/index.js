@@ -845,7 +845,7 @@ app.get("/published_surveys", authenticate, async (req, res) => {
   try {
     const user_id = req.user_id;
     const titles = await pool.query(
-      "SELECT title, id, hash, published, redirect_url, number_of_questions FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
+      "SELECT title, id, hash, published, redirect_url, number_of_questions, responses FROM survey WHERE user_id = $1 AND published = true ORDER BY created_at DESC",
       [user_id]
     );
     res.json(titles.rows);
@@ -1001,7 +1001,7 @@ app.get("/open_ended_analytics/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
     const response = await pool.query(
-      "SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1",
+      "SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1 ORDER BY r.created_at DESC",
       [question_id]
     );
     res.json(response.rows); //.answer
