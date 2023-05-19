@@ -1001,7 +1001,7 @@ app.get("/open_ended_analytics/:question_id", async (req, res) => {
   try {
     const {question_id} = req.params;
     const response = await pool.query(
-      "SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1",
+      "SELECT answer FROM response r INNER JOIN question q ON r.question_id = q.id WHERE r.question_id = $1 ORDER BY r.created_at DESC",
       [question_id]
     );
     res.json(response.rows); //.answer

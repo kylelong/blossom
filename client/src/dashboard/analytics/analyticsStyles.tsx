@@ -26,12 +26,15 @@ export const SurveyRow = styled.div`
 `;
 export const SurveyContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex: 1;
   align-items: center;
   @media (max-width: 1100px) {
     flex: unset;
     margin-bottom: 24px;
+  }
+  @media (min-width: 769px) {
+    flex-direction: row;
   }
 `;
 export const ResponsesHeader = styled.div`
@@ -39,6 +42,10 @@ export const ResponsesHeader = styled.div`
   font-size: 18px;
   color: rgb(184, 184, 184);
   font-weight: bold;
+  margin-top: 24px;
+  @media (min-width: 769px) {
+    margin-top: unset;
+  }
 `;
 
 export const QuestionContainer = styled.div`
@@ -227,4 +234,14 @@ export const Emoji = styled.div`
   font-size: 30px;
   margin: 1%;
   height: 50px;
+`;
+
+export const NoResponses = styled.div`
+  margin-top: 32px;
+  font-size: 18px;
+`;
+export const OpenEndedContainer = styled.div`
+  border: 1px solid #d3d3d3;
+  padding: 10px;
+  border-radius: 4px;
 `;
