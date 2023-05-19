@@ -14,12 +14,9 @@ import {
   AnalyticsContainer,
   SurveyTitle,
   QuestionContainer,
-  AnswerChoiceContainer,
   SurveyRow,
-  ContainerHeader,
   SurveyContainer,
   Question,
-  SelectedQuestion,
   QuestionType,
   EmojiRow,
   Emoji,
@@ -30,12 +27,13 @@ import {
   ResponsesHeader,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
+import DataTable from "react-data-table-component";
 import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
 import EmojiStat from "./EmojiStat";
 import AnswerChoice from "./AnswerChoice";
 import ScrollArea from "./ScrollArea";
-import {UserData} from "./Data";
+// import {UserData} from "./Data";
 import axios from "axios";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
@@ -52,9 +50,6 @@ const AnalyticsDashboard = () => {
   const [hasDraft, setHasDraft] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [publishedCount, setPublishedCount] = useState(0);
-  const [emojiAnalytics, setEmojiAnalytics] = useState([]);
-  const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
-  const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
   const {user} = useContext(AccountContext);
   /**
@@ -63,24 +58,24 @@ const AnalyticsDashboard = () => {
   // eslint-disable-next-line
 
   // TODO build json object of all answer data
-  const [userData, setUserData] = useState({
-    labels: UserData.map((data) => data.year),
-    datasets: [
-      {
-        label: "Users Gained",
-        data: UserData.map((data) => data.userGain),
-        backgroundColor: [
-          "#525f7f",
-          "#fa5f55",
-          "#355e3b",
-          "#f3ba2f",
-          "#2a71d0",
-        ],
-        borderColor: "black",
-        borderWidth: 2,
-      },
-    ],
-  });
+  // const [userData, setUserData] = useState({
+  //   labels: UserData.map((data) => data.year),
+  //   datasets: [
+  //     {
+  //       label: "Users Gained",
+  //       data: UserData.map((data) => data.userGain),
+  //       backgroundColor: [
+  //         "#525f7f",
+  //         "#fa5f55",
+  //         "#355e3b",
+  //         "#f3ba2f",
+  //         "#2a71d0",
+  //       ],
+  //       borderColor: "black",
+  //       borderWidth: 2,
+  //     },
+  //   ],
+  // });
 
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const open_ended_choice = useMemo(() => ["open_ended", "short_answer"], []);
@@ -140,41 +135,45 @@ const AnalyticsDashboard = () => {
       console.error(err.message);
     }
   };
-  const loadAnswers = async (questions) => {
-    let question_copy = [];
-    for (let i = 0; i < questions.length; i++) {
-      let question = questions[i];
+  const loadAnswers = useCallback(
+    async (questions) => {
+      let question_copy = [];
+      for (let i = 0; i < questions.length; i++) {
+        let question = questions[i];
 
-      let {id} = question;
-      let question_array = questions.filter((question) => question.id === id);
+        let {id} = question;
+        let question_array = questions.filter((question) => question.id === id);
 
-      try {
-        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
-        const data = await response.data;
-        question_array[0].answerChoices = data;
+        try {
+          const response = await axios.get(`${endpoint}/answer_choices/${id}`);
+          const data = await response.data;
+          question_array[0].answerChoices = data;
 
-        if (multiple_choice.includes(question.type)) {
-          loadAnswerChoiceAnalytics(question.id).then(
-            (resp) => (question_array[0].analytics = resp)
-          );
-        } else if (question.type === "emoji_sentiment") {
-          loadEmojiAnalytics(question.id).then(
-            (resp) => (question_array[0].analytics = resp)
-          );
-        } else if (open_ended_choice.includes(question.type)) {
-          loadOpenEnededAnalytics(question.id).then(
-            (resp) => (question_array[0].analytics = resp)
-          );
+          if (multiple_choice.includes(question.type)) {
+            await loadAnswerChoiceAnalytics(question.id).then(
+              (resp) => (question_array[0].analytics = resp)
+            );
+          } else if (question.type === "emoji_sentiment") {
+            await loadEmojiAnalytics(question.id).then(
+              (resp) => (question_array[0].analytics = resp)
+            );
+          } else if (open_ended_choice.includes(question.type)) {
+            await loadOpenEnededAnalytics(question.id).then(
+              (resp) => (question_array[0].analytics = resp)
+            );
+          }
+          question_copy.push(question_array);
+        } catch (err) {
+          console.error(err.message);
         }
-        question_copy.push(question_array);
-      } catch (err) {
-        console.error(err.message);
       }
-    }
 
-    setQuestions(question_copy.flat());
-    setLoaded(true);
-  };
+      setQuestions(question_copy.flat());
+      console.log(question_copy.flat());
+      setLoaded(true);
+    },
+    [open_ended_choice, multiple_choice]
+  );
 
   const loadQuestions = useCallback(
     async (survey_id) => {
@@ -192,7 +191,7 @@ const AnalyticsDashboard = () => {
         console.error(err.message);
       }
     },
-    [handleQuestionChange]
+    [handleQuestionChange, loadAnswers]
   );
   useEffect(() => {
     const loadSurveys = async () => {
@@ -300,23 +299,28 @@ const AnalyticsDashboard = () => {
 
                     <AnswerWrapper>
                       {validQuestions &&
-                        questions[index].type === "emoji_sentiment" && (
+                        questions[index].type === "emoji_sentiment" &&
+                        questions[index].analytics && (
                           <EmojiRow>
                             {Object.entries(emojis)
                               .reverse()
                               .map(([key, value]) => {
-                                let idx = emojiAnalytics.findIndex(
+                                let idx = questions[index].analytics.findIndex(
                                   (em) => em.answer === value
                                 );
                                 let progress =
-                                  idx > -1 ? emojiAnalytics[idx].avg * 100 : 0;
+                                  idx > -1
+                                    ? questions[index].analytics[idx].avg * 100
+                                    : 0;
                                 return (
                                   <EmojiContainer key={key}>
                                     <Emoji>{String.fromCodePoint(value)}</Emoji>
                                     <ProgressBar number={progress} />
                                     <EmojiStat
                                       emoji={value}
-                                      emojiAnalytics={emojiAnalytics}
+                                      emojiAnalytics={
+                                        questions[index].analytics
+                                      }
                                     />
                                   </EmojiContainer>
                                 );
@@ -339,6 +343,11 @@ const AnalyticsDashboard = () => {
                       {validQuestions &&
                         open_ended_choice.includes(questions[index].type) && (
                           <ScrollArea data={questions[index].analytics} />
+                          //                       <DataTable
+                          //   columns={columns}
+                          //   data={data}
+                          //   pagination
+                          // />
                         )}
                     </AnswerWrapper>
                   </QuestionWrapper>
