@@ -2,6 +2,7 @@ import React from "react";
 import DashboardMenu from "./DashboardMenu";
 import Menu from "../landingPage/Menu";
 import Panel from "./create/Panel";
+import SuggestionBox from "./create/SuggestionBox";
 import {
   DashboardContainer,
   DashboardSectionContainerCenter,
@@ -20,6 +21,7 @@ const Create = () => {
           <DashboardHeaderTextDesktop>create</DashboardHeaderTextDesktop>
           <DashboardHeaderDetail>create a new survey</DashboardHeaderDetail>
           <Panel />
+          <SuggestionBox />
         </DashboardContent>
         <MenuContainer>
           <Menu />
