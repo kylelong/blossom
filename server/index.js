@@ -1030,11 +1030,18 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
 
 app.get("/ai", async (req, res) => {
   try {
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: "Hello world",
+    let messages = [];
+    messages.push({
+      role: "user",
+      content:
+        "give me 3 survey questions of different types for a survey reviewing my designs as a freelancer in a json format",
     });
-    console.log(completion.data.choices[0].text);
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: messages,
+    });
+    res.json(completion.data.choices[0].message.content);
+    console.log(completion.data.choices[0].message.content);
   } catch (err) {
     console.error(err.message);
   }
