@@ -2,11 +2,13 @@ import React from "react";
 import styled from "styled-components";
 export const Answer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   border-radius: 0.375rem;
   border: 1px solid black;
   padding: 12px;
   margin-bottom: 12px;
+  justify-content: space-between;
+  align-items: center;
   text-align: left;
 `;
 export const StatContainer = styled.div`

@@ -255,9 +255,6 @@
     position: absolute;
     bottom: 28px;
   }
-  .panelContainer {
-    flex-direction: column;
-  }
 
   .surveyContainerParent {
     margin-top: 12px;

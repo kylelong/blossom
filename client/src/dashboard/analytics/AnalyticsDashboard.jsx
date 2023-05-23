@@ -14,31 +14,34 @@ import {
   AnalyticsContainer,
   SurveyTitle,
   QuestionContainer,
-  AnswerChoiceContainer,
   SurveyRow,
-  ContainerHeader,
   SurveyContainer,
   Question,
-  SelectedQuestion,
   QuestionType,
   EmojiRow,
   Emoji,
   EmojiContainer,
   AnswerWrapper,
+  QuestionWrapper,
   SurveyButton,
+  ResponsesHeader,
+  NoResponses,
+  OpenEndedContainer,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
+import DataTable from "react-data-table-component";
 import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
 import EmojiStat from "./EmojiStat";
 import AnswerChoice from "./AnswerChoice";
 import ScrollArea from "./ScrollArea";
-import {UserData} from "./Data";
+// import {UserData} from "./Data";
 import axios from "axios";
 const endpoint =
   process.env.REACT_APP_NODE_ENV === "production"
     ? process.env.REACT_APP_LIVE_SERVER_URL
     : process.env.REACT_APP_LOCALHOST_URL;
+const columns = [{name: "Response", selector: (row) => row.answer}];
 
 const AnalyticsDashboard = () => {
   const [loaded, setLoaded] = useState(false);
@@ -50,33 +53,32 @@ const AnalyticsDashboard = () => {
   const [hasDraft, setHasDraft] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [publishedCount, setPublishedCount] = useState(0);
-  const [emojiAnalytics, setEmojiAnalytics] = useState([]);
-  const [openEndedAnalytics, setOpenEndedAnalytics] = useState([]);
-  const [answerChoiceAnalytics, setAnswerChoiceAnalytics] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
   const {user} = useContext(AccountContext);
   /**
    * colors: [#fa5f55, ]
    */
   // eslint-disable-next-line
-  const [userData, setUserData] = useState({
-    labels: UserData.map((data) => data.year),
-    datasets: [
-      {
-        label: "Users Gained",
-        data: UserData.map((data) => data.userGain),
-        backgroundColor: [
-          "#525f7f",
-          "#fa5f55",
-          "#355e3b",
-          "#f3ba2f",
-          "#2a71d0",
-        ],
-        borderColor: "black",
-        borderWidth: 2,
-      },
-    ],
-  });
+
+  // TODO build json object of all answer data
+  // const [userData, setUserData] = useState({
+  //   labels: UserData.map((data) => data.year),
+  //   datasets: [
+  //     {
+  //       label: "Users Gained",
+  //       data: UserData.map((data) => data.userGain),
+  //       backgroundColor: [
+  //         "#525f7f",
+  //         "#fa5f55",
+  //         "#355e3b",
+  //         "#f3ba2f",
+  //         "#2a71d0",
+  //       ],
+  //       borderColor: "black",
+  //       borderWidth: 2,
+  //     },
+  //   ],
+  // });
 
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
   const open_ended_choice = useMemo(() => ["open_ended", "short_answer"], []);
@@ -109,7 +111,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/emoji_analytics/${question_id}`
       );
       const data = await response.data;
-      setEmojiAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
@@ -120,7 +122,7 @@ const AnalyticsDashboard = () => {
         `${endpoint}/answer_choice_analytics/${question_id}`
       );
       const data = await response.data;
-      setAnswerChoiceAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
@@ -131,31 +133,51 @@ const AnalyticsDashboard = () => {
         `${endpoint}/open_ended_analytics/${question_id}`
       );
       const data = await response.data;
-      setOpenEndedAnalytics(data);
+      return data;
     } catch (err) {
       console.error(err.message);
     }
   };
-  const loadAnswers = async (questions) => {
-    let question_copy = [];
-    for (let i = 0; i < questions.length; i++) {
-      let question = questions[i];
+  const loadAnswers = useCallback(
+    async (questions) => {
+      let question_copy = [];
 
-      let {id} = question;
-      let question_array = questions.filter((question) => question.id === id);
+      for (let i = 0; i < questions.length; i++) {
+        let question = questions[i];
 
-      try {
-        const response = await axios.get(`${endpoint}/answer_choices/${id}`);
-        const data = await response.data;
-        question_array[0].answerChoices = data;
-        question_copy.push(question_array);
-      } catch (err) {
-        console.error(err.message);
+        let {id} = question;
+        let question_array = questions.filter((question) => question.id === id);
+
+        try {
+          const response = await axios.get(`${endpoint}/answer_choices/${id}`);
+          const data = await response.data;
+          question_array[0].answerChoices = data;
+
+          if (multiple_choice.includes(question.type)) {
+            await loadAnswerChoiceAnalytics(question.id).then(
+              (resp) => (question_array[0].analytics = resp)
+            );
+          } else if (question.type === "emoji_sentiment") {
+            await loadEmojiAnalytics(question.id).then(
+              (resp) => (question_array[0].analytics = resp)
+            );
+          } else if (open_ended_choice.includes(question.type)) {
+            await loadOpenEnededAnalytics(question.id).then((resp) => {
+              question_array[0].analytics = resp;
+            });
+          }
+          question_copy.push(question_array);
+        } catch (err) {
+          console.error(err.message);
+        }
       }
-    }
 
-    setQuestions(question_copy.flat());
-  };
+      setQuestions(question_copy.flat());
+
+      setLoaded(true);
+    },
+    [open_ended_choice, multiple_choice]
+  );
 
   const loadQuestions = useCallback(
     async (survey_id) => {
@@ -173,7 +195,7 @@ const AnalyticsDashboard = () => {
         console.error(err.message);
       }
     },
-    [handleQuestionChange]
+    [handleQuestionChange, loadAnswers]
   );
   useEffect(() => {
     const loadSurveys = async () => {
@@ -189,8 +211,6 @@ const AnalyticsDashboard = () => {
       } catch (err) {
         console.error(err.message);
       }
-
-      setLoaded(true);
     };
     const countSurveys = async () => {
       const response = await axios.get(`${endpoint}/survey_count`);
@@ -258,99 +278,105 @@ const AnalyticsDashboard = () => {
       {loaded && (
         <AnalyticsContainer>
           <SurveyTitle>{survey.title}</SurveyTitle>
-
-          <SurveyRow>
-            <SurveyContainer>
-              <DropdownMenu
-                surveys={surveys}
-                setSelectedSurveyId={setSelectedSurveyId}
-              />
-            </SurveyContainer>
-            <QuestionContainer>
-              <ContainerHeader> questions </ContainerHeader>
-              <div>
+          <SurveyContainer>
+            <DropdownMenu
+              surveys={surveys}
+              setSelectedSurveyId={setSelectedSurveyId}
+            />
+            {survey.title && (
+              <ResponsesHeader>{survey.responses} responses</ResponsesHeader>
+            )}
+          </SurveyContainer>
+          {survey.responses === 0 && (
+            <NoResponses>No responses yet</NoResponses>
+          )}
+          {survey.responses > 0 && (
+            <SurveyRow>
+              <QuestionContainer>
                 {questions.map((question, index) => {
                   return (
-                    <div key={question.id}>
-                      {index === questionIndex ? (
-                        <SelectedQuestion
-                          onClick={() =>
-                            handleQuestionChange(
-                              index,
-                              question.type,
-                              question.id
-                            )
-                          }
-                        >
-                          {question.title}
-                          <QuestionType>{question.type}</QuestionType>
-                        </SelectedQuestion>
-                      ) : (
-                        <Question
-                          onClick={() =>
-                            handleQuestionChange(
-                              index,
-                              question.type,
-                              question.id
-                            )
-                          }
-                        >
-                          {question.title}
-                          <QuestionType>{question.type}</QuestionType>
-                        </Question>
-                      )}
-                    </div>
+                    <QuestionWrapper key={question.id}>
+                      <Question
+                        onClick={() =>
+                          handleQuestionChange(
+                            index,
+                            question.type,
+                            question.id
+                          )
+                        }
+                      >
+                        {index + 1}. {question.title}
+                        <QuestionType>{question.type}</QuestionType>
+                      </Question>
+
+                      <AnswerWrapper>
+                        {validQuestions &&
+                          questions[index].type === "emoji_sentiment" &&
+                          questions[index].analytics && (
+                            <EmojiRow>
+                              {Object.entries(emojis)
+                                .reverse()
+                                .map(([key, value]) => {
+                                  let idx = questions[
+                                    index
+                                  ].analytics.findIndex(
+                                    (em) => em.answer === value
+                                  );
+                                  let progress =
+                                    idx > -1
+                                      ? questions[index].analytics[idx].avg *
+                                        100
+                                      : 0;
+                                  return (
+                                    <EmojiContainer key={key}>
+                                      <Emoji>
+                                        {String.fromCodePoint(value)}
+                                      </Emoji>
+                                      <ProgressBar number={progress} />
+                                      <EmojiStat
+                                        emoji={value}
+                                        emojiAnalytics={
+                                          questions[index].analytics
+                                        }
+                                      />
+                                    </EmojiContainer>
+                                  );
+                                })}
+                            </EmojiRow>
+                          )}
+
+                        {validQuestions &&
+                          multiple_choice.includes(questions[index].type) &&
+                          questions[index].answerChoices &&
+                          questions[index].answerChoices.map((answer) => {
+                            return (
+                              <AnswerChoice
+                                key={answer.id}
+                                choice={answer.choice}
+                                answerChoiceAnalytics={
+                                  questions[index].analytics
+                                }
+                              />
+                            );
+                          })}
+                        {validQuestions &&
+                          open_ended_choice.includes(questions[index].type) && (
+                            // <ScrollArea data={questions[index].analytics} />
+                            <OpenEndedContainer>
+                              <DataTable
+                                columns={columns}
+                                data={questions[index].analytics}
+                                pagination
+                              />
+                            </OpenEndedContainer>
+                          )}
+                      </AnswerWrapper>
+                    </QuestionWrapper>
                   );
                 })}
-              </div>
-            </QuestionContainer>
-            <AnswerChoiceContainer>
-              <ContainerHeader> answer choices </ContainerHeader>
-              {validQuestions &&
-                questions[questionIndex].type === "emoji_sentiment" && (
-                  <EmojiRow>
-                    {Object.entries(emojis)
-                      .reverse()
-                      .map(([key, value]) => {
-                        let index = emojiAnalytics.findIndex(
-                          (em) => em.answer === value
-                        );
-                        let progress =
-                          index > -1 ? emojiAnalytics[index].avg * 100 : 0;
-                        return (
-                          <EmojiContainer key={key}>
-                            <Emoji>{String.fromCodePoint(value)}</Emoji>
-                            <ProgressBar number={progress} />
-                            <EmojiStat
-                              emoji={value}
-                              emojiAnalytics={emojiAnalytics}
-                            />
-                          </EmojiContainer>
-                        );
-                      })}
-                  </EmojiRow>
-                )}
-
-              <AnswerWrapper>
-                {validQuestions &&
-                  multiple_choice.includes(questions[questionIndex].type) &&
-                  questions[questionIndex].answerChoices &&
-                  questions[questionIndex].answerChoices.map((answer) => {
-                    return (
-                      <AnswerChoice
-                        key={answer.id}
-                        choice={answer.choice}
-                        answerChoiceAnalytics={answerChoiceAnalytics}
-                      />
-                    );
-                  })}
-                {validQuestions &&
-                  open_ended_choice.includes(questions[questionIndex].type) && (
-                    <ScrollArea data={openEndedAnalytics} />
-                  )}
-              </AnswerWrapper>
-            </AnswerChoiceContainer>
-          </SurveyRow>
+              </QuestionContainer>
+            </SurveyRow>
+          )}
         </AnalyticsContainer>
       )}
     </>

@@ -11,12 +11,13 @@ const Scroller = ({data}) => (
     <ScrollArea.Viewport className="ScrollAreaViewport">
       <div style={{padding: "15px 20px"}}>
         <div className="Text">Responses</div>
-        {data.map((d) => (
-          <div className="Tag" key={d.answer}>
-            {d.answer}
-          </div>
-        ))}
-        {data.length === 0 && (
+        {data &&
+          data.map((d) => (
+            <div className="Tag" key={d.answer}>
+              {d.answer}
+            </div>
+          ))}
+        {data && data.length === 0 && (
           <div className="noResponsesYet">no responses yet</div>
         )}
       </div>
