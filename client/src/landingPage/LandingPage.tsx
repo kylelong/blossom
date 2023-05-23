@@ -46,6 +46,7 @@ import {
   StartTrialContainer,
   TrialButton,
   linkStyle,
+  NoCard,
 } from "./styles";
 
 const LandingPage: React.FC = () => {
@@ -160,6 +161,7 @@ const LandingPage: React.FC = () => {
       <StartTrialContainer>
         <Link to="/signup" style={linkStyle}>
           <TrialButton>Start Free Trial</TrialButton>
+          <NoCard>No Credit Card Required</NoCard>
         </Link>
       </StartTrialContainer>
 

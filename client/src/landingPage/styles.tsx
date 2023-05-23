@@ -158,6 +158,13 @@ export const TrialButton = styled.button`
     opacity: 0.7;
   }
 `;
+export const NoCard = styled.div`
+  margin-top: 12px;
+  text-align: center;
+  margin-left: 18px;
+  color: rgb(82, 95, 127);
+  font-weight: bold;
+`;
 
 export const FAQSectionContainer = styled.div`
   display: flex;
