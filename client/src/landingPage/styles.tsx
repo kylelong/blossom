@@ -90,7 +90,7 @@ export const BenefitsItem = styled.div`
 export const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 14px;
+  margin-top: 24px;
   text-align: center;
   margin-bottom: 48px;
 `;
@@ -162,7 +162,7 @@ export const TrialButton = styled.button`
 export const FAQSectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 18px;
+  margin-top: 24px;
   align-items: center;
   justify-content: center;
   margin-bottom: 48px;
@@ -278,7 +278,7 @@ export const PricingSectionContainer = styled.div`
   margin-top: 18px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   @media (max-width: 500px) {
     padding: 10px;
   }

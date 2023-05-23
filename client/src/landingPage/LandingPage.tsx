@@ -159,7 +159,7 @@ const LandingPage: React.FC = () => {
 
       <StartTrialContainer>
         <Link to="/signup" style={linkStyle}>
-          <TrialButton>Create a Survey</TrialButton>
+          <TrialButton>Start Free Trial</TrialButton>
         </Link>
       </StartTrialContainer>
 
