@@ -66,14 +66,16 @@ const Menu: React.FC = () => {
       return (
         <MenuContainer>
           <Link to="/login" style={linkStyle}>
-            <MenuItem style={{marginRight: "24px"}}>login</MenuItem>
+            <MenuItem style={{marginRight: "24px", fontSize: "22px"}}>
+              login
+            </MenuItem>
             <ArrowRightIcon
               style={{
                 width: "20px",
                 height: "20px",
                 position: "relative",
                 right: "17px",
-                top: "1px",
+                top: "5px",
                 color: "#355e3b",
               }}
             />

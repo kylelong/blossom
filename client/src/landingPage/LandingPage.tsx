@@ -10,6 +10,7 @@ import flower7 from "../images/scandi-370.svg"; // *
 import happy_customer from "../images/happy_customer.svg";
 import team from "../images/team.svg";
 import money from "../images/purse.svg";
+import {Link} from "react-router-dom";
 
 import {
   LandingPageContainer,
@@ -42,6 +43,9 @@ import {
   PricingHeader,
   Footer,
   Trial,
+  StartTrialContainer,
+  TrialButton,
+  linkStyle,
 } from "./styles";
 
 const LandingPage: React.FC = () => {
@@ -53,7 +57,7 @@ const LandingPage: React.FC = () => {
     "No coding required",
     "Advanced analytics",
     "Fast support",
-  ];
+  ].sort((a, b) => a.length - b.length);
   const price = 25;
 
   return (
@@ -73,6 +77,12 @@ const LandingPage: React.FC = () => {
           Create beautiful surveys that help you understand your audience.
         </SloganDetail>
       </SloganContainer>
+
+      <StartTrialContainer>
+        <Link to="/signup" style={linkStyle}>
+          <TrialButton>Create a Survey</TrialButton>
+        </Link>
+      </StartTrialContainer>
 
       <SectionContainer>
         <FlowerImageSection src={flower6} style={{marginBottom: "12px"}} />
@@ -147,6 +157,12 @@ const LandingPage: React.FC = () => {
         </PriceContainer>
       </PricingSectionContainer>
 
+      <StartTrialContainer>
+        <Link to="/signup" style={linkStyle}>
+          <TrialButton>Create a Survey</TrialButton>
+        </Link>
+      </StartTrialContainer>
+
       <FAQSectionContainer>
         <FlowerImageSection src={flower3} style={{marginBottom: "8px"}} />
         <SectionHeader>FAQs</SectionHeader>
@@ -188,7 +204,7 @@ const LandingPage: React.FC = () => {
             <QuestionLabel>How much does this cost?</QuestionLabel>
             <AnswerLabel>
               ${price} / month. Start today with a 2 week free trial. No credit
-              card required.
+              card required to signup.
             </AnswerLabel>
           </QuestionContainer>
         </FAQContainer>

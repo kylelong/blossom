@@ -132,6 +132,32 @@ export const BenefitsListItem = styled.li`
 `;
 
 /* FAQContainer */
+export const StartTrialContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+export const TrialButton = styled.button`
+  // background-color: rgb(250, 249, 246);
+  // border: 1px solid rgb(82, 95, 127);
+  height: 25px;
+  width: 100%;
+  max-width: 259px;
+
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+
+  background: transparent;
+  color: white;
+  background-color: rgb(0, 100, 0);
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+`;
 
 export const FAQSectionContainer = styled.div`
   display: flex;
@@ -201,6 +227,10 @@ export const PriceContainer = styled.div`
   margin-bottom: 48px;
   background-color: #faf9f6;
 `;
+export const linkStyle = {
+  textDecoration: "none",
+  color: "black",
+};
 
 export const PricingLabelContainer = styled.div`
   display: flex;
