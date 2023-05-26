@@ -209,6 +209,13 @@ const LandingPage: React.FC = () => {
               card required to signup.
             </AnswerLabel>
           </QuestionContainer>
+
+          <QuestionContainer>
+            <QuestionLabel>
+              Who do I contact when I have questions?
+            </QuestionLabel>
+            <AnswerLabel>Email: contact@blossomsurveys.io</AnswerLabel>
+          </QuestionContainer>
         </FAQContainer>
       </FAQSectionContainer>
 
