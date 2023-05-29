@@ -211,9 +211,7 @@ const LandingPage: React.FC = () => {
           </QuestionContainer>
 
           <QuestionContainer>
-            <QuestionLabel>
-              Who do I contact when I have questions?
-            </QuestionLabel>
+            <QuestionLabel>Who do I contact if I need help?</QuestionLabel>
             <AnswerLabel>Email: contact@blossomsurveys.io</AnswerLabel>
           </QuestionContainer>
         </FAQContainer>

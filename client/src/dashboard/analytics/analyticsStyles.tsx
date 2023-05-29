@@ -237,7 +237,7 @@ export const Emoji = styled.div`
 `;
 
 export const NoResponses = styled.div`
-  margin-top: 32px;
+  margin-top: 112px;
   font-size: 18px;
 `;
 export const OpenEndedContainer = styled.div`
