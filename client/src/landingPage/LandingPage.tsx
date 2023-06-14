@@ -11,7 +11,6 @@ import happy_customer from "../images/happy_customer.svg";
 import team from "../images/team.svg";
 import money from "../images/purse.svg";
 import {Link} from "react-router-dom";
-
 import {
   LandingPageContainer,
   LogoContainer,
@@ -47,6 +46,9 @@ import {
   TrialButton,
   linkStyle,
   NoCard,
+  Video,
+  VideoContainer,
+  VideoDescription,
 } from "./styles";
 
 const LandingPage: React.FC = () => {
@@ -131,6 +133,18 @@ const LandingPage: React.FC = () => {
           </BenefitsItem>
         </BenefitsContainer>
       </SectionContainer>
+
+      <VideoContainer>
+        <SectionHeader>Easily create surveys</SectionHeader>
+        <VideoDescription>
+          Use Blossom's easy-to-use interface to create a beautiful survey in no
+          time
+        </VideoDescription>
+
+        <Video autoPlay muted playsInline loop controls>
+          <source src="https://blossomsurveys.s3.amazonaws.com/blossom_create.MP4"></source>
+        </Video>
+      </VideoContainer>
 
       <PricingSectionContainer id="pricing">
         <FlowerImageSection src={flower2} style={{marginBottom: "5px"}} />

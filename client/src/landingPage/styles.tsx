@@ -220,6 +220,32 @@ export const AnswerLabelItem = styled.div`
   font-size: 17.5px;
 `;
 
+export const VideoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px;
+`;
+
+export const VideoDescription = styled.div`
+  text-align: left;
+  margin-bottom: 5px;
+  color: #525f7f;
+  font-size: 18px;
+  line-height: 145%;
+`;
+
+export const Video = styled.video`
+  display: flex;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+  max-width: 853px;
+  width: 100%;
+  height: 480px;
+  border-radius: 4px;
+`;
+
 /* Price */
 
 export const PriceContainer = styled.div`
