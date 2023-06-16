@@ -10,6 +10,7 @@ import VerifyEmailNotice from "../VerifyEmailNotice";
 import SubscribeNotice from "../SubscribeNotice";
 import {useForm} from "react-hook-form";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import * as Switch from "@radix-ui/react-switch";
 import * as Label from "@radix-ui/react-label";
 import axios from "axios";
 import {
@@ -805,6 +806,18 @@ const Panel = () => {
                 </div>
               </>
             )}
+          </div>
+          <div style={{display: "flex", alignItems: "center"}}>
+            <label
+              className="Label"
+              htmlFor="airplane-mode"
+              style={{paddingRight: 15}}
+            >
+              group responses
+            </label>
+            <Switch.Root className="SwitchRoot" id="airplane-mode">
+              <Switch.Thumb className="SwitchThumb" />
+            </Switch.Root>
           </div>
           {surveyLink && (
             <div className="surveyLinkContainer">
