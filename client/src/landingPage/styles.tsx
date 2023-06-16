@@ -244,6 +244,7 @@ export const Video = styled.video`
   width: 100%;
   height: 480px;
   border-radius: 4px;
+  z-index: 100;
 `;
 
 /* Price */
