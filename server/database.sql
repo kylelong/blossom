@@ -200,3 +200,10 @@ SELECT q.type, COUNT(q.type) FROM question q INNER JOIN survey s ON s.id = q.sur
 
 
 */
+
+/* Add group_responses */
+ALTER TABLE survey ADD COLUMN group_responses BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE response ADD COLUMN response_hash VARCHAR(255) NOT NULL DEFAULT '';
+
+select id, answer_id, question_id, answer, created_at, response_hash  from response WHERE response_hash != ''  GROUP BY response_hash, id ORDER BY created_at DESC;
+select *  from response r INNER JOIN question q ON q.id = r.question_id WHERE r.response_hash != ''  GROUP BY r.response_hash, q.index, r.id, q.id ORDER BY q.index ASC;

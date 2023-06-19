@@ -956,10 +956,10 @@ app.get("/get_answer_choice_id/:hash", async (req, res) => {
 // insert for emoji / open_ended question (no answer_id, answer is text) with created_at
 app.post("/add_response_with_answer", async (req, res) => {
   try {
-    const {answer, question_id} = req.body;
+    const {answer, question_id, response_hash} = req.body;
     await pool.query(
-      "INSERT INTO response (question_id, answer) VALUES($1, $2)",
-      [question_id, answer]
+      "INSERT INTO response (question_id, answer, response_hash) VALUES($1, $2, $3)",
+      [question_id, answer, response_hash]
     );
     res.json("answer response inserted");
   } catch (err) {
@@ -970,10 +970,10 @@ app.post("/add_response_with_answer", async (req, res) => {
 // insert for multi_select / single_select question (answer_id, answer is null) with created_at
 app.post("/add_response_with_answer_id", async (req, res) => {
   try {
-    const {answer_id, question_id} = req.body;
+    const {answer_id, question_id, response_hash} = req.body;
     await pool.query(
-      "INSERT INTO response (question_id, answer_id) VALUES($1, $2)",
-      [question_id, answer_id]
+      "INSERT INTO response (question_id, answer_id, response_hash) VALUES($1, $2, $3)",
+      [question_id, answer_id, response_hash]
     );
     res.json("answer choice with id response inserted");
   } catch (err) {
