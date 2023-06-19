@@ -43,6 +43,7 @@ const Panel = () => {
     published: false,
     redirect_url: "",
     title: "",
+    group_responses: false,
   });
 
   const [surveyTitle, setSurveyTitle] = useState("");
@@ -647,6 +648,12 @@ const Panel = () => {
 
     // check answers
   };
+  const handleSwitch = (e) => {
+    const {dataset, ariaChecked} = e.target;
+
+    console.log("data-state:", dataset.state);
+    console.log("aria-checked:", ariaChecked);
+  };
   useEffect(() => {
     if (!surveyStateLoaded) {
       loadSurvey();
@@ -807,17 +814,27 @@ const Panel = () => {
               </>
             )}
           </div>
-          <div style={{display: "flex", alignItems: "center"}}>
-            <label
-              className="Label"
-              htmlFor="airplane-mode"
-              style={{paddingRight: 15}}
-            >
-              group responses
-            </label>
-            <Switch.Root className="SwitchRoot" id="airplane-mode">
-              <Switch.Thumb className="SwitchThumb" />
-            </Switch.Root>
+          <div className="groupResponsesContainer">
+            <div className="sliderContainer">
+              <label
+                className="Label"
+                htmlFor="airplane-mode"
+                style={{paddingRight: 15}}
+              >
+                group responses
+              </label>
+              <Switch.Root
+                className="SwitchRoot"
+                id="airplane-mode"
+                onCheckedChange={(e) => handleSwitch}
+                checked={draft.group_responses}
+              >
+                <Switch.Thumb className="SwitchThumb" />
+              </Switch.Root>
+            </div>
+            <div className="groupDesc">
+              response analytics will be grouped by submission.
+            </div>
           </div>
           {surveyLink && (
             <div className="surveyLinkContainer">
