@@ -5,6 +5,7 @@ import Logo from "../Logo";
 import flower from "../images/scandi-373.svg";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import randomstring from "randomstring";
 
 import SurveyViewer from "./SurveyViewer";
 const endpoint =
@@ -26,6 +27,7 @@ const Survey = () => {
     redirect_url: "",
     title: "",
   });
+
   const [response, setResponse] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -174,11 +176,12 @@ const Survey = () => {
   };
 
   // text based answer for open_ended / short answer
-  const insertAnswerResponse = async (answer, question_id) => {
+  const insertAnswerResponse = async (answer, question_id, response_hash) => {
     try {
       await axios.post(`${endpoint}/add_response_with_answer`, {
         answer: answer,
         question_id: question_id,
+        response_hash: response_hash,
       });
     } catch (err) {
       console.error(`inserting answer with response: ${err.message}`);
@@ -186,11 +189,16 @@ const Survey = () => {
   };
 
   // multi_select / single_select
-  const insertAnswerIdResponse = async (answer_id, question_id) => {
+  const insertAnswerIdResponse = async (
+    answer_id,
+    question_id,
+    response_hash
+  ) => {
     try {
       await axios.post(`${endpoint}/add_response_with_answer_id`, {
         answer_id: answer_id,
         question_id: question_id,
+        response_hash: response_hash,
       });
     } catch (err) {
       console.error(`inserting answer with id: ${err.message}`);
@@ -198,6 +206,10 @@ const Survey = () => {
   };
 
   const submitSurvey = async () => {
+    const response_hash = randomstring.generate({
+      length: 24,
+      charset: "alphanumeric",
+    });
     for (let i = 0; i < questions.length; i++) {
       let res = response[i];
       let question_id = questionIds[i];
@@ -210,13 +222,17 @@ const Survey = () => {
           (async function () {
             let answer_id = await getAnswerChoiceId(hash);
             (async function () {
-              await insertAnswerIdResponse(answer_id, question_id);
+              await insertAnswerIdResponse(
+                answer_id,
+                question_id,
+                response_hash
+              );
             })();
           })();
         } else if (hash.length === 0 && answers.length > 0) {
           // add_response_with_answer for emojis / open_ended / short_answer
           (async function () {
-            await insertAnswerResponse(answer, question_id);
+            await insertAnswerResponse(answer, question_id, response_hash);
           })();
         }
       }

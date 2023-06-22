@@ -27,6 +27,8 @@ import {
   ResponsesHeader,
   NoResponses,
   OpenEndedContainer,
+  GroupResponsesContainer,
+  GroupDesc,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DataTable from "react-data-table-component";
@@ -34,7 +36,7 @@ import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
 import EmojiStat from "./EmojiStat";
 import AnswerChoice from "./AnswerChoice";
-import ScrollArea from "./ScrollArea";
+import * as Switch from "@radix-ui/react-switch";
 // import {UserData} from "./Data";
 import axios from "axios";
 const endpoint =
@@ -197,6 +199,10 @@ const AnalyticsDashboard = () => {
     },
     [handleQuestionChange, loadAnswers]
   );
+  const handleSwitch = (e) => {
+    console.log("afsf");
+    console.log(e);
+  };
   useEffect(() => {
     const loadSurveys = async () => {
       try {
@@ -292,6 +298,27 @@ const AnalyticsDashboard = () => {
           )}
           {survey.responses > 0 && (
             <SurveyRow>
+              {/* <GroupResponsesContainer>
+                <div className="sliderContainer">
+                  <label
+                    className="Label"
+                    htmlFor="airplane-mode"
+                    style={{paddingRight: 15}}
+                  >
+                    group responses
+                  </label>
+                  <Switch.Root
+                    className="SwitchRoot"
+                    id="airplane-mode"
+                    onCheckedChange={(e) => handleSwitch(e)}
+                  >
+                    <Switch.Thumb className="SwitchThumb" />
+                  </Switch.Root>
+                </div>
+                <GroupDesc>
+                  response analytics will be grouped by submission.
+                </GroupDesc>
+              </GroupResponsesContainer> */}
               <QuestionContainer>
                 {questions.map((question, index) => {
                   return (

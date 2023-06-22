@@ -646,6 +646,7 @@ const Panel = () => {
 
     // check answers
   };
+
   useEffect(() => {
     if (!surveyStateLoaded) {
       loadSurvey();
@@ -806,6 +807,7 @@ const Panel = () => {
               </>
             )}
           </div>
+
           {surveyLink && (
             <div className="surveyLinkContainer">
               <div className="surveyLinkHeaderContainer">

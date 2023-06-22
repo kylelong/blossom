@@ -13,11 +13,25 @@ export const SurveyTitle = styled.div`
   color: #525f7f;
   margin-bottom: 50px;
 `;
+export const GroupResponsesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-bottom: 24px;
+`;
+
+export const GroupDesc = styled.div`
+  margin-top: 10px;
+  width: 100%;
+  font-size: 15px;
+  text-align: left;
+  margin-left: 15px;
+`;
 
 export const SurveyRow = styled.div`
   display: flex;
-  flex-direction: row;
-  margin-top: 50px;
+  flex-direction: column;
+  margin-top: 24px;
   @media (max-width: 1100px) {
     flex-direction: column;
     align-items: center;
