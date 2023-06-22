@@ -298,7 +298,7 @@ const AnalyticsDashboard = () => {
           )}
           {survey.responses > 0 && (
             <SurveyRow>
-              <GroupResponsesContainer>
+              {/* <GroupResponsesContainer>
                 <div className="sliderContainer">
                   <label
                     className="Label"
@@ -318,7 +318,7 @@ const AnalyticsDashboard = () => {
                 <GroupDesc>
                   response analytics will be grouped by submission.
                 </GroupDesc>
-              </GroupResponsesContainer>
+              </GroupResponsesContainer> */}
               <QuestionContainer>
                 {questions.map((question, index) => {
                   return (
