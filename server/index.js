@@ -1023,6 +1023,32 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
   }
 });
 
+app.get("/response_hashes/:survey_id", async (req, res) => {
+  try {
+    const {survey_id} = req.params;
+    const response = await pool.query(
+      "SELECT DISTINCT(r.response_hash) from response r INNER JOIN question q ON q.id = r.question_id WHERE q.survey_id = $1 AND r.response_hash != ''; ",
+      [survey_id]
+    );
+    res.json(response.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/responses_by_hash", async (req, res) => {
+  try {
+    const {survey_id, response_hash} = req.body;
+    const response = await pool.query(
+      "SELECT * FROM response r INNER JOIN question q ON q.id = r.question_id WHERE q.survey_id = $1 AND r.response_hash = $2 ORDER BY q.index;",
+      [survey_id, response_hash]
+    );
+    res.json(response.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 app.listen(config.PORT, () => {
   console.log(`server listening on port http://${config.HOST}:${config.PORT}`);
 });
