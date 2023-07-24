@@ -28,7 +28,7 @@ import {
   NoResponses,
   OpenEndedContainer,
   GroupResponsesContainer,
-  GroupDesc,
+  GroupResponsesCheckbox,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
 import DataTable from "react-data-table-component";
@@ -36,7 +36,6 @@ import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
 import EmojiStat from "./EmojiStat";
 import AnswerChoice from "./AnswerChoice";
-import * as Switch from "@radix-ui/react-switch";
 // import {UserData} from "./Data";
 import axios from "axios";
 const endpoint =
@@ -55,6 +54,8 @@ const AnalyticsDashboard = () => {
   const [hasDraft, setHasDraft] = useState(false);
   const [selectedSurveyId, setSelectedSurveyId] = useState(0);
   const [publishedCount, setPublishedCount] = useState(0);
+  const [groupResponses, setGroupResponses] = useState(false);
+  const [responseHashes, setResponseHashes] = useState([]);
   const surveyIdRef = useRef(selectedSurveyId);
   const {user} = useContext(AccountContext);
   /**
@@ -200,8 +201,7 @@ const AnalyticsDashboard = () => {
     [handleQuestionChange, loadAnswers]
   );
   const handleSwitch = (e) => {
-    console.log("afsf");
-    console.log(e);
+    setGroupResponses(!groupResponses);
   };
   useEffect(() => {
     const loadSurveys = async () => {
@@ -252,6 +252,33 @@ const AnalyticsDashboard = () => {
       loadQuestions(selectedSurveyId);
     }
     surveyIdRef.current = selectedSurveyId;
+
+    const loadResponseHashes = async () => {
+      try {
+        const response = await axios.get(
+          `${endpoint}/response_hashes/${surveyIdRef.current}`
+        );
+        const data = await response.data;
+        setResponseHashes(data);
+        /*
+        [
+    {
+        "response_hash": "RhRrxd7yrYrBlbchTcfmGIIP"
+    },
+    {
+        "response_hash": "jd9yLChi551mQkCuI7jTbKlK"
+    },
+    {
+        "response_hash": "L5xuZOhUprNRBRLS85SsnjIc"
+    }
+]
+  response_hashes[0].response_hash
+        */
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+    loadResponseHashes();
   }, [loaded, selectedSurveyId, loadQuestions, surveys]);
 
   const buttonText = hasDraft
@@ -296,29 +323,20 @@ const AnalyticsDashboard = () => {
           {survey.responses === 0 && (
             <NoResponses>No responses yet</NoResponses>
           )}
-          {survey.responses > 0 && (
+          {survey.title && (
+            <GroupResponsesContainer>
+              <label for="group_responses">group responses</label>
+              <GroupResponsesCheckbox
+                type="checkbox"
+                name="group_responses"
+                checked={groupResponses}
+                onChange={handleSwitch}
+              />
+            </GroupResponsesContainer>
+          )}
+
+          {survey.responses > 0 && !groupResponses && (
             <SurveyRow>
-              {/* <GroupResponsesContainer>
-                <div className="sliderContainer">
-                  <label
-                    className="Label"
-                    htmlFor="airplane-mode"
-                    style={{paddingRight: 15}}
-                  >
-                    group responses
-                  </label>
-                  <Switch.Root
-                    className="SwitchRoot"
-                    id="airplane-mode"
-                    onCheckedChange={(e) => handleSwitch(e)}
-                  >
-                    <Switch.Thumb className="SwitchThumb" />
-                  </Switch.Root>
-                </div>
-                <GroupDesc>
-                  response analytics will be grouped by submission.
-                </GroupDesc>
-              </GroupResponsesContainer> */}
               <QuestionContainer>
                 {questions.map((question, index) => {
                   return (

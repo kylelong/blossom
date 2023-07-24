@@ -15,17 +15,18 @@ export const SurveyTitle = styled.div`
 `;
 export const GroupResponsesContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: left;
   margin-bottom: 24px;
+  margin-top: 24px;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgb(82, 95, 127);
 `;
 
-export const GroupDesc = styled.div`
-  margin-top: 10px;
-  width: 100%;
-  font-size: 15px;
-  text-align: left;
-  margin-left: 15px;
+export const GroupResponsesCheckbox = styled.input`
+  margin-top: 6px;
+  margin-left: 6px;
 `;
 
 export const SurveyRow = styled.div`
