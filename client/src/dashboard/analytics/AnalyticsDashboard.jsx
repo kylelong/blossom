@@ -31,6 +31,7 @@ import {
   GroupResponsesCheckbox,
 } from "./analyticsStyles";
 // import PieChart from "./PieChart";
+import GroupResponses from "./GroupResponses";
 import DataTable from "react-data-table-component";
 import DropdownMenu from "./DropdownMenu";
 import ProgressBar from "./ProgressBar";
@@ -260,20 +261,6 @@ const AnalyticsDashboard = () => {
         );
         const data = await response.data;
         setResponseHashes(data);
-        /*
-        [
-    {
-        "response_hash": "RhRrxd7yrYrBlbchTcfmGIIP"
-    },
-    {
-        "response_hash": "jd9yLChi551mQkCuI7jTbKlK"
-    },
-    {
-        "response_hash": "L5xuZOhUprNRBRLS85SsnjIc"
-    }
-]
-  response_hashes[0].response_hash
-        */
       } catch (err) {
         console.error(err.message);
       }
@@ -325,7 +312,7 @@ const AnalyticsDashboard = () => {
           )}
           {survey.title && (
             <GroupResponsesContainer>
-              <label for="group_responses">group responses</label>
+              <label htmlFor="group_responses">group responses</label>
               <GroupResponsesCheckbox
                 type="checkbox"
                 name="group_responses"
@@ -333,6 +320,13 @@ const AnalyticsDashboard = () => {
                 onChange={handleSwitch}
               />
             </GroupResponsesContainer>
+          )}
+
+          {survey.responses > 0 && groupResponses && (
+            <GroupResponses
+              responseHashes={responseHashes}
+              surveyId={surveyIdRef.current}
+            />
           )}
 
           {survey.responses > 0 && !groupResponses && (
