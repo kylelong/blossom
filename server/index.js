@@ -883,6 +883,21 @@ app.get("/answer_choices/:question_id", async (req, res) => {
   }
 });
 
+// get choice text from answer id for analytics
+
+app.get("/answer_from_id/:answer_id", async (req, res) => {
+  try {
+    const {answer_id} = req.params;
+    const answer = await pool.query(
+      "SELECT choice FROM answer_choice WHERE id = $1",
+      [answer_id]
+    );
+    res.json(answer.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 // TAKING SURVEY
 app.get("/survey/:hash", async (req, res) => {
   try {
@@ -1018,6 +1033,32 @@ app.get("/emoji_analytics/:question_id", async (req, res) => {
       [question_id]
     );
     res.json(response.rows); // choice, count, total, avg
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/response_hashes/:survey_id", async (req, res) => {
+  try {
+    const {survey_id} = req.params;
+    const response = await pool.query(
+      "SELECT DISTINCT(r.response_hash) from response r INNER JOIN question q ON q.id = r.question_id WHERE q.survey_id = $1 AND r.response_hash != ''; ",
+      [survey_id]
+    );
+    res.json(response.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/responses_by_hash/:survey_id/:response_hash", async (req, res) => {
+  try {
+    const {survey_id, response_hash} = req.params;
+    const response = await pool.query(
+      "SELECT * FROM response r INNER JOIN question q ON q.id = r.question_id WHERE q.survey_id = $1 AND r.response_hash = $2 ORDER BY q.index;",
+      [survey_id, response_hash]
+    );
+    res.json(response.rows);
   } catch (err) {
     console.error(err.message);
   }
