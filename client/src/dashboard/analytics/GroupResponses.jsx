@@ -95,12 +95,12 @@ const GroupResponses = ({surveyId, responseHashes}) => {
   }
   return (
     <Container>
-      {Object.entries(responses).map(([key, value]) => {
+      {Object.entries(responses).map(([key, value], index) => {
         const {title, type, answers} = value;
         return (
           <>
             <Question>
-              {title}
+              {index + 1}. {title}
               <QuestionType>{type}</QuestionType>
             </Question>
             <AnswerWrapper type={type} answers={answers} />

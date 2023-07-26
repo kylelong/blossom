@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-
+import QuestionTypes from "../../questionTypes";
 export const Emoji = styled.div`
   position: relative;
-  bottom: 20px;
+  bottom: 6px;
   border-radius: 0;
   border: none;
   border-image-width: 0;
@@ -18,25 +18,55 @@ export const Emoji = styled.div`
   margin: 1%;
   height: 50px;
 `;
+
+export const AnswerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-radius: 0.375rem;
+  border: 1px solid black;
+  padding: 12px;
+  margin-bottom: 12px;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  align-items: center;
+  text-align: left;
+`;
+
+export const AnswerContainerCenter = styled.div`
+  display: flex;
+  flex-direction: row;
+  border-radius: 0.375rem;
+  border: 1px solid black;
+  padding: 12px;
+  margin-bottom: 12px;
+  -webkit-box-pack: justify;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  text-align: left;
+`;
 const AnswerWrapper = ({type, answers}) => {
   //use ENUMS
-  if (type === "emoji_sentiment") {
-    return <Emoji>{String.fromCodePoint(answers[0])}</Emoji>;
-  }
-  if (type === "multi_select") {
-    return (
-      <ul>
-        {answers.map((answer, index) => {
-          return <li key={index}>{answer}</li>;
-        })}
-      </ul>
-    );
-  }
-  if (type === "single_select") {
-    return <div>{answers[0]}</div>;
-  }
-  if (type === "open_ended" || type === "short_answer") {
-    return <div>{answers[0]}</div>;
+  switch (type) {
+    case QuestionTypes.EMOJI_SENTIMENT:
+      return (
+        <AnswerContainerCenter>
+          <Emoji>{String.fromCodePoint(answers[0])}</Emoji>
+        </AnswerContainerCenter>
+      );
+    case QuestionTypes.MULTI_SELECT:
+      return (
+        <AnswerContainer>
+          <ul>
+            {answers.map((answer, index) => {
+              return <li key={index}>{answer}</li>;
+            })}
+          </ul>
+        </AnswerContainer>
+      );
+    default:
+      return <AnswerContainer>{answers[0]}</AnswerContainer>;
   }
 };
 
