@@ -194,6 +194,7 @@
   padding: 8px;
   border-radius: 4px;
   font-family: sans-serif;
+  font-size: 16px;
 }
 @media (max-width: 768px) {
   .openEndedTextArea {
