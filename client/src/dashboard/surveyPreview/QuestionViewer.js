@@ -4,6 +4,7 @@ import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
 import ShortAnswer from "./ShortAnswer";
 import Emojis from "./Emojis";
+import Number from "./Number";
 import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
   const questionStarted =
@@ -52,6 +53,13 @@ const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
           return (
             <>
               <Emojis questionHash={hash} currentEmoji={emoji} />
+            </>
+          );
+        case "number":
+          return (
+            <>
+              <div className="surveyQuestionDetail">enter a number</div>
+              <Number />
             </>
           );
         default:

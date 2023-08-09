@@ -2,6 +2,7 @@ import React from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
+import Number from "./Number";
 import Emojis from "./Emojis";
 import ShortAnswer from "./ShortAnswer";
 import flower from "../images/sunflower.svg";
@@ -86,6 +87,17 @@ const QuestionViewer = ({
           return (
             <>
               <Emojis
+                index={index}
+                handleProceed={handleProceed}
+                updateResponse={updateResponse}
+                surveyHash={surveyHash}
+              />
+            </>
+          );
+        case "number":
+          return (
+            <>
+              <Number
                 index={index}
                 handleProceed={handleProceed}
                 updateResponse={updateResponse}
