@@ -19,7 +19,7 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
-  const types = ["emoji_sentiment", "short_answer"];
+  const types = ["emoji_sentiment", "short_answer", "number"];
   let dynamicStyle = {
     marginTop: types.includes(type) ? "100px" : "30px",
   };
@@ -97,6 +97,7 @@ const QuestionViewer = ({
         case "number":
           return (
             <>
+              <div className="surveyQuestionDetail">enter a number</div>
               <Number
                 index={index}
                 handleProceed={handleProceed}
