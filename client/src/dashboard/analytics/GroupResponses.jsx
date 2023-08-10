@@ -46,7 +46,7 @@ const GroupResponses = ({surveyId, responseHashes}) => {
   useEffect(() => {
     /**
      * answer_id: multi_select, single_select
-     * answer: short_answer, open_ended, emoji_sentiment
+     * answer: short_answer, open_ended, emoji_sentiment, number
      */
     if (responseHashes.length > 0 && index >= 0) {
       const loadResponses = async () => {
