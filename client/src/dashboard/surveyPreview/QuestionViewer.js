@@ -4,11 +4,12 @@ import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
 import ShortAnswer from "./ShortAnswer";
 import Emojis from "./Emojis";
+import Number from "./Number";
 import flower from "../../images/sunflower.svg";
 const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
   const questionStarted =
     (title && title.length > 0) || (type && type.length > 0); // title, type, can be changes by user
-  const types = ["emoji_sentiment", "short_answer"];
+  const types = ["emoji_sentiment", "short_answer", "number"];
   let dynamicStyle = {
     marginTop: types.includes(type) ? "100px" : "30px",
   };
@@ -52,6 +53,13 @@ const QuestionViewer = ({id, title, type, answerChoices, hash, emoji}) => {
           return (
             <>
               <Emojis questionHash={hash} currentEmoji={emoji} />
+            </>
+          );
+        case "number":
+          return (
+            <>
+              <div className="surveyQuestionDetail">enter a number</div>
+              <Number />
             </>
           );
         default:

@@ -85,7 +85,10 @@ const AnalyticsDashboard = () => {
   // });
 
   const multiple_choice = useMemo(() => ["multi_select", "single_select"], []);
-  const open_ended_choice = useMemo(() => ["open_ended", "short_answer"], []);
+  const open_ended_choice = useMemo(
+    () => ["open_ended", "short_answer", "number"],
+    []
+  );
   const emojis = {
     angry: "0x1F621",
     sad: "0x1F614",

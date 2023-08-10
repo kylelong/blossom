@@ -2,6 +2,7 @@ import React from "react";
 import MultiSelect from "./MultiSelect";
 import SingleSelect from "./SingleSelect";
 import OpenEnded from "./OpenEnded";
+import Number from "./Number";
 import Emojis from "./Emojis";
 import ShortAnswer from "./ShortAnswer";
 import flower from "../images/sunflower.svg";
@@ -18,7 +19,7 @@ const QuestionViewer = ({
 }) => {
   const questionStarted =
     title || type || (answerChoices && answerChoices.length);
-  const types = ["emoji_sentiment", "short_answer"];
+  const types = ["emoji_sentiment", "short_answer", "number"];
   let dynamicStyle = {
     marginTop: types.includes(type) ? "100px" : "30px",
   };
@@ -86,6 +87,18 @@ const QuestionViewer = ({
           return (
             <>
               <Emojis
+                index={index}
+                handleProceed={handleProceed}
+                updateResponse={updateResponse}
+                surveyHash={surveyHash}
+              />
+            </>
+          );
+        case "number":
+          return (
+            <>
+              <div className="surveyQuestionDetail">enter a number</div>
+              <Number
                 index={index}
                 handleProceed={handleProceed}
                 updateResponse={updateResponse}

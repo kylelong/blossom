@@ -12,6 +12,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
     "emoji_sentiment",
     "open_ended",
     "short_answer",
+    "number",
   ];
   // use value={choice}
   return (
@@ -44,6 +45,7 @@ const QuestionTypeSelectMenu = ({updateQuestionType, defaultQuestionType}) => {
               <SelectItem value="emoji_sentiment">emoji sentiment</SelectItem>
               <SelectItem value="short_answer">short answer</SelectItem>
               <SelectItem value="open_ended">open ended</SelectItem>
+              <SelectItem value="number">number</SelectItem>
             </Select.Group>
           </Select.Viewport>
           <Select.ScrollDownButton className="SelectScrollButton">
