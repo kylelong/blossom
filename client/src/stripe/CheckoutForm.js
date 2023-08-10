@@ -133,7 +133,7 @@ export default function CheckoutForm({email}) {
               Become a premium user to continue using Blossom.
             </div>
             <div className="trial-message">
-              Billed Monthly at $25 / mo. Cancel or Pause anytime.
+              Billed Monthly at $19 / mo. Cancel or Pause anytime.
             </div>
           </>
         )}

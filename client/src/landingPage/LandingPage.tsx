@@ -61,7 +61,7 @@ const LandingPage: React.FC = () => {
     "Advanced analytics",
     "Fast support",
   ].sort((a, b) => a.length - b.length);
-  const price = 25;
+  const price = 19;
 
   return (
     <LandingPageContainer>
