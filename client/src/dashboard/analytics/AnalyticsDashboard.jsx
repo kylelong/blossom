@@ -177,7 +177,6 @@ const AnalyticsDashboard = () => {
       }
 
       setQuestions(question_copy.flat());
-
       setLoaded(true);
     },
     [open_ended_choice, multiple_choice]
@@ -214,6 +213,8 @@ const AnalyticsDashboard = () => {
         if (data && data.length) {
           setSelectedSurveyId(data[0].id);
           loadQuestions(data[0].id);
+        } else {
+          setLoaded(true);
         }
       } catch (err) {
         console.error(err.message);
