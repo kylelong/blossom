@@ -57,7 +57,6 @@ const QuestionOverview = ({
     emoji_sentiment: "range of emojis to gauage interest level",
     open_ended: "input box for longer text responses",
     short_answer: "input text for short answers",
-    number: "number for quantifying",
   };
 
   // snippet below all question options (title, type, and # of answers selector)
@@ -74,8 +73,6 @@ const QuestionOverview = ({
           return questionDetails.open_ended;
         case "short_answer":
           return questionDetails.short_answer;
-        case "number":
-          return questionDetails.number;
         default:
           return "";
       }
